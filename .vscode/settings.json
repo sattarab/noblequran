@@ -1,0 +1,33 @@
+{
+  "editor.tabSize": 2,
+  "files.watcherExclude": {
+    "dist/**": true,
+    "node_modules/**": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/*.code-search": true
+  },
+  "cSpell.words": [
+    "Karim",
+    "Sajda",
+    "bismillah",
+    "hizb",
+    "indopak",
+    "manzil",
+    "mushaf",
+    "nestjs",
+    "noblequran",
+    "parseurl",
+    "ruku",
+    "sajdah",
+    "surahs",
+    "uthmani"
+  ],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ]
+}

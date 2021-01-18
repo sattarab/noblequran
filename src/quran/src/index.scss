@@ -1,0 +1,95 @@
+@font-face {
+  font-family: "GothamRounded";
+  font-style: normal;
+  font-weight: 300;
+  src: url( "./fonts/GothamRounded/GothamRounded-Light.otf" ) format( "opentype" );
+}
+
+@font-face {
+  font-family: "GothamRounded";
+  font-style: normal;
+  font-weight: 400;
+  src: url( "./fonts/GothamRounded/GothamRounded-Book.otf" ) format( "opentype" );
+}
+
+@font-face {
+  font-family: "GothamRounded";
+  font-style: normal;
+  font-weight: 500;
+  src: url( "./fonts/GothamRounded/GothamRounded-Medium.otf" ) format( "opentype" );
+}
+
+@font-face {
+  font-family: "GothamRounded";
+  font-style: normal;
+  font-weight: 700;
+  src: url( "./fonts/GothamRounded/GothamRounded-Bold.otf" ) format( "opentype" );
+}
+
+@font-face {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 300;
+  src: url( "./fonts/Lato/Lato-Light.ttf" ) format( "truetype" );
+}
+
+@font-face {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  src: url( "./fonts/Lato/Lato-Regular.ttf" ) format( "truetype" );
+}
+
+@font-face {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 500;
+  src: url( "./fonts/Lato/Lato-Bold.ttf" ) format( "truetype" );
+}
+
+@font-face {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 700;
+  src: url( "./fonts/Lato/Lato-Black.ttf" ) format( "truetype" );
+}
+
+@font-face {
+  font-family: "ReemKufi";
+  src: url( "./fonts/ReemKufi/ReemKufi-Regular.ttf" ) format( "truetype" );
+}
+
+@font-face {
+  font-family: "QuranKarim";
+  src: url( "./fonts/QuranKarim/QuranKarim.ttf" ) format( "truetype" );
+}
+
+@for $i from 1 through 604 {
+  @font-face {
+    font-family: "Mushafp#{ $i }";
+    src: url( "./fonts/Mushaf/p#{ $i }.ttf" ) format( "truetype" );
+  }
+}
+
+body {
+  margin: 0;
+  font-family: "GothamRounded";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a,
+button {
+  font-family: "GothamRounded";
+  outline: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+div,
+span {
+  color: #4b4b4b;
+}

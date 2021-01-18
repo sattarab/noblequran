@@ -1,0 +1,7 @@
+export { ReactComponent as ArrowDownIcon } from "../icons/arrow-down.svg"
+export { ReactComponent as ArrowRightIcon } from "../icons/arrow-right.svg"
+export { ReactComponent as ArrowUpIcon } from "../icons/arrow-up.svg"
+export { ReactComponent as FavoriteIcon } from "../icons/favorite.svg"
+export { ReactComponent as QuranIcon } from "../icons/quran.svg"
+export { ReactComponent as GridIcon } from "../icons/grid.svg"
+export { ReactComponent as ListIcon } from "../icons/list.svg"
