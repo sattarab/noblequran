@@ -9,8 +9,8 @@ export interface Surah {
   number_of_ayahs: number
   query_indexes: string[]
   revelation: {
-    place: string
     order: number
+    place: string
   }
   translations: Array<{
     language: string
@@ -20,5 +20,5 @@ export interface Surah {
     language: string
     text: string
   }>
-  unicode?: string
+  unicode: string
 }

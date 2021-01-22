@@ -17,9 +17,10 @@ export const SURAHS: Surah[] = [
       "fatihah",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 5,
     },
     "translations": [
@@ -52,9 +53,11 @@ export const SURAHS: Surah[] = [
       "baqarah",
       "al",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 87,
     },
     "translations": [
@@ -91,9 +94,11 @@ export const SURAHS: Surah[] = [
       "'imran",
       "ali",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 89,
     },
     "translations": [
@@ -126,9 +131,11 @@ export const SURAHS: Surah[] = [
       "nisa",
       "an",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 92,
     },
     "translations": [
@@ -163,9 +170,11 @@ export const SURAHS: Surah[] = [
       "ma'idah",
       "al",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 112,
     },
     "translations": [
@@ -198,9 +207,10 @@ export const SURAHS: Surah[] = [
       "an'am",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 55,
     },
     "translations": [
@@ -233,9 +243,10 @@ export const SURAHS: Surah[] = [
       "a'raf",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 39,
     },
     "translations": [
@@ -272,9 +283,11 @@ export const SURAHS: Surah[] = [
       "anfal",
       "al",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 88,
     },
     "translations": [
@@ -307,9 +320,11 @@ export const SURAHS: Surah[] = [
       "tawbah",
       "at",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 113,
     },
     "translations": [
@@ -338,9 +353,10 @@ export const SURAHS: Surah[] = [
       "يونس",
       "yunus",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 51,
     },
     "translations": [
@@ -369,9 +385,10 @@ export const SURAHS: Surah[] = [
       "هود",
       "hud",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 52,
     },
     "translations": [
@@ -400,9 +417,10 @@ export const SURAHS: Surah[] = [
       "يوسف",
       "yusuf",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 53,
     },
     "translations": [
@@ -435,9 +453,11 @@ export const SURAHS: Surah[] = [
       "ra'd",
       "ar",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 96,
     },
     "translations": [
@@ -466,9 +486,10 @@ export const SURAHS: Surah[] = [
       "ابراهيم",
       "ibrahim",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 72,
     },
     "translations": [
@@ -503,9 +524,10 @@ export const SURAHS: Surah[] = [
       "hijr",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 54,
     },
     "translations": [
@@ -538,9 +560,10 @@ export const SURAHS: Surah[] = [
       "nahl",
       "an",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 70,
     },
     "translations": [
@@ -575,9 +598,10 @@ export const SURAHS: Surah[] = [
       "isra",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 50,
     },
     "translations": [
@@ -610,9 +634,10 @@ export const SURAHS: Surah[] = [
       "kahf",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 69,
     },
     "translations": [
@@ -641,9 +666,10 @@ export const SURAHS: Surah[] = [
       "مريم",
       "maryam",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 44,
     },
     "translations": [
@@ -674,9 +700,10 @@ export const SURAHS: Surah[] = [
       "طه",
       "taha",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 45,
     },
     "translations": [
@@ -709,9 +736,10 @@ export const SURAHS: Surah[] = [
       "anbya",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 73,
     },
     "translations": [
@@ -744,9 +772,11 @@ export const SURAHS: Surah[] = [
       "haj",
       "al",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 103,
     },
     "translations": [
@@ -779,9 +809,10 @@ export const SURAHS: Surah[] = [
       "mu'minun",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 74,
     },
     "translations": [
@@ -814,9 +845,11 @@ export const SURAHS: Surah[] = [
       "nur",
       "an",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 102,
     },
     "translations": [
@@ -849,9 +882,10 @@ export const SURAHS: Surah[] = [
       "furqan",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 42,
     },
     "translations": [
@@ -884,9 +918,10 @@ export const SURAHS: Surah[] = [
       "shu'ara",
       "ash",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 47,
     },
     "translations": [
@@ -919,9 +954,10 @@ export const SURAHS: Surah[] = [
       "naml",
       "an",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 48,
     },
     "translations": [
@@ -954,9 +990,10 @@ export const SURAHS: Surah[] = [
       "qasas",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 49,
     },
     "translations": [
@@ -989,9 +1026,10 @@ export const SURAHS: Surah[] = [
       "'ankabut",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 85,
     },
     "translations": [
@@ -1024,9 +1062,10 @@ export const SURAHS: Surah[] = [
       "rum",
       "ar",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 84,
     },
     "translations": [
@@ -1055,9 +1094,10 @@ export const SURAHS: Surah[] = [
       "لقمان",
       "luqman",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 57,
     },
     "translations": [
@@ -1090,9 +1130,10 @@ export const SURAHS: Surah[] = [
       "sajdah",
       "as",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 75,
     },
     "translations": [
@@ -1127,9 +1168,11 @@ export const SURAHS: Surah[] = [
       "ahzab",
       "al",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 90,
     },
     "translations": [
@@ -1158,9 +1201,10 @@ export const SURAHS: Surah[] = [
       "سبإ",
       "saba",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 58,
     },
     "translations": [
@@ -1189,9 +1233,10 @@ export const SURAHS: Surah[] = [
       "فاطر",
       "fatir",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 43,
     },
     "translations": [
@@ -1224,9 +1269,10 @@ export const SURAHS: Surah[] = [
       "sin",
       "ya",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 41,
     },
     "translations": [
@@ -1265,9 +1311,10 @@ export const SURAHS: Surah[] = [
       "saffat",
       "as",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 56,
     },
     "translations": [
@@ -1300,9 +1347,10 @@ export const SURAHS: Surah[] = [
       "ص",
       "sad",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 38,
     },
     "translations": [
@@ -1335,9 +1383,10 @@ export const SURAHS: Surah[] = [
       "zumar",
       "az",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 59,
     },
     "translations": [
@@ -1368,9 +1417,10 @@ export const SURAHS: Surah[] = [
       "غافر",
       "ghafir",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 60,
     },
     "translations": [
@@ -1403,9 +1453,10 @@ export const SURAHS: Surah[] = [
       "فصلت",
       "fussilat",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 61,
     },
     "translations": [
@@ -1438,9 +1489,10 @@ export const SURAHS: Surah[] = [
       "shuraa",
       "ash",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 62,
     },
     "translations": [
@@ -1477,9 +1529,10 @@ export const SURAHS: Surah[] = [
       "zukhruf",
       "az",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 63,
     },
     "translations": [
@@ -1512,9 +1565,10 @@ export const SURAHS: Surah[] = [
       "dukhan",
       "ad",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 64,
     },
     "translations": [
@@ -1547,9 +1601,10 @@ export const SURAHS: Surah[] = [
       "jathiyah",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 65,
     },
     "translations": [
@@ -1586,9 +1641,10 @@ export const SURAHS: Surah[] = [
       "ahqaf",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 66,
     },
     "translations": [
@@ -1617,9 +1673,11 @@ export const SURAHS: Surah[] = [
       "محمد",
       "muhammad",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 95,
     },
     "translations": [
@@ -1652,9 +1710,11 @@ export const SURAHS: Surah[] = [
       "fath",
       "al",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 111,
     },
     "translations": [
@@ -1687,9 +1747,11 @@ export const SURAHS: Surah[] = [
       "hujurat",
       "al",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 106,
     },
     "translations": [
@@ -1722,9 +1784,10 @@ export const SURAHS: Surah[] = [
       "ق",
       "qaf",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 34,
     },
     "translations": [
@@ -1759,9 +1822,10 @@ export const SURAHS: Surah[] = [
       "dhariyat",
       "adh",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 67,
     },
     "translations": [
@@ -1794,9 +1858,10 @@ export const SURAHS: Surah[] = [
       "tur",
       "at",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 76,
     },
     "translations": [
@@ -1829,9 +1894,10 @@ export const SURAHS: Surah[] = [
       "najm",
       "an",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 23,
     },
     "translations": [
@@ -1864,9 +1930,10 @@ export const SURAHS: Surah[] = [
       "qamar",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 37,
     },
     "translations": [
@@ -1899,9 +1966,11 @@ export const SURAHS: Surah[] = [
       "rahman",
       "ar",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 97,
     },
     "translations": [
@@ -1934,9 +2003,10 @@ export const SURAHS: Surah[] = [
       "waqi'ah",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 46,
     },
     "translations": [
@@ -1969,9 +2039,11 @@ export const SURAHS: Surah[] = [
       "hadid",
       "al",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 94,
     },
     "translations": [
@@ -2006,9 +2078,11 @@ export const SURAHS: Surah[] = [
       "mujadila",
       "al",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 105,
     },
     "translations": [
@@ -2041,9 +2115,11 @@ export const SURAHS: Surah[] = [
       "hashr",
       "al",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 101,
     },
     "translations": [
@@ -2084,9 +2160,11 @@ export const SURAHS: Surah[] = [
       "mumtahanah",
       "al",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 91,
     },
     "translations": [
@@ -2119,9 +2197,11 @@ export const SURAHS: Surah[] = [
       "saf",
       "as",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 109,
     },
     "translations": [
@@ -2156,9 +2236,11 @@ export const SURAHS: Surah[] = [
       "jumu'ah",
       "al",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 110,
     },
     "translations": [
@@ -2191,9 +2273,11 @@ export const SURAHS: Surah[] = [
       "munafiqun",
       "al",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 104,
     },
     "translations": [
@@ -2228,9 +2312,11 @@ export const SURAHS: Surah[] = [
       "taghabun",
       "at",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 108,
     },
     "translations": [
@@ -2263,9 +2349,11 @@ export const SURAHS: Surah[] = [
       "talaq",
       "at",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 99,
     },
     "translations": [
@@ -2298,9 +2386,11 @@ export const SURAHS: Surah[] = [
       "tahrim",
       "at",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 107,
     },
     "translations": [
@@ -2333,9 +2423,10 @@ export const SURAHS: Surah[] = [
       "mulk",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 77,
     },
     "translations": [
@@ -2368,9 +2459,10 @@ export const SURAHS: Surah[] = [
       "qalam",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 2,
     },
     "translations": [
@@ -2403,9 +2495,10 @@ export const SURAHS: Surah[] = [
       "haqqah",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 78,
     },
     "translations": [
@@ -2440,9 +2533,10 @@ export const SURAHS: Surah[] = [
       "ma'arij",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 79,
     },
     "translations": [
@@ -2471,9 +2565,10 @@ export const SURAHS: Surah[] = [
       "نوح",
       "nuh",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 71,
     },
     "translations": [
@@ -2506,9 +2601,10 @@ export const SURAHS: Surah[] = [
       "jinn",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 40,
     },
     "translations": [
@@ -2543,9 +2639,10 @@ export const SURAHS: Surah[] = [
       "muzzammil",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 3,
     },
     "translations": [
@@ -2580,9 +2677,10 @@ export const SURAHS: Surah[] = [
       "muddaththir",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 4,
     },
     "translations": [
@@ -2615,9 +2713,10 @@ export const SURAHS: Surah[] = [
       "qiyamah",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 31,
     },
     "translations": [
@@ -2650,9 +2749,11 @@ export const SURAHS: Surah[] = [
       "insan",
       "al",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 98,
     },
     "translations": [
@@ -2685,9 +2786,10 @@ export const SURAHS: Surah[] = [
       "mursalat",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 33,
     },
     "translations": [
@@ -2720,9 +2822,10 @@ export const SURAHS: Surah[] = [
       "naba",
       "an",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 80,
     },
     "translations": [
@@ -2759,9 +2862,10 @@ export const SURAHS: Surah[] = [
       "nazi'at",
       "an",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 81,
     },
     "translations": [
@@ -2792,9 +2896,10 @@ export const SURAHS: Surah[] = [
       "عبس",
       "'abasa",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 24,
     },
     "translations": [
@@ -2827,9 +2932,10 @@ export const SURAHS: Surah[] = [
       "takwir",
       "at",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 7,
     },
     "translations": [
@@ -2862,9 +2968,10 @@ export const SURAHS: Surah[] = [
       "infitar",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 82,
     },
     "translations": [
@@ -2897,9 +3004,10 @@ export const SURAHS: Surah[] = [
       "mutaffifin",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 86,
     },
     "translations": [
@@ -2932,9 +3040,10 @@ export const SURAHS: Surah[] = [
       "inshiqaq",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 83,
     },
     "translations": [
@@ -2972,9 +3081,10 @@ export const SURAHS: Surah[] = [
       "buruj",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 27,
     },
     "translations": [
@@ -3007,9 +3117,10 @@ export const SURAHS: Surah[] = [
       "tariq",
       "at",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 36,
     },
     "translations": [
@@ -3044,9 +3155,10 @@ export const SURAHS: Surah[] = [
       "a'la",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 8,
     },
     "translations": [
@@ -3079,9 +3191,10 @@ export const SURAHS: Surah[] = [
       "ghashiyah",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 68,
     },
     "translations": [
@@ -3114,9 +3227,10 @@ export const SURAHS: Surah[] = [
       "fajr",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 10,
     },
     "translations": [
@@ -3149,9 +3263,10 @@ export const SURAHS: Surah[] = [
       "balad",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 35,
     },
     "translations": [
@@ -3184,9 +3299,10 @@ export const SURAHS: Surah[] = [
       "shams",
       "ash",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 26,
     },
     "translations": [
@@ -3219,9 +3335,10 @@ export const SURAHS: Surah[] = [
       "layl",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 9,
     },
     "translations": [
@@ -3256,9 +3373,10 @@ export const SURAHS: Surah[] = [
       "duhaa",
       "ad",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 11,
     },
     "translations": [
@@ -3291,9 +3409,10 @@ export const SURAHS: Surah[] = [
       "sharh",
       "ash",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 12,
     },
     "translations": [
@@ -3326,9 +3445,10 @@ export const SURAHS: Surah[] = [
       "tin",
       "at",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 28,
     },
     "translations": [
@@ -3361,9 +3481,10 @@ export const SURAHS: Surah[] = [
       "'alaq",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 1,
     },
     "translations": [
@@ -3396,9 +3517,10 @@ export const SURAHS: Surah[] = [
       "qadr",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 25,
     },
     "translations": [
@@ -3433,9 +3555,11 @@ export const SURAHS: Surah[] = [
       "bayyinah",
       "al",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 100,
     },
     "translations": [
@@ -3468,9 +3592,11 @@ export const SURAHS: Surah[] = [
       "zalzalah",
       "az",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 93,
     },
     "translations": [
@@ -3503,9 +3629,10 @@ export const SURAHS: Surah[] = [
       "'adiyat",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 14,
     },
     "translations": [
@@ -3538,9 +3665,10 @@ export const SURAHS: Surah[] = [
       "qari'ah",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 30,
     },
     "translations": [
@@ -3579,9 +3707,10 @@ export const SURAHS: Surah[] = [
       "takathur",
       "at",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 16,
     },
     "translations": [
@@ -3616,9 +3745,10 @@ export const SURAHS: Surah[] = [
       "'asr",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 13,
     },
     "translations": [
@@ -3651,9 +3781,10 @@ export const SURAHS: Surah[] = [
       "humazah",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 32,
     },
     "translations": [
@@ -3686,9 +3817,10 @@ export const SURAHS: Surah[] = [
       "fil",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 19,
     },
     "translations": [
@@ -3717,9 +3849,10 @@ export const SURAHS: Surah[] = [
       "قريش",
       "quraysh",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 29,
     },
     "translations": [
@@ -3754,9 +3887,10 @@ export const SURAHS: Surah[] = [
       "ma'un",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 17,
     },
     "translations": [
@@ -3789,9 +3923,10 @@ export const SURAHS: Surah[] = [
       "kawthar",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 15,
     },
     "translations": [
@@ -3824,9 +3959,10 @@ export const SURAHS: Surah[] = [
       "kafirun",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 18,
     },
     "translations": [
@@ -3861,9 +3997,11 @@ export const SURAHS: Surah[] = [
       "nasr",
       "an",
       "madinah",
+      "medinan",
+      "medinah",
     ],
     "revelation": {
-      "place": "Madinah",
+      "place": "medinan",
       "order": 114,
     },
     "translations": [
@@ -3898,9 +4036,10 @@ export const SURAHS: Surah[] = [
       "masad",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 6,
     },
     "translations": [
@@ -3933,9 +4072,10 @@ export const SURAHS: Surah[] = [
       "ikhlas",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 22,
     },
     "translations": [
@@ -3968,9 +4108,10 @@ export const SURAHS: Surah[] = [
       "falaq",
       "al",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 20,
     },
     "translations": [
@@ -4003,9 +4144,10 @@ export const SURAHS: Surah[] = [
       "nas",
       "an",
       "makkah",
+      "meccan",
     ],
     "revelation": {
-      "place": "Makkah",
+      "place": "meccan",
       "order": 21,
     },
     "translations": [

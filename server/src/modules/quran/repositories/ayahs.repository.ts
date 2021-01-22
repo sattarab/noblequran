@@ -47,6 +47,12 @@ export class AyahsRepository {
       .then( ( ayah_docs ) => ayah_docs.map( this.fromDocument ) )
   }
 
+  findByJuz( juz: string ) {
+    return this.collection.find( { juz: parseInt( juz ) } ).sort( [ [ "number", 1 ] ] ).toArray()
+      .catch( ( err ) => { throw new MongoDbException( err ) } )
+      .then( ( ayah_docs ) => ayah_docs.map( this.fromDocument ) )
+  }
+
   findBySurahId( surah_id: string ) {
     return this.collection.find( { surah_id: parseInt( surah_id ) } ).sort( [ [ "number", 1 ] ] ).toArray()
       .catch( ( err ) => { throw new MongoDbException( err ) } )
@@ -62,6 +68,15 @@ export class AyahsRepository {
     }
 
     return this.fromDocument( ayah_doc )
+  }
+
+  findPaginatedByJuz( juz: string, options: PaginationOptions ): Promise<PaginationResults<Ayah>> {
+    const query: FilterQuery<AyahDoc> = {
+      juz: parseInt( juz ),
+    }
+    options.sort = [ [ "number", 1 ] ]
+    return getPaginationResults( this.collection, query, options, this.fromDocument )
+      .catch( ( err ) => { throw new MongoDbException( err ) } )
   }
 
   findPaginatedBySurahId( surah_id: string, options: PaginationOptions ): Promise<PaginationResults<Ayah>> {
