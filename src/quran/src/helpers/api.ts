@@ -1,9 +1,13 @@
 import axios from "axios"
 
-export interface HttpRequestOption<T> {
+interface HttpRequestData {
+  [ key: string ]: number | string | HttpRequestData
+}
+
+export interface HttpRequestOption {
   method: HttpMethod
   url: string
-  data?: T
+  data?: HttpRequestData
 }
 
 export enum HttpMethod {
@@ -19,7 +23,7 @@ const DEFAULT_ERROR_MESSAGE = "Unknown error"
 const axiosInstance = axios.create()
 axiosInstance.defaults.headers.common[ "Accept" ] = "application/json"
 
-export async function sendHttpRequest<T, U>( options: HttpRequestOption<T> ) {
+export async function sendHttpRequest<T>( options: HttpRequestOption ) {
   const axiosOptions = {
     ...options,
   }
@@ -37,5 +41,5 @@ export async function sendHttpRequest<T, U>( options: HttpRequestOption<T> ) {
       },
     )
 
-  return response.data as U
+  return response.data as T
 }

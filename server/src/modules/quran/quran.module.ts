@@ -11,6 +11,7 @@ import { JuzsRepository } from "./repositories/juzs.repository"
 import { JuzsService } from "./services/juzs.service"
 import { SurahsRepository } from "./repositories/surahs.repository"
 import { SurahsService } from "./services/surahs.service"
+import { TranslationsRepository } from "./repositories/translations.repository"
 
 @Module( {
   controllers: [
@@ -34,6 +35,7 @@ import { SurahsService } from "./services/surahs.service"
     JuzsService,
     SurahsRepository,
     SurahsService,
+    TranslationsRepository,
   ],
 } )
 export class QuranModule {

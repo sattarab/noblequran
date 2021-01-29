@@ -1,6 +1,12 @@
-export const BACKGROUND_COLOR = "#ffffff"
-export const BORDER_COLOR = "#e1e1e1"
-export const DEFAULT_TEXT_COLOR = "#4b4b4b"
-export const DISABLED_TEXT_COLOR = "#b3b3b3"
-export const PRIMARY_TEAL_COLOR = "#20b2aa"
-export const SECONDARY_TEAL_COLOR = "#188781"
+// Colors
+export const BLUE_COLOR = "#1a73e8"
+export const BLUE_COLOR_WITH_OPACITY = "rgba( 26, 115, 232, 0.10 )"
+export const BORDER_COLOR = "#dadce0"
+export const DARK_BLUE_COLOR = "#174ea6"
+export const DARK_TEXT_COLOR = "#3c4043"
+export const DARKER_TEXT_COLOR = "#333333"
+export const DEFAULT_TEXT_COLOR = "#5f6368"
+export const WHITE_SMOKE_COLOR = "#f5f5f5"
+
+// Font Family
+export const FONT_FAMILY = "HarmoniaSansPro"

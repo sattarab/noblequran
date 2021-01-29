@@ -50,7 +50,7 @@ export function getPaginationOptions( query: { page?: string, per_page?: string 
 
   return {
     page: parseInt( page, 10 ) || 1,
-    per_page: parseInt( per_page, 10 ) || 12,
+    per_page: parseInt( per_page, 10 ) ?? 12,
   } as PaginationOptions
 }
 
