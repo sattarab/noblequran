@@ -53,4 +53,3 @@ export class JuzsService {
     return this.juzsRepository.find()
   }
 }
-
