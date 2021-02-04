@@ -11,6 +11,8 @@ export const MEDIUM_SCREEN_MEDIA_QUERY = `( min-width: ${ MEDIUM_SCREEN_WIDTH }p
 export const LARGE_SCREEN_MEDIA_QUERY = `( min-width: ${ LARGE_SCREEN_WIDTH }px )`
 export const EXTRA_LARGE_SCREEN_MEDIA_QUERY = `( min-width: ${ EXTRA_LARGE_SCREEN_WIDTH }px )`
 
+export const MOBILE_SCREEN_MEDIA_QUERY = `( max-width: ${ MEDIUM_SCREEN_WIDTH }px )`
+
 const createMediaQueryMatcher = ( mediaQuery: string ) => {
   return () => {
     return window.matchMedia( mediaQuery ).matches

@@ -3,6 +3,7 @@ import { omit } from "lodash"
 import { Collection, Db, FilterQuery } from "mongodb"
 
 import { MongoDbException } from "../../common/helpers/error.helper"
+import { parseIntId } from "../../common/helpers/utils.helper"
 import { InjectDb } from "../../mongo/mongo.decorators"
 import { Translation } from "../types/translation.type"
 
@@ -37,7 +38,7 @@ export class TranslationsRepository {
 
   findByAyahIds( ayah_ids: string[] ): Promise<Translation[]> {
     const translations_query: FilterQuery<TranslationDoc> = {
-      _id: { $in: ayah_ids.map( parseInt ) },
+      _id: { $in: ayah_ids.map( parseIntId ) },
     }
 
     return this.collection.find( translations_query ).sort( [ [ "number", 1 ] ] ).toArray()

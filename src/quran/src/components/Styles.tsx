@@ -7,6 +7,8 @@ export const DARK_TEXT_COLOR = "#3c4043"
 export const DARKER_TEXT_COLOR = "#333333"
 export const DEFAULT_TEXT_COLOR = "#5f6368"
 export const WHITE_SMOKE_COLOR = "#f5f5f5"
+export const WHITE_SMOKE_COLOR_WITH_OPACITY = "rgba( 245, 245, 245, 0.7 )"
 
 // Font Family
-export const FONT_FAMILY = "HarmoniaSansPro"
+export const BASE_FONT_FAMILY = "HarmoniaSansPro"
+export const QURAN_KARIM_FONT_FAMILY = "QuranKarim"

@@ -1,6 +1,5 @@
 export { ReactComponent as AddTaskIcon } from "../icons/add-task.svg"
 export { ReactComponent as ArrowDownIcon } from "../icons/arrow-down.svg"
-export { ReactComponent as ArrowRightIcon } from "../icons/arrow-right.svg"
 export { ReactComponent as ArrowUpIcon } from "../icons/arrow-up.svg"
 export { ReactComponent as BookmarkIcon } from "../icons/bookmark.svg"
 export { ReactComponent as ClearIcon } from "../icons/clear.svg"

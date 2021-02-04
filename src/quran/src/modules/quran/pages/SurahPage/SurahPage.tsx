@@ -1,270 +1,296 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Helmet } from "react-helmet"
 import { matchPath, useHistory, useLocation } from "react-router-dom"
 import { useEffectOnce } from "react-use"
 import styled from "styled-components"
 
-import { ClearIcon, SearchIcon } from "../../../../components/Icon"
-import { BLUE_COLOR, BLUE_COLOR_WITH_OPACITY, BORDER_COLOR, DARK_BLUE_COLOR, DEFAULT_TEXT_COLOR, WHITE_SMOKE_COLOR } from "../../../../components/Styles"
-import { escapeRegex } from "../../../../helpers/utility"
-import { getSurahAyahs, getSurahs } from "../../services/surah"
-import { Ayah } from "../../../../types/ayah"
+import { ArrowDownIcon } from "../../../../components/Icon"
+import { BLUE_COLOR, BLUE_COLOR_WITH_OPACITY, BORDER_COLOR, DEFAULT_TEXT_COLOR, WHITE_SMOKE_COLOR } from "../../../../components/Styles"
+import { LARGE_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
 import { Surah } from "../../../../types/surah"
+import { QLoader } from "../../components/Loader"
+import { useQuranState } from "../../components/QuranContext"
+import { AL_QURAN } from "../../constants/common"
+import { getSurahAyahs } from "../../services/surah"
 
-
-const SurahContainer = styled.div`
-  border-top: 1px solid ${ BORDER_COLOR };
-  color: ${ DEFAULT_TEXT_COLOR };
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  padding: 30px 15px;
-
-  &:hover {
-    background: ${ WHITE_SMOKE_COLOR };
-    transform: translateY( -1px );
-
-    &.active {
-      background: ${ BLUE_COLOR_WITH_OPACITY };
-
-      div {
-        color: ${ DARK_BLUE_COLOR };
-      }
-    }
-  }
-`
-
-const SurahDetailsContainer = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-`
-
-const SearchInput = styled.input`
-  border: none;
-  caret-color: ${ BLUE_COLOR };
-  color: ${ DEFAULT_TEXT_COLOR };
+const SurahPageErrorBody = styled.div`
   font-size: 16px;
-  font-weight: 500;
-  width: calc( 100% - 70px );
-
-  &::-moz-placeholder,
-  &:-moz-placeholder
-  &::placeholder,
-  &::-webkit-input-placeholder {
-    color: ${ DEFAULT_TEXT_COLOR };
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 1.45;
-    opacity: 1;
-  }
+  margin-top: 20px;
+  text-align: center;
 `
 
-const SurahNumberTextContainer = styled.div`
-  font-size: 13px;
-  font-weight: 400;
-  padding-bottom: 5px;
-  padding-left: 15px;
+const SurahPageErrorContainer = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: calc( 100vh - 63px );
+  justify-content: center;
+  padding: 0 30px;
+`
+
+const SurahPageErrorTitle = styled.div`
+  font-size: 40px;
+  text-align: center;
+`
+
+const SurahPageLoadingContainer = styled.div`
+  align-items: center;
+  display: flex;
+  height: calc( 100vh - 63px );
+  justify-content: center;
 `
 
 const SurahPageContainer = styled.div`
-  display: flex;
-`
+  margin: 0 auto;
+  padding: 0 30px 40px 30px;
 
-const SurahPageAyahsContainer = styled.div`
-`
-
-const SurahPageAyahContainer = styled.div`
-`
-
-const SurahPageArabicContainer = styled.div`
-`
-
-const SurahPageArabicText = styled.div`
-  direction: rtl;
-  font-size: 30px;
-  overflow-wrap: break-word;
-  padding-right: 15px;
-  text-align: right;
-`
-
-const SurahPageMainContainer = styled.div`
-  flex: 1;
-`
-
-const SurahPageSideContainer = styled.div`
-  border-right: 1px solid ${ BORDER_COLOR };
-  height: calc( 100vh - 63px );
-  max-height: calc( 100vh - 63px );
-  overflow-y: auto;
-  width: 340px;
-`
-
-const SurahSearchBarContainer = styled.div`
-  align-items: center;
-  border: 1px solid ${ BORDER_COLOR };
-  border-radius: 48px;
-  display: flex;
-  height: 54px;
-  margin: 15px;
-  padding-left: 15px;
-`
-
-const SurahSearchClearIconContainer = styled.a`
-  height: 24px;
-  text-decoration: none;
-`
-
-const SurahTitleText = styled.div`
-  font-family: "QuranKarim";
-  font-size: 80px;
-  margin-top: -40px;
-
-  &.active {
-    color: ${ BLUE_COLOR };
+  @media ${ LARGE_SCREEN_MEDIA_QUERY } {
+    max-width: 1440px;
+    padding: 0 60px 48px 60px;
   }
 `
 
-const SurahTransliteratedText = styled.div`
+// Main Container
+const SurahPageMainContainer = styled.div`
+  box-sizing: border-box;
+  max-width: 100%;
+`
+
+const SurahPageMainContainerAyahArabicText = styled.div`
+  direction: rtl;
+  font-size: 34px;
+  margin-bottom: 30px;
+  overflow-wrap: break-word;
+  text-align: right;
+
+  @media ${ LARGE_SCREEN_MEDIA_QUERY } {
+    font-size: 40px;
+  }
+`
+
+const SurahPageMainContainerAyahTranslatedText = styled.div`
+`
+
+const SurahPageMainContainerAyahContainer = styled.div`
+  border-bottom: 1px solid ${ BORDER_COLOR };
+  padding: 15px 0;
+
+  &:first-of-type {
+    border-top: 1px solid ${ BORDER_COLOR };
+  }
+`
+
+const SurahPageMainContainerAyahsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const SurahPageMainContainerBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 40px;
+`
+
+const SurahPageMainContainerHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 15px 0;
+
+  @media ${ LARGE_SCREEN_MEDIA_QUERY } {
+    padding: 30px;
+  }
+
+  &.fixed {
+    background: #ffffff;
+    border: none;
+    border-bottom: 1px solid ${ BORDER_COLOR };
+    border-radius: 0;
+    left: 0;
+    margin: 0;
+    padding: 15px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+  }
+`
+
+const SurahPageMainContainerSettingsContainer = styled.div`
+  align-items: center;
+  display: flex;
+  margin-top: 10px;
+`
+
+const SurahPageMainContainerSettingsContainerButton = styled.button`
+  align-items: center;
+  background: transparent;
+  border: 1px solid ${ BORDER_COLOR };
+  border-radius: 20px;
+  display: flex;
+  color: ${ DEFAULT_TEXT_COLOR };
   font-size: 16px;
   font-weight: 500;
+  min-height: 32px;
+  padding: 0 15px;
 
-  &.active {
+  &:hover {
+    background: ${ WHITE_SMOKE_COLOR };
     color: ${ BLUE_COLOR };
+  }
+
+  &:focus {
+    background: ${ BLUE_COLOR_WITH_OPACITY };
+    border: 1px solid ${ BLUE_COLOR };
   }
 `
 
-const SurahTranslatedText = styled.div`
+const SurahPageMainContainerTitleContainer = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+  text-align: center;
+`
+
+const SurahPageMainContainerTitle = styled.div`
+  font-family: "QuranKarim";
+  font-size: 200px;
+  margin-top: -80px;
+  margin-bottom: -60px;
+
+  &.fixed {
+    font-size: 140px;
+    margin-top: -50px;
+    margin-bottom: -30px;
+  }
+`
+
+const SurahPageMainContainerTranslatedTitle = styled.div`
   font-size: 15px;
-  font-weight: 400;
   margin-top: 10px;
-
-  &.active {
-    color: ${ BLUE_COLOR };
-  }
 `
 
-
-// eslint-disable-next-line space-in-parens
-const StyledClearIcon = styled(ClearIcon)`
-  fill: ${ DEFAULT_TEXT_COLOR };
+const SurahPageMainContainerTransliteratedTitle = styled.div`
+  font-size: 16px;
+  font-weight: 500;
 `
 
-// eslint-disable-next-line space-in-parens
-const StyledSearchIcon = styled(SearchIcon)`
-  fill: ${ DEFAULT_TEXT_COLOR };
+const StyledArrowDownIcon = styled( ArrowDownIcon )`
+  fill: ${ BLUE_COLOR };
 `
 
 export const SurahPage: React.FunctionComponent = () => {
+  const MAX_SCROLL_OFFSET = 225
+
   const history = useHistory()
   const location = useLocation()
-  const [ searchText, setSearchText ] = useState<string>( "" )
-  const [ surah, setSurah ] = useState<{ ayahs: Ayah[] }>( { ayahs: [] } )
-  const [ surahs, setSurahs ] = useState<Surah[]>( getSurahs() )
-
-  let id: string
-  let regex = searchText ? new RegExp( escapeRegex( searchText ), "i" ) : null
+  const { surahs } = useQuranState()
 
   const match = matchPath( location.pathname, "/:id" )
+  const id = ( match?.params as { id: string } ).id
+  const selectedSurah = surahs[ id ]
 
-  if( match ) {
-    id = ( match.params as { id: string } ).id
+  if( ! selectedSurah ) {
+    history.replace( "/" )
+    return null
   }
 
-  const clearSearch = () => {
-    regex = null
-    setSearchText( "" )
-    filterSurahs()
-  }
+  const [ displayError, setDisplayError ] = useState<boolean>( false )
+  const [ isSurahTitleFixed, setIsSurahTitleFixed ] = useState<boolean>( false )
+  const [ isLoading, setIsLoading ] = useState<boolean>( true )
+  const [ surah, setSurah ] = useState<Surah>( selectedSurah )
 
-  const filterSurahs = () => {
-    if( ! regex ) {
-      setSurahs( getSurahs() )
-      return
+  const onPageScroll = () => {
+    if( window.pageYOffset > MAX_SCROLL_OFFSET ) {
+      setIsSurahTitleFixed( true )
+    } else {
+      setIsSurahTitleFixed( false )
     }
+  }
 
-    const filteredSurahs: Surah[] = []
+  useEffect( () => {
+    getSurahAyahs( id, { page: 1, per_page: 7, embeds: [ "translations" ] } )
+      .then( ( response ) => {
+        const updatedSurah = {
+          ...surah,
+          ayahs: [ ...( surah.ayahs ?? [] ) ],
+        }
 
-    for( const surah of getSurahs() ) {
-      if( regex ) {
-        for( const queryIndex of surah.query_indexes ) {
-          if( regex.test( queryIndex ) ) {
-            filteredSurahs.push( surah )
-            break
+        for( const ayah of response.items ) {
+          if( updatedSurah.ayahs.findIndex( ( surahAyah ) => surahAyah.id === ayah.id ) === -1 ) {
+            updatedSurah.ayahs.push( ayah )
           }
         }
-      }
-    }
 
-    setSurahs( filteredSurahs )
-  }
-
-  const onSearch = ( event: React.ChangeEvent<HTMLInputElement> ) => {
-    regex = event.target.value ? new RegExp( escapeRegex( event.target.value ), "i" ) : null
-    setSearchText( event.target.value )
-    filterSurahs()
-  }
-
-  const readSurah = ( selectedId: string ) => {
-    if( selectedId === id ) {
-      return
-    }
-
-    history.push( `/${ selectedId }` )
-  }
+        setSurah( updatedSurah )
+      } )
+      .catch( () => {
+        setDisplayError( true )
+      } )
+      .finally( () => {
+        setIsLoading( false )
+      } )
+  }, [ surah.id ] )
 
   useEffectOnce( () => {
-    getSurahAyahs( id )
-      .then( ( response ) => {
-        setSurah( { ayahs: [ ...surah.ayahs, ...response.items ] } )
-      } )
+    window.addEventListener( "scroll", onPageScroll )
+
+    return () => {
+      window.removeEventListener( "scroll", onPageScroll )
+    }
   } )
 
   return (
-    // <SurahPageContainer>
-    //   <SurahPageAyahsContainer>
-    //     {
-    //       surah.ayahs.map( ( ayah ) => (
-    //         <SurahPageAyahContainer key={ ayah.id }>
-    //           <SurahPageArabicContainer>
-    //             <SurahPageArabicText className={ `p${ ayah.page }` }>{ ayah.text.mushaf }</SurahPageArabicText>
-    //           </SurahPageArabicContainer>
-    //         </SurahPageAyahContainer>
-    //       ) )
-    //     }
-    //   </SurahPageAyahsContainer>
-    // </SurahPageContainer>
     <div>
-      <SurahPageContainer>
-        <SurahPageSideContainer>
-          <SurahSearchBarContainer>
-            <StyledSearchIcon />
-            <SearchInput autoComplete="false" onChange={ onSearch } placeholder="Search" type="text" value={ searchText } />
-            {
-              searchText && (
-                <SurahSearchClearIconContainer onClick={ clearSearch } >
-                  <StyledClearIcon />
-                </SurahSearchClearIconContainer>
-              )
-            }
-          </SurahSearchBarContainer>
-          <SurahNumberTextContainer>{ surahs.length } of 114 surahs</SurahNumberTextContainer>
-          {
-            surahs.map( ( surah ) => (
-              <SurahContainer key={ surah.id } className={ surah.id === id ? "active" : "" } onClick={ () => readSurah( surah.id ) }>
-                <SurahDetailsContainer>
-                  <SurahTransliteratedText className={ surah.id === id ? "active" : "" }>{ surah.number } &#8226; { surah.transliterations[ 0 ].text }</SurahTransliteratedText>
-                  <SurahTranslatedText className={ surah.id === id ? "active" : "" }>{ surah.translations[ 0 ].text } &#8226; { surah.number_of_ayahs } verses</SurahTranslatedText>
-                </SurahDetailsContainer>
-                <SurahTitleText className={ surah.id === id ? "active" : "" } dangerouslySetInnerHTML={ { __html: surah.unicode } }></SurahTitleText>
-              </SurahContainer>
-            ) )
-          }
-        </SurahPageSideContainer>
-        <SurahPageMainContainer>
-
-        </SurahPageMainContainer>
-      </SurahPageContainer>
+      <Helmet>
+        <title>{ surah.transliterations[ 0 ].text } - The Noble Quran - { AL_QURAN }</title>
+      </Helmet>
+      {
+          isLoading
+          ? (
+            <SurahPageLoadingContainer>
+              <QLoader />
+            </SurahPageLoadingContainer>
+          ) : (
+            displayError
+            ? (
+              <SurahPageErrorContainer>
+                <SurahPageErrorTitle>We have got something special in store for you.</SurahPageErrorTitle>
+                <SurahPageErrorBody>And we can&apos;t wait for you to see it.<br />Please check back soon.</SurahPageErrorBody>
+              </SurahPageErrorContainer>
+            ) : (
+              <SurahPageContainer>
+                <SurahPageMainContainer>
+                  <SurahPageMainContainerHeader className={ isSurahTitleFixed ? "fixed" : "" }>
+                    <SurahPageMainContainerTitleContainer>
+                      <SurahPageMainContainerTitle dangerouslySetInnerHTML={ { __html: surah.unicode } } className={ isSurahTitleFixed ? "fixed" : "" } />
+                      <SurahPageMainContainerTransliteratedTitle>{ surah.transliterations[ 0 ].text }</SurahPageMainContainerTransliteratedTitle>
+                      <SurahPageMainContainerTranslatedTitle>{ surah.translations[ 0 ].text } &#8226; { surah.number_of_ayahs } verses</SurahPageMainContainerTranslatedTitle>
+                    </SurahPageMainContainerTitleContainer>
+                    <SurahPageMainContainerSettingsContainer>
+                      <SurahPageMainContainerSettingsContainerButton>
+                        Translations
+                        <StyledArrowDownIcon />
+                      </SurahPageMainContainerSettingsContainerButton>
+                    </SurahPageMainContainerSettingsContainer>
+                  </SurahPageMainContainerHeader>
+                  <SurahPageMainContainerBody>
+                    <SurahPageMainContainerAyahsContainer>
+                      {
+                        surah.ayahs?.map( ( ayah ) => (
+                          <SurahPageMainContainerAyahContainer key={ ayah.number }>
+                            <SurahPageMainContainerAyahArabicText className={ `p${ ayah.page }` }>{ ayah.text.mushaf }</SurahPageMainContainerAyahArabicText>
+                            <SurahPageMainContainerAyahTranslatedText>{ ayah.translations?.[ 0 ]?.text }</SurahPageMainContainerAyahTranslatedText>
+                          </SurahPageMainContainerAyahContainer>
+                        ) )
+                      }
+                    </SurahPageMainContainerAyahsContainer>
+                  </SurahPageMainContainerBody>
+                </SurahPageMainContainer>
+              </SurahPageContainer>
+            )
+          )
+        }
     </div>
   )
 }

@@ -1,5 +1,3 @@
-@import "./MyFontsWebfontsKit.css";
-
 @font-face {
   font-family: "HarmoniaSansPro";
   font-style: normal;
@@ -23,13 +21,16 @@
 
 @font-face {
   font-family: "QuranKarim";
-  src: url( "./fonts/QuranKarim/QuranKarim.ttf" ) format( "truetype" );
+  src: url( "./fonts/QuranKarim/QuranKarim.woff2" ) format( "woff2" ),
+       url( "./fonts/QuranKarim/QuranKarim.woff" ) format( "woff" ),
+       url( "./fonts/QuranKarim/QuranKarim.ttf" ) format( "truetype" );
 }
 
 @for $i from 1 through 604 {
   @font-face {
     font-family: "Mushafp#{ $i }";
-    src: url( "./fonts/Mushaf/woff2/p#{ $i }.woff2" ) format( "woff2" ), url( "./fonts/Mushaf/woff/p#{ $i }.woff" ) format( "woff" );
+    src: url( "./fonts/Mushaf/v1/woff2/p#{ $i }.woff2" ) format( "woff2" ),
+         url( "./fonts/Mushaf/v1/woff/p#{ $i }.woff" ) format( "woff" );
   }
 
   .p#{ $i } {

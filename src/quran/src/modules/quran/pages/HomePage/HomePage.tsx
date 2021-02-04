@@ -1,16 +1,24 @@
 import React, { useState } from "react"
 import { Helmet } from "react-helmet"
 import { useHistory } from "react-router-dom"
-import { useEffectOnce, useMedia } from "react-use"
+import { useEffectOnce } from "react-use"
 import styled from "styled-components"
 
-import { escapeRegex } from "../../../../helpers/utility"
-import { isGreaterThanMediumScreen, LARGE_SCREEN_MEDIA_QUERY, MEDIUM_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
 import { BookmarkIcon, ClearIcon, GridIcon, ListIcon, RefreshIcon, SearchIcon } from "../../../../components/Icon"
-import { BLUE_COLOR, BLUE_COLOR_WITH_OPACITY, BORDER_COLOR, DARK_TEXT_COLOR, DEFAULT_TEXT_COLOR, WHITE_SMOKE_COLOR } from "../../../../components/Styles"
+import {
+  BLUE_COLOR,
+  BLUE_COLOR_WITH_OPACITY,
+  BORDER_COLOR,
+  DARK_TEXT_COLOR,
+  DEFAULT_TEXT_COLOR,
+  WHITE_SMOKE_COLOR,
+} from "../../../../components/Styles"
+import { LARGE_SCREEN_MEDIA_QUERY, MEDIUM_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
+import { escapeRegex } from "../../../../helpers/utility"
+import { Surah } from "../../../../types/surah"
+import { useQuranState } from "../../components/QuranContext"
 import { AL_QURAN } from "../../constants/common"
 import { getSurahs } from "../../services/surah"
-import { Surah } from "../../../../types/surah"
 
 const HomePageClearIconContainer = styled.a`
   height: 24px;
@@ -23,8 +31,8 @@ const HomePageContainer = styled.div`
   padding-top: 30px;
 
   @media ${ LARGE_SCREEN_MEDIA_QUERY } {
-    max-width: 90%;
-    padding: 21px 60px 0 60px;
+    max-width: 1440px;
+    padding: 21px 60px 48px 60px;
   }
 `
 
@@ -337,28 +345,22 @@ const StyledBookmarkIcon = styled(BookmarkIcon)`
   }
 `
 
-// eslint-disable-next-line space-in-parens
-const StyledClearIcon = styled(ClearIcon)`
+const StyledClearIcon = styled( ClearIcon )`
   fill: ${ DEFAULT_TEXT_COLOR };
 `
 
-// eslint-disable-next-line space-in-parens
-const StyledGridIcon = styled(GridIcon)`
+const StyledGridIcon = styled( GridIcon )`
   fill: ${ DEFAULT_TEXT_COLOR };
 `
 
-// eslint-disable-next-line space-in-parens
-const StyledListIcon = styled(ListIcon)`
+const StyledListIcon = styled( ListIcon )`
+  fill: ${ DEFAULT_TEXT_COLOR };
+`
+const StyledRefreshIcon = styled( RefreshIcon )`
   fill: ${ DEFAULT_TEXT_COLOR };
 `
 
-// eslint-disable-next-line space-in-parens
-const StyledRefreshIcon = styled(RefreshIcon)`
-  fill: ${ DEFAULT_TEXT_COLOR };
-`
-
-// eslint-disable-next-line space-in-parens
-const StyledSearchIcon = styled(SearchIcon)`
+const StyledSearchIcon = styled( SearchIcon )`
   fill: ${ DEFAULT_TEXT_COLOR };
 `
 
@@ -371,7 +373,7 @@ export const HomePage: React.FunctionComponent = () => {
   const MAX_SCROLL_OFFSET = 87
 
   const history = useHistory()
-  const isDesktopDevice = useMedia( LARGE_SCREEN_MEDIA_QUERY, isGreaterThanMediumScreen() )
+  const { isMobileDevice } = useQuranState()
   const [ isSearchContainerFixed, setIsSearchContainerFixed ] = useState<boolean>( false )
   const [ displayMyBookmarks, setMyDisplayBookmarks ] = useState<boolean>( false )
   const [ searchText, setSearchText ] = useState<string>( "" )
@@ -412,7 +414,7 @@ export const HomePage: React.FunctionComponent = () => {
     return type.charAt( 0 ).toUpperCase() + type.slice( 1 )
   }
 
-  const onScroll = () => {
+  const onPageScroll = () => {
     if( window.pageYOffset > MAX_SCROLL_OFFSET ) {
       setIsSearchContainerFixed( true )
     } else {
@@ -426,8 +428,9 @@ export const HomePage: React.FunctionComponent = () => {
     filterSurahs()
   }
 
-  const readSurah = ( id: string ) => {
-    history.push( `/${ id }` )
+  const readSurah = ( surah: Surah ) => {
+    history.push( `/${ surah.id }` )
+    window.scroll( 0, 0 )
   }
 
   const toggleDisplayMyBookmarks = () => {
@@ -436,10 +439,10 @@ export const HomePage: React.FunctionComponent = () => {
   }
 
   useEffectOnce( () => {
-    window.addEventListener( "scroll", onScroll )
+    window.addEventListener( "scroll", onPageScroll )
 
     return () => {
-      window.removeEventListener( "scroll", onScroll )
+      window.removeEventListener( "scroll", onPageScroll )
     }
   } )
 
@@ -462,11 +465,11 @@ export const HomePage: React.FunctionComponent = () => {
         </HomePageSearchInputContainer>
         <HomePageMyBookmarksContainer onClick={ toggleDisplayMyBookmarks }>
           {
-            isDesktopDevice
+            isMobileDevice
             ? (
-              <HomePageMyBookmarksButton className={ displayMyBookmarks ?  "active" :  "" }>My Bookmarks</HomePageMyBookmarksButton>
-            ) : (
               <StyledBookmarkIcon className={ displayMyBookmarks ?  "active" :  "" }/>
+            ) : (
+              <HomePageMyBookmarksButton className={ displayMyBookmarks ?  "active" :  "" }>My Bookmarks</HomePageMyBookmarksButton>
             )
           }
         </HomePageMyBookmarksContainer>
@@ -500,7 +503,7 @@ export const HomePage: React.FunctionComponent = () => {
                 <HomePageSurahsGridContainer>
                   {
                     surahs.map( ( surah ) => (
-                      <HomePageSurahGridContainer key={ surah.id } onClick={ () => readSurah( surah.id ) }>
+                      <HomePageSurahGridContainer key={ surah.id } onClick={ () => readSurah( surah ) }>
                         <HomePageSurahGridInnerContainer>
                           <HomePageSurahGridTitleContainer>
                             <HomePageSurahGridTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } />
@@ -527,7 +530,7 @@ export const HomePage: React.FunctionComponent = () => {
                 <HomePageSurahsListContainer>
                   {
                     surahs.map( ( surah ) => (
-                      <HomePageSurahListContainer key={ surah.id }>
+                      <HomePageSurahListContainer key={ surah.id } onClick={ () => readSurah( surah ) }>
                         <HomePageSurahListTitleContainer>
                           <HomePageSurahTranslatedText>{ surah.translations[ 0 ].text }</HomePageSurahTranslatedText>
                           <HomePageSurahListTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } />

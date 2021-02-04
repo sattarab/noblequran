@@ -13,12 +13,13 @@ module.exports = {
     }
   },
   plugins: [
+    "eslint-plugin-import",
     "eslint-plugin-react",
     "@typescript-eslint/eslint-plugin"
   ],
   extends: [
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
   ],
   root: true,
   env: {
@@ -43,11 +44,13 @@ module.exports = {
     "object-curly-spacing": ["error", "always"],
     "quotes": ["error", "double"],
     "semi": ["error", "never"],
-    // @todo currently causes more issues then solve problems
-    // "sort-imports": [ "error", {
-    //   "allowSeparatedGroups": true,
-    // } ],
-    "sort-keys": ["error"],
+    "import/order": ["error", {
+      "groups": ["external", "builtin", "internal", "parent", "sibling", "index", "object"],
+      "alphabetize": {
+        "order": "asc",
+        "caseInsensitive": true
+      }
+    } ],
     "space-in-parens": ["error", "always"],
   },
 };

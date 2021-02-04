@@ -1,12 +1,12 @@
 import { SwipeableDrawer } from "@material-ui/core"
 import React, { useState } from "react"
-import { Link, useLocation } from "react-router-dom"
-import { useMedia } from "react-use"
+import { Link, useHistory, useLocation } from "react-router-dom"
 import styled from "styled-components"
 
 import { AddTaskIcon, MenuIcon } from "../../../components/Icon"
 import { BLUE_COLOR, BLUE_COLOR_WITH_OPACITY, BORDER_COLOR, DARK_BLUE_COLOR, DEFAULT_TEXT_COLOR, WHITE_SMOKE_COLOR } from "../../../components/Styles"
-import { isGreaterThanMediumScreen, LARGE_SCREEN_MEDIA_QUERY } from "../../../helpers/responsive"
+import { LARGE_SCREEN_MEDIA_QUERY } from "../../../helpers/responsive"
+import { useQuranState } from "./QuranContext"
 
 const HeaderActionIconContainer = styled.div`
   align-items: center;
@@ -20,6 +20,7 @@ const HeaderContainer = styled.div`
   height: 63px;
   justify-content: space-between;
   padding: 0 30px;
+  z-index: 100;
 
   @media ${ LARGE_SCREEN_MEDIA_QUERY } {
     padding: 0 60px;
@@ -146,10 +147,11 @@ const StyledMenuIcon = styled(MenuIcon)`
   margin-right: 15px;
 `
 
-export const Header: React.FunctionComponent = () => {
+export const QHeader: React.FunctionComponent = () => {
+  const history = useHistory()
   const location = useLocation()
   const [ isMenuOpen, setIsMenuOpen ] = useState<boolean>( false )
-  const isDesktopDevice = useMedia( LARGE_SCREEN_MEDIA_QUERY, isGreaterThanMediumScreen() )
+  const { isMobileDevice } = useQuranState()
 
   const toggleMenu = ( open: boolean ) => {
     setIsMenuOpen( open )
@@ -160,14 +162,14 @@ export const Header: React.FunctionComponent = () => {
       <HeaderContainer>
         <HeaderTitleContainer>
           {
-            ! isDesktopDevice && (
+            isMobileDevice && (
               <div onClick={ () => toggleMenu( ! isMenuOpen ) }><StyledMenuIcon/></div>
             )
           }
-          <HeaderTitle>Quran</HeaderTitle>
+          <HeaderTitle onClick={ () => history.push( "/" ) }>Quran</HeaderTitle>
         </HeaderTitleContainer>
         {
-          isDesktopDevice && (
+          ! isMobileDevice && (
             <HeaderNavigationContainer>
               <StyledLink to="/">
                 <HeaderNavigationTab className={ location.pathname === "/" ? "nav-tab--selected" : "" }>Browse Surahs</HeaderNavigationTab>
@@ -189,7 +191,7 @@ export const Header: React.FunctionComponent = () => {
           </MenuTitleContainer>
           <MenuNavigationTabContainer>
             <StyledLink to="/" onClick={ () => toggleMenu( false ) }>
-              <MenuTabContainer className={ location.pathname === "/" ? "nav-tab--selected" : "" }>Browse Fonts</MenuTabContainer>
+              <MenuTabContainer className={ location.pathname === "/" ? "nav-tab--selected" : "" }>Browse Surahs</MenuTabContainer>
             </StyledLink>
             <StyledLink to="/about" onClick={ () => toggleMenu( false ) }>
               <MenuTabContainer className={ location.pathname === "/about" ? "nav-tab--selected" : "" }>About</MenuTabContainer>

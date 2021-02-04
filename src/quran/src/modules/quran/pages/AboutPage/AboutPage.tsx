@@ -18,7 +18,7 @@ export const AboutPage: React.FunctionComponent = () => {
   return (
     <AboutPageContainer>
       <Helmet>
-        <title>About | The Noble Quran | { AL_QURAN }</title>
+        <title>About - The Noble Quran | { AL_QURAN }</title>
       </Helmet>
     </AboutPageContainer>
   )

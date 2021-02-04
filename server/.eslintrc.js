@@ -5,7 +5,10 @@ module.exports = {
     sourceType: "module",
     tsconfigRootDir: __dirname,
   },
-  plugins: ["@typescript-eslint/eslint-plugin"],
+  plugins: [
+    "eslint-plugin-import",
+    "@typescript-eslint/eslint-plugin",
+  ],
   extends: ["plugin:@typescript-eslint/recommended"],
   root: true,
   env: {
@@ -22,10 +25,13 @@ module.exports = {
     "object-curly-spacing": ["error", "always"],
     "quotes": ["error", "double"],
     "semi": ["error", "never"],
-    // @todo currently causes more issues then solve problems
-    // "sort-imports": [ "error", {
-    //   "allowSeparatedGroups": true,
-    // } ],
+    "import/order": [ "error", {
+      "groups": [ "external", "builtin", "internal", "parent", "sibling", "index", "object" ],
+      "alphabetize": {
+        "order": "asc",
+        "caseInsensitive": true
+      }
+    } ],
     "sort-keys": ["error"],
     "space-in-parens": ["error", "always"],
   },

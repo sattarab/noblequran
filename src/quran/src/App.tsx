@@ -3,7 +3,7 @@ import React from "react"
 import { BrowserRouter as Router } from "react-router-dom"
 
 import "./App.scss"
-import { DEFAULT_TEXT_COLOR, FONT_FAMILY } from "./components/Styles"
+import { BASE_FONT_FAMILY, DEFAULT_TEXT_COLOR } from "./components/Styles"
 import { QuranRoot } from "./modules/quran/QuranRoot"
 
 const theme = createMuiTheme( {
@@ -13,7 +13,7 @@ const theme = createMuiTheme( {
     },
   },
   typography: {
-    fontFamily: FONT_FAMILY,
+    fontFamily: BASE_FONT_FAMILY,
     fontWeightBold: 700,
     fontWeightLight: 300,
     fontWeightMedium: 500,

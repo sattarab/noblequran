@@ -4,6 +4,7 @@ import { Collection, Db, FilterQuery } from "mongodb"
 
 import { MongoDbException } from "../../common/helpers/error.helper"
 import { getPaginationResults, PaginationOptions, PaginationResults } from "../../common/helpers/pagination.helper"
+import { parseIntId } from "../../common/helpers/utils.helper"
 import { InjectDb } from "../../mongo/mongo.decorators"
 import { Ayah } from "../types/ayah.type"
 
@@ -48,19 +49,19 @@ export class AyahsRepository {
   }
 
   findByJuz( juz: string ) {
-    return this.collection.find( { juz: parseInt( juz ) } ).sort( [ [ "number", 1 ] ] ).toArray()
+    return this.collection.find( { juz: parseIntId( juz ) } ).sort( [ [ "number", 1 ] ] ).toArray()
       .catch( ( err ) => { throw new MongoDbException( err ) } )
       .then( ( ayah_docs ) => ayah_docs.map( this.fromDocument ) )
   }
 
   findBySurahId( surah_id: string ) {
-    return this.collection.find( { surah_id: parseInt( surah_id ) } ).sort( [ [ "number", 1 ] ] ).toArray()
+    return this.collection.find( { surah_id: parseIntId( surah_id ) } ).sort( [ [ "number", 1 ] ] ).toArray()
       .catch( ( err ) => { throw new MongoDbException( err ) } )
       .then( ( ayah_docs ) => ayah_docs.map( this.fromDocument ) )
   }
 
   async findOneById( id: string ) {
-    const ayah_doc = await this.collection.findOne( { _id: parseInt( id ) } )
+    const ayah_doc = await this.collection.findOne( { _id: parseIntId( id ) } )
       .catch( ( err ) => { throw new MongoDbException( err ) } )
 
     if( ! ayah_doc ) {
@@ -72,7 +73,7 @@ export class AyahsRepository {
 
   findPaginatedByJuz( juz: string, options: PaginationOptions ): Promise<PaginationResults<Ayah>> {
     const query: FilterQuery<AyahDoc> = {
-      juz: parseInt( juz ),
+      juz: parseIntId( juz ),
     }
     options.sort = [ [ "number", 1 ] ]
     return getPaginationResults( this.collection, query, options, this.fromDocument )
@@ -81,7 +82,7 @@ export class AyahsRepository {
 
   findPaginatedBySurahId( surah_id: string, options: PaginationOptions ): Promise<PaginationResults<Ayah>> {
     const query: FilterQuery<AyahDoc> = {
-      surah_id: parseInt( surah_id ),
+      surah_id: parseIntId( surah_id ),
     }
     options.sort = [ [ "number", 1 ] ]
     return getPaginationResults( this.collection, query, options, this.fromDocument )

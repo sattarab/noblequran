@@ -3,6 +3,7 @@ import { omit } from "lodash"
 import { Collection, Db } from "mongodb"
 
 import { MongoDbException } from "../../common/helpers/error.helper"
+import { parseIntId } from "../../common/helpers/utils.helper"
 import { InjectDb } from "../../mongo/mongo.decorators"
 import { Juz } from "../types/juz.type"
 
@@ -45,7 +46,7 @@ export class JuzsRepository {
   }
 
   async findOneById( id: string ) {
-    const juz_doc = await this.collection.findOne( { _id: parseInt( id ) } )
+    const juz_doc = await this.collection.findOne( { _id: parseIntId( id ) } )
       .catch( ( err ) => { throw new MongoDbException( err ) } )
 
     if( ! juz_doc ) {

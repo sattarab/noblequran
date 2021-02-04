@@ -3,6 +3,7 @@ import { omit } from "lodash"
 import { Collection, Db } from "mongodb"
 
 import { MongoDbException } from "../../common/helpers/error.helper"
+import { parseIntId } from "../../common/helpers/utils.helper"
 import { InjectDb } from "../../mongo/mongo.decorators"
 import { Surah } from "../types/surah.type"
 
@@ -49,7 +50,7 @@ export class SurahsRepository {
   }
 
   async findOneById( id: string ) {
-    const surah_doc = await this.collection.findOne( { _id: parseInt( id ) } )
+    const surah_doc = await this.collection.findOne( { _id: parseIntId( id ) } )
       .catch( ( err ) => { throw new MongoDbException( err ) } )
 
     if( ! surah_doc ) {
