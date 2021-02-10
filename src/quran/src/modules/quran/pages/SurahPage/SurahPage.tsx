@@ -1,17 +1,61 @@
-import React, { useEffect, useState } from "react"
+import Checkbox from "@material-ui/core/Checkbox"
+import FormControlLabel from "@material-ui/core/FormControlLabel"
+import Menu from "@material-ui/core/Menu"
+import MenuItem from "@material-ui/core/MenuItem"
+import { PopoverOrigin } from "@material-ui/core/Popover"
+import { withStyles } from "@material-ui/core/styles"
+import { debounce, groupBy } from "lodash"
+import React, { useCallback, useEffect, useState } from "react"
 import { Helmet } from "react-helmet"
+import InfiniteScroll from "react-infinite-scroll-component"
 import { matchPath, useHistory, useLocation } from "react-router-dom"
 import { useEffectOnce } from "react-use"
 import styled from "styled-components"
 
-import { ArrowDownIcon } from "../../../../components/Icon"
-import { BLUE_COLOR, BLUE_COLOR_WITH_OPACITY, BORDER_COLOR, DEFAULT_TEXT_COLOR, WHITE_SMOKE_COLOR } from "../../../../components/Styles"
+import { ArrowDownIcon, ArrowUpIcon } from "../../../../components/Icon"
+import { BLUE_COLOR, BLUE_COLOR_WITH_OPACITY, BORDER_COLOR, DARK_TEXT_COLOR, DEFAULT_TEXT_COLOR, WHITE_SMOKE_COLOR } from "../../../../components/Styles"
 import { LARGE_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
+import { getLanguageLabel } from "../../../../helpers/utility"
+import { Ayah } from "../../../../types/ayah"
+import { Pagination } from "../../../../types/pagination"
 import { Surah } from "../../../../types/surah"
+import { Translator } from "../../../../types/translator"
 import { QLoader } from "../../components/Loader"
 import { useQuranState } from "../../components/QuranContext"
-import { AL_QURAN } from "../../constants/common"
-import { getSurahAyahs } from "../../services/surah"
+import { AL_QURAN, MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER } from "../../constants/common"
+import { getSurahAyahs, getTranslatorsGroupedByLanguage } from "../../services/surah"
+
+const MAX_SCROLL_OFFSET = 225
+
+const MenuHeader = styled.div`
+  font-size: 12px;
+  font-weight: 500;
+  padding: 15px 15px 0;
+`
+
+const StyledArrowDownIcon = styled( ArrowDownIcon )`
+  fill: ${ BLUE_COLOR };
+`
+
+const StyledArrowUpIcon = styled( ArrowUpIcon )`
+  fill: ${ BLUE_COLOR };
+`
+
+const StyledFormControlLabel = withStyles( {
+  label: {
+    "fontSize": "15px",
+  },
+} )( FormControlLabel )
+
+const StyledMenu = withStyles( {
+  paper: {
+    "borderRadius": "8px",
+    "marginTop": "8px",
+    "maxHeight": "400px",
+    "overflow": "scroll",
+  },
+} )( Menu )
+
 
 const SurahPageErrorBody = styled.div`
   font-size: 16px;
@@ -68,12 +112,9 @@ const SurahPageMainContainerAyahArabicText = styled.div`
   }
 `
 
-const SurahPageMainContainerAyahTranslatedText = styled.div`
-`
-
 const SurahPageMainContainerAyahContainer = styled.div`
   border-bottom: 1px solid ${ BORDER_COLOR };
-  padding: 15px 0;
+  padding: 30px 0;
 
   &:first-of-type {
     border-top: 1px solid ${ BORDER_COLOR };
@@ -85,10 +126,25 @@ const SurahPageMainContainerAyahsContainer = styled.div`
   flex-direction: column;
 `
 
+const SurahPageMainContainerAyahTranslationContainer = styled.div`
+  & + & {
+    margin-top: 15px;
+  }
+`
+
+const SurahPageMainContainerAyahTranslatedText = styled.div`
+`
+
+const SurahPageMainContainerAyahTranslatorName = styled.div`
+  color: ${ DARK_TEXT_COLOR };
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 5px;
+`
+
 const SurahPageMainContainerBody = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 40px;
 `
 
 const SurahPageMainContainerHeader = styled.div`
@@ -107,7 +163,6 @@ const SurahPageMainContainerHeader = styled.div`
     border-radius: 0;
     left: 0;
     margin: 0;
-    padding: 15px;
     position: fixed;
     top: 0;
     width: 100%;
@@ -119,6 +174,7 @@ const SurahPageMainContainerSettingsContainer = styled.div`
   align-items: center;
   display: flex;
   margin-top: 10px;
+  margin-bottom: 40px;
 `
 
 const SurahPageMainContainerSettingsContainerButton = styled.button`
@@ -141,6 +197,7 @@ const SurahPageMainContainerSettingsContainerButton = styled.button`
   &:focus {
     background: ${ BLUE_COLOR_WITH_OPACITY };
     border: 1px solid ${ BLUE_COLOR };
+    color: ${ BLUE_COLOR };
   }
 `
 
@@ -175,12 +232,8 @@ const SurahPageMainContainerTransliteratedTitle = styled.div`
   font-weight: 500;
 `
 
-const StyledArrowDownIcon = styled( ArrowDownIcon )`
-  fill: ${ BLUE_COLOR };
-`
-
 export const SurahPage: React.FunctionComponent = () => {
-  const MAX_SCROLL_OFFSET = 225
+  const DEFAULT_TRANSLATION = "en.sahih"
 
   const history = useHistory()
   const location = useLocation()
@@ -195,34 +248,96 @@ export const SurahPage: React.FunctionComponent = () => {
     return null
   }
 
+  const [ ayahs, setAyahs ] = useState<Ayah[]>( [] )
   const [ displayError, setDisplayError ] = useState<boolean>( false )
-  const [ isSurahTitleFixed, setIsSurahTitleFixed ] = useState<boolean>( false )
+  const [ groupedTranslators, setGroupedTranslators ] = useState<{ [ language: string ]: Translator[] }>( {} )
   const [ isLoading, setIsLoading ] = useState<boolean>( true )
-  const [ surah, setSurah ] = useState<Surah>( selectedSurah )
+  const [ isLoadingMore, setIsLoadingMore ] = useState<boolean>( false )
+  const [ isSurahTitleFixed, setIsSurahTitleFixed ] = useState<boolean>( false )
+  const [ pagination, setPagination ] = useState<Pagination | null>( null )
+  const [ selectedTranslations, setSelectedTranslations ] = useState<string[]>( [ DEFAULT_TRANSLATION ] )
+  const [ translatorsAnchorElement, seTTranslatorsAnchorElement ] = useState<Element | null>( null )
+
+  const menuPopoverOrigin: PopoverOrigin = {
+    "horizontal": "left",
+    "vertical": "bottom",
+  }
+  const translatorNames: { [ identifier: string ]: string } = {}
+
+  const getTranslatorName = ( identifier: string ) => {
+    const language = identifier.split( "." )[ 0 ]
+
+    if( translatorNames[ identifier ] ) {
+      return translatorNames[ identifier ]
+    }
+
+    const translators = groupedTranslators[ language ]
+    const selectedTranslator = translators?.find( ( translator ) => translator.id === identifier )
+    if( ! selectedTranslator ) {
+      return null
+    }
+
+    translatorNames[ identifier ] = selectedTranslator.translations[ 0 ].name
+    return translatorNames[ identifier ]
+  }
+
+  useEffect( () => {
+    if( pagination?.next_page ) {
+      getSurahAyahs( id, { page: pagination.next_page, per_page: 7, translations: selectedTranslations } )
+        .then( ( response ) => {
+          const { items, pagination } = response
+          const updatedAyahs: Ayah[] = [ ...ayahs ]
+
+          for( const ayah of items ) {
+            updatedAyahs.push( ayah )
+          }
+
+          setAyahs( [ ...ayahs, ...items ] )
+          setPagination( { ...pagination } )
+        } )
+        .catch( ( err ) => {
+          console.error( err )
+        } )
+        .finally( () => {
+          setIsLoadingMore( false )
+        } )
+    }
+  }, [ pagination ] )
+
+  const onClickTranslatorsHandler = ( event: React.MouseEvent<HTMLButtonElement> ) => {
+    seTTranslatorsAnchorElement( event.currentTarget )
+  }
+
+  const onCloseTranslatorsHandler = () => {
+    seTTranslatorsAnchorElement( null )
+  }
 
   const onPageScroll = () => {
-    if( window.pageYOffset > MAX_SCROLL_OFFSET ) {
+    if( window.pageYOffset > MAX_SCROLL_OFFSET && document.documentElement.scrollHeight > MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER ) {
       setIsSurahTitleFixed( true )
     } else {
       setIsSurahTitleFixed( false )
     }
   }
 
+  const onTranslationToggle = ( translator_id: string ) => {
+    const index = selectedTranslations.indexOf( translator_id )
+
+    if( index !== -1 ) {
+      const updatedSelectedTranslations = [ ...selectedTranslations ]
+      updatedSelectedTranslations.splice( index, 1 )
+      setSelectedTranslations( updatedSelectedTranslations )
+    } else {
+      setSelectedTranslations( [ ...selectedTranslations, translator_id ] )
+    }
+  }
+
   useEffect( () => {
-    getSurahAyahs( id, { page: 1, per_page: 7, embeds: [ "translations" ] } )
+    getSurahAyahs( id, { page: 1, per_page: pagination?.page_end || 7, translations: selectedTranslations } )
       .then( ( response ) => {
-        const updatedSurah = {
-          ...surah,
-          ayahs: [ ...( surah.ayahs ?? [] ) ],
-        }
-
-        for( const ayah of response.items ) {
-          if( updatedSurah.ayahs.findIndex( ( surahAyah ) => surahAyah.id === ayah.id ) === -1 ) {
-            updatedSurah.ayahs.push( ayah )
-          }
-        }
-
-        setSurah( updatedSurah )
+        const { items, pagination } = response
+        setAyahs( [ ...items ] )
+        setPagination( { ...pagination } )
       } )
       .catch( () => {
         setDisplayError( true )
@@ -230,7 +345,31 @@ export const SurahPage: React.FunctionComponent = () => {
       .finally( () => {
         setIsLoading( false )
       } )
-  }, [ surah.id ] )
+  }, [ selectedTranslations ] )
+
+  useEffectOnce( () => {
+    getTranslatorsGroupedByLanguage()
+      .then( ( translators ) => {
+        translators.sort( ( a, b ) => {
+          const aLanguageLabel = getLanguageLabel( a.language )
+          const bLanguageLabel = getLanguageLabel( b.language )
+
+          if( aLanguageLabel < bLanguageLabel ) {
+            return -1
+          }
+
+          if( aLanguageLabel > bLanguageLabel ) {
+            return 1
+          }
+
+          return 0
+        } )
+        setGroupedTranslators( groupBy( translators, "language" ) )
+      } )
+      .catch( () => {
+        setDisplayError( true )
+      } )
+  } )
 
   useEffectOnce( () => {
     window.addEventListener( "scroll", onPageScroll )
@@ -243,7 +382,7 @@ export const SurahPage: React.FunctionComponent = () => {
   return (
     <div>
       <Helmet>
-        <title>{ surah.transliterations[ 0 ].text } - The Noble Quran - { AL_QURAN }</title>
+        <title>{ selectedSurah.transliterations[ 0 ].text } - The Noble Quran - { AL_QURAN }</title>
       </Helmet>
       {
           isLoading
@@ -263,24 +402,69 @@ export const SurahPage: React.FunctionComponent = () => {
                 <SurahPageMainContainer>
                   <SurahPageMainContainerHeader className={ isSurahTitleFixed ? "fixed" : "" }>
                     <SurahPageMainContainerTitleContainer>
-                      <SurahPageMainContainerTitle dangerouslySetInnerHTML={ { __html: surah.unicode } } className={ isSurahTitleFixed ? "fixed" : "" } />
-                      <SurahPageMainContainerTransliteratedTitle>{ surah.transliterations[ 0 ].text }</SurahPageMainContainerTransliteratedTitle>
-                      <SurahPageMainContainerTranslatedTitle>{ surah.translations[ 0 ].text } &#8226; { surah.number_of_ayahs } verses</SurahPageMainContainerTranslatedTitle>
+                      <SurahPageMainContainerTitle dangerouslySetInnerHTML={ { __html: selectedSurah.unicode } } className={ isSurahTitleFixed ? "fixed" : "" } />
+                      <SurahPageMainContainerTransliteratedTitle>{ selectedSurah.transliterations[ 0 ].text }</SurahPageMainContainerTransliteratedTitle>
+                      <SurahPageMainContainerTranslatedTitle>{ selectedSurah.translations[ 0 ].text } &#8226; { selectedSurah.number_of_ayahs } verses</SurahPageMainContainerTranslatedTitle>
                     </SurahPageMainContainerTitleContainer>
-                    <SurahPageMainContainerSettingsContainer>
-                      <SurahPageMainContainerSettingsContainerButton>
-                        Translations
-                        <StyledArrowDownIcon />
-                      </SurahPageMainContainerSettingsContainerButton>
-                    </SurahPageMainContainerSettingsContainer>
                   </SurahPageMainContainerHeader>
                   <SurahPageMainContainerBody>
+                    <SurahPageMainContainerSettingsContainer>
+                      <SurahPageMainContainerSettingsContainerButton aria-controls="translators-menu" aria-haspopup="true" onClick={ onClickTranslatorsHandler }>
+                        Translations
+                        {
+                          translatorsAnchorElement
+                          ? (
+                            <StyledArrowUpIcon />
+                          ) : (
+                            <StyledArrowDownIcon />
+                          )
+                        }
+                      </SurahPageMainContainerSettingsContainerButton>
+                      <StyledMenu
+                        anchorEl={ translatorsAnchorElement }
+                        anchorOrigin={ menuPopoverOrigin }
+                        id="translators-menu"
+                        getContentAnchorEl={ null }
+                        onClose={ onCloseTranslatorsHandler }
+                        open={ Boolean( translatorsAnchorElement ) }
+                      >
+                        {
+                          Object.entries( groupedTranslators ).map( ( [ language, translators ] ) => (
+                            <div key={ language }>
+                              <MenuHeader>{ getLanguageLabel( language ) }</MenuHeader>
+                              {
+                                translators.map( ( translator ) => (
+                                  <MenuItem key={ translator.id }>
+                                    <StyledFormControlLabel
+                                      control={
+                                        <Checkbox
+                                          defaultChecked={ selectedTranslations.indexOf( translator.id ) !== -1 }
+                                          onChange={ () => onTranslationToggle( translator.id ) }
+                                        />
+                                      }
+                                      label={ translator.translations[ 0 ].name }
+                                    />
+                                  </MenuItem>
+                                ) )
+                              }
+                            </div>
+                          ) )
+                        }
+                      </StyledMenu>
+                    </SurahPageMainContainerSettingsContainer>
                     <SurahPageMainContainerAyahsContainer>
                       {
-                        surah.ayahs?.map( ( ayah ) => (
+                        ayahs?.map( ( ayah ) => (
                           <SurahPageMainContainerAyahContainer key={ ayah.number }>
                             <SurahPageMainContainerAyahArabicText className={ `p${ ayah.page }` }>{ ayah.text.mushaf }</SurahPageMainContainerAyahArabicText>
-                            <SurahPageMainContainerAyahTranslatedText>{ ayah.translations?.[ 0 ]?.text }</SurahPageMainContainerAyahTranslatedText>
+                            {
+                              ayah.translations && Object.keys( ayah.translations ).map( ( identifier ) => (
+                                <SurahPageMainContainerAyahTranslationContainer key={ identifier }>
+                                  <SurahPageMainContainerAyahTranslatorName>{ getTranslatorName( identifier ) }</SurahPageMainContainerAyahTranslatorName>
+                                  <SurahPageMainContainerAyahTranslatedText>{ ayah.translations?.[ identifier ] }</SurahPageMainContainerAyahTranslatedText>
+                                </SurahPageMainContainerAyahTranslationContainer>
+                              ) )
+                            }
                           </SurahPageMainContainerAyahContainer>
                         ) )
                       }

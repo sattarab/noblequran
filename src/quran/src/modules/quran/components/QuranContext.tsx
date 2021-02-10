@@ -10,7 +10,7 @@ interface QuranContextType {
   surahs: { [ id: string ]: Surah },
 }
 
-export const QuranContext = createContext<QuranContextType>( null! )
+export const QuranContext = createContext<QuranContextType | null>( null )
 
 
 export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildren<Record<string, JSX.Element[]>>> = ( props ) => {

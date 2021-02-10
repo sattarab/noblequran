@@ -1,19 +1,19 @@
 import { Injectable, NotFoundException } from "@nestjs/common"
-import { pick } from "lodash"
+import { isEmpty, pick } from "lodash"
 
 import { PaginationOptions } from "../../common/helpers/pagination.helper"
 import { AyahsRepository } from "../repositories/ayahs.repository"
 import { SurahsRepository } from "../repositories/surahs.repository"
 import { TranslationsRepository } from "../repositories/translations.repository"
 import { Surah } from "../types/surah.type"
+import { Translation } from "../types/translation.type"
 
 export interface SurahGetOptions {
   embed_ayahs?: boolean
 }
 
 export interface SurahGetAyahOptions extends PaginationOptions {
-  embed_translation?: boolean
-  embed_transliterations?: boolean
+  translations?: string[]
 }
 
 @Injectable()
@@ -48,13 +48,28 @@ export class SurahService {
     const pagination_options: PaginationOptions = pick( options, "page", "per_page" )
     const ayahs_response = await this.ayahsRepository.findPaginatedBySurahId( id, pagination_options )
 
-    if( options.embed_translation ) {
-      const translations = await this.translationsRepository.findByAyahIds( ayahs_response.items.map( ( ayah ) => ayah.id ) )
+    if( options.translations ) {
+      const translation_promises: Array<Promise<Translation[]>> = []
+      for( const translation_name of options.translations ) {
+        translation_promises.push( this.translationsRepository.findByAyahIds( translation_name, ayahs_response.items.map( ( ayah ) => ayah.id ) ) )
+      }
 
-      for( const ayah of ayahs_response.items ) {
-        const ayah_translations = translations.find( ( translation ) => translation.id === ayah.id )
-        if( ayah_translations ) {
-          ayah.translations = [ ...ayah_translations.translations ]
+      const translations = await Promise.all( translation_promises )
+
+      if( ! isEmpty( translations ) ) {
+        for( const [ index, translation_identifier ] of options.translations.entries() ) {
+          const ayah_translations = translations[ index ]
+
+          if( isEmpty( ayah_translations ) ) {
+            continue
+          }
+
+          for( const [ ayah_index, ayah ] of ayahs_response.items.entries() ) {
+            if( ! ayah.translations ) {
+              ayah.translations = {}
+            }
+            ayah.translations[ translation_identifier ] = ayah_translations[ ayah_index ].text
+          }
         }
       }
     }

@@ -13,8 +13,5 @@ export interface Ayah {
     simple: string
     uthmani: string
   }
-  translations?: Array<{
-    translator_id: string
-    text: string
-  }>
+  translations?: { [ identifier: string ]: string }
 }

@@ -26,28 +26,11 @@ export class SurahController {
   }
 
   @Get( ":id/ayahs" )
-  async getAyahs(
-    @Param() params: {
-      id: string
-    },
-    @Query() query: {
-      page?: string
-      per_page?: string
-      embed?: string
-    }
-  ) {
+  async getAyahs( @Param() params: { id: string }, @Query() query: { page?: string, per_page?: string, translations?: string } ) {
     const options: SurahGetAyahOptions = getPaginationOptions( query )
 
-    if( query.embed ) {
-      const embeds = query.embed.split( "," )
-
-      if( embeds.includes( "translations" ) ) {
-        options.embed_translation = true
-      }
-
-      if( embeds.includes( "transliterations" ) ) {
-        options.embed_transliterations = true
-      }
+    if( query.translations ) {
+      options.translations = query.translations.split( "," )
     }
 
     return this.surahService.getAyahs( params.id, options )

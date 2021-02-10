@@ -17,7 +17,7 @@ import { LARGE_SCREEN_MEDIA_QUERY, MEDIUM_SCREEN_MEDIA_QUERY } from "../../../..
 import { escapeRegex } from "../../../../helpers/utility"
 import { Surah } from "../../../../types/surah"
 import { useQuranState } from "../../components/QuranContext"
-import { AL_QURAN } from "../../constants/common"
+import { AL_QURAN, MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER } from "../../constants/common"
 import { getSurahs } from "../../services/surah"
 
 const HomePageClearIconContainer = styled.a`
@@ -415,7 +415,7 @@ export const HomePage: React.FunctionComponent = () => {
   }
 
   const onPageScroll = () => {
-    if( window.pageYOffset > MAX_SCROLL_OFFSET ) {
+    if( window.pageYOffset > MAX_SCROLL_OFFSET && document.documentElement.scrollHeight > MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER ) {
       setIsSearchContainerFixed( true )
     } else {
       setIsSearchContainerFixed( false )
