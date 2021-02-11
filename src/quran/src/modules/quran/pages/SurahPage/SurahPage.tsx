@@ -2,8 +2,8 @@ import Checkbox from "@material-ui/core/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
 import Menu from "@material-ui/core/Menu"
 import MenuItem from "@material-ui/core/MenuItem"
-import { PopoverOrigin } from "@material-ui/core/Popover"
-import { withStyles } from "@material-ui/core/styles"
+import Popover, { PopoverOrigin } from "@material-ui/core/Popover"
+import { makeStyles, withStyles } from "@material-ui/core/styles"
 import { groupBy } from "lodash"
 import React, { useEffect, useState } from "react"
 import { Helmet } from "react-helmet"
@@ -153,6 +153,15 @@ const SurahPageMainContainerAyahTranslatorName = styled.div`
   margin-bottom: 5px;
 `
 
+const SurahPageMainContainerAyahWordContainer = styled.div`
+  display: inline;
+`
+
+const SurahPageMainContainerAyahWordTranslation = styled.span`
+  color: #ffffff;
+  font-size: 15px;
+`
+
 const SurahPageMainContainerHeaderBackIconContainer = styled.div`
   align-items: center;
   cursor: pointer;
@@ -257,7 +266,19 @@ const SurahPageMainContainerTransliteratedTitle = styled.div`
   font-weight: 500;
 `
 
+const useStyles = makeStyles( () => ( {
+  popover: {
+    pointerEvents: "none",
+  },
+  paper: {
+    background: `${ DEFAULT_TEXT_COLOR }`,
+    padding: "8px 15px",
+  },
+} ) )
+
+
 export const SurahPage: React.FunctionComponent = () => {
+  const classes = useStyles()
   const DEFAULT_TRANSLATION = "en.sahih"
 
   const history = useHistory()
@@ -280,6 +301,7 @@ export const SurahPage: React.FunctionComponent = () => {
   const [ isLoadingMore, setIsLoadingMore ] = useState<boolean>( false )
   const [ isSurahTitleFixed, setIsSurahTitleFixed ] = useState<boolean>( false )
   const [ pagination, setPagination ] = useState<Pagination | null>( null )
+  const [ popoverMap, setPopoverMap ] = useState<{ [ key: string ]: Element | null }>( {} )
   const [ selectedTranslations, setSelectedTranslations ] = useState<string[]>( [ DEFAULT_TRANSLATION ] )
   const [ translatorsAnchorElement, seTTranslatorsAnchorElement ] = useState<Element | null>( null )
 
@@ -396,6 +418,14 @@ export const SurahPage: React.FunctionComponent = () => {
     }
   }
 
+  const onPopoverClose = ( key: string ) => {
+    setPopoverMap( { [ key ]: null } )
+  }
+
+  const onPopoverOpen = ( key: string, event: React.MouseEvent<HTMLSpanElement> ) => {
+    setPopoverMap( { [ key ]: event.currentTarget } )
+  }
+
   const onTranslationToggle = ( translator_id: string ) => {
     const index = selectedTranslations.indexOf( translator_id )
 
@@ -497,7 +527,38 @@ export const SurahPage: React.FunctionComponent = () => {
                             <SurahPageMainContainerAyahArabicText className={ `p${ ayah.page }` }>
                               {
                                 ayah.words.map( ( word ) => (
-                                  <span key={ word.id }>{ word.text.mushaf }</span>
+                                  <SurahPageMainContainerAyahWordContainer key={ word.id }>
+                                    <span
+                                      aria-owns={ Boolean( popoverMap[ `${ ayah.id }_${ word.id }` ] ) ? `mouse-over-popover-${ ayah.id }_${ word.id }` : undefined }
+                                      aria-haspopup="true"
+                                      onClick={ ( event ) => onPopoverOpen( `${ ayah.id }_${ word.id }`, event ) }
+                                      onMouseEnter={ ( event ) => onPopoverOpen( `${ ayah.id }_${ word.id }`, event ) }
+                                      onMouseLeave={ () => onPopoverClose( `${ ayah.id }_${ word.id }` ) }
+                                    >
+                                      { word.text.mushaf }
+                                    </span>
+                                    <Popover
+                                      className={ classes.popover }
+                                      classes={ {
+                                        paper: classes.paper,
+                                      } }
+                                      id={ `mouse-over-popover-${ ayah.id }_${ word.id }` }
+                                      open={ Boolean( popoverMap[ `${ ayah.id }_${ word.id }` ] ) }
+                                      anchorEl={ popoverMap[ `${ ayah.id }_${ word.id }` ] }
+                                      anchorOrigin={ {
+                                        vertical: "bottom",
+                                        horizontal: "left",
+                                      } }
+                                      transformOrigin={ {
+                                        vertical: "top",
+                                        horizontal: "left",
+                                      } }
+                                      onClose={ () => onPopoverClose( `${ ayah.id }_${ word.id }` ) }
+                                      disableRestoreFocus
+                                    >
+                                      <SurahPageMainContainerAyahWordTranslation>{ word.translations[ 0 ].text }</SurahPageMainContainerAyahWordTranslation>
+                                    </Popover>
+                                  </SurahPageMainContainerAyahWordContainer>
                                 ) )
                               }
                             </SurahPageMainContainerAyahArabicText>
