@@ -6,7 +6,7 @@ import { MongoDbException } from "../../common/helpers/error.helper"
 import { getPaginationResults, PaginationOptions, PaginationResults } from "../../common/helpers/pagination.helper"
 import { parseIntId } from "../../common/helpers/utils.helper"
 import { InjectDb } from "../../mongo/mongo.decorators"
-import { Ayah } from "../types/ayah.type"
+import { Ayah, WordType } from "../types/ayah.type"
 
 interface AyahDoc {
   _id: number
@@ -24,6 +24,19 @@ interface AyahDoc {
     simple: string
     uthmani: string
   }
+  words: Array<{
+    _id: number
+    type: WordType
+    text: {
+      indopak: string
+      mushaf: string
+      uthmani: string
+    }
+    translations: Array<{
+      language: string
+      text: string
+    }>
+  }>
 }
 
 @Injectable()
@@ -39,6 +52,10 @@ export class AyahsRepository {
       ...omit( ayah_doc, "_id", "surah_id" ),
       id: `${ ayah_doc._id }`,
       surah_id: `${ ayah_doc.surah_id }`,
+      words: ayah_doc.words.map( ( word_doc ) => ( {
+        id: `${ word_doc._id }`,
+        ...omit( word_doc, "_id" ),
+      } ) ),
     } as Ayah
   }
 

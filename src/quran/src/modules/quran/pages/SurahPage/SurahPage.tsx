@@ -4,33 +4,35 @@ import Menu from "@material-ui/core/Menu"
 import MenuItem from "@material-ui/core/MenuItem"
 import { PopoverOrigin } from "@material-ui/core/Popover"
 import { withStyles } from "@material-ui/core/styles"
-import { debounce, groupBy } from "lodash"
-import React, { useCallback, useEffect, useState } from "react"
+import { groupBy } from "lodash"
+import React, { useEffect, useState } from "react"
 import { Helmet } from "react-helmet"
-import InfiniteScroll from "react-infinite-scroll-component"
 import { matchPath, useHistory, useLocation } from "react-router-dom"
 import { useEffectOnce } from "react-use"
 import styled from "styled-components"
 
-import { ArrowDownIcon, ArrowUpIcon } from "../../../../components/Icon"
+import { ArrowBackIcon, ArrowDownIcon, ArrowUpIcon } from "../../../../components/Icon"
 import { BLUE_COLOR, BLUE_COLOR_WITH_OPACITY, BORDER_COLOR, DARK_TEXT_COLOR, DEFAULT_TEXT_COLOR, WHITE_SMOKE_COLOR } from "../../../../components/Styles"
 import { LARGE_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
 import { getLanguageLabel } from "../../../../helpers/utility"
 import { Ayah } from "../../../../types/ayah"
 import { Pagination } from "../../../../types/pagination"
-import { Surah } from "../../../../types/surah"
 import { Translator } from "../../../../types/translator"
 import { QLoader } from "../../components/Loader"
 import { useQuranState } from "../../components/QuranContext"
 import { AL_QURAN, MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER } from "../../constants/common"
 import { getSurahAyahs, getTranslatorsGroupedByLanguage } from "../../services/surah"
 
-const MAX_SCROLL_OFFSET = 225
+const MAX_SCROLL_OFFSET = 205
 
 const MenuHeader = styled.div`
   font-size: 12px;
   font-weight: 500;
   padding: 15px 15px 0;
+`
+
+const StyledArrowBackIcon = styled( ArrowBackIcon )`
+  fill: ${ DARK_TEXT_COLOR };
 `
 
 const StyledArrowDownIcon = styled( ArrowDownIcon )`
@@ -108,7 +110,7 @@ const SurahPageMainContainerAyahArabicText = styled.div`
   text-align: right;
 
   @media ${ LARGE_SCREEN_MEDIA_QUERY } {
-    font-size: 40px;
+    font-size: 36px;
   }
 `
 
@@ -126,6 +128,15 @@ const SurahPageMainContainerAyahsContainer = styled.div`
   flex-direction: column;
 `
 
+const SurahPageMainContainerAyahNumberContainer = styled.div`
+  background: ${ WHITE_SMOKE_COLOR };
+  border-radius: 4px;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 5px;
+`
+
 const SurahPageMainContainerAyahTranslationContainer = styled.div`
   & + & {
     margin-top: 15px;
@@ -140,6 +151,20 @@ const SurahPageMainContainerAyahTranslatorName = styled.div`
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 5px;
+`
+
+const SurahPageMainContainerHeaderBackIconContainer = styled.div`
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  left: 15px;
+  position: fixed;
+  top: 40px;
+`
+
+const SurahPageMainContainerHeaderBackText = styled.div`
+  margin-left: 5px;
+  margin-top: 5px;
 `
 
 const SurahPageMainContainerBody = styled.div`
@@ -264,23 +289,6 @@ export const SurahPage: React.FunctionComponent = () => {
   }
   const translatorNames: { [ identifier: string ]: string } = {}
 
-  const getTranslatorName = ( identifier: string ) => {
-    const language = identifier.split( "." )[ 0 ]
-
-    if( translatorNames[ identifier ] ) {
-      return translatorNames[ identifier ]
-    }
-
-    const translators = groupedTranslators[ language ]
-    const selectedTranslator = translators?.find( ( translator ) => translator.id === identifier )
-    if( ! selectedTranslator ) {
-      return null
-    }
-
-    translatorNames[ identifier ] = selectedTranslator.translations[ 0 ].name
-    return translatorNames[ identifier ]
-  }
-
   useEffect( () => {
     if( pagination?.next_page ) {
       getSurahAyahs( id, { page: pagination.next_page, per_page: 7, translations: selectedTranslations } )
@@ -302,35 +310,7 @@ export const SurahPage: React.FunctionComponent = () => {
           setIsLoadingMore( false )
         } )
     }
-  }, [ pagination ] )
-
-  const onClickTranslatorsHandler = ( event: React.MouseEvent<HTMLButtonElement> ) => {
-    seTTranslatorsAnchorElement( event.currentTarget )
-  }
-
-  const onCloseTranslatorsHandler = () => {
-    seTTranslatorsAnchorElement( null )
-  }
-
-  const onPageScroll = () => {
-    if( window.pageYOffset > MAX_SCROLL_OFFSET && document.documentElement.scrollHeight > MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER ) {
-      setIsSurahTitleFixed( true )
-    } else {
-      setIsSurahTitleFixed( false )
-    }
-  }
-
-  const onTranslationToggle = ( translator_id: string ) => {
-    const index = selectedTranslations.indexOf( translator_id )
-
-    if( index !== -1 ) {
-      const updatedSelectedTranslations = [ ...selectedTranslations ]
-      updatedSelectedTranslations.splice( index, 1 )
-      setSelectedTranslations( updatedSelectedTranslations )
-    } else {
-      setSelectedTranslations( [ ...selectedTranslations, translator_id ] )
-    }
-  }
+  }, [ isLoadingMore ] )
 
   useEffect( () => {
     getSurahAyahs( id, { page: 1, per_page: pagination?.page_end || 7, translations: selectedTranslations } )
@@ -379,6 +359,55 @@ export const SurahPage: React.FunctionComponent = () => {
     }
   } )
 
+  const getTranslatorName = ( identifier: string ) => {
+    const language = identifier.split( "." )[ 0 ]
+
+    if( translatorNames[ identifier ] ) {
+      return translatorNames[ identifier ]
+    }
+
+    const translators = groupedTranslators[ language ]
+    const selectedTranslator = translators?.find( ( translator ) => translator.id === identifier )
+    if( ! selectedTranslator ) {
+      return null
+    }
+
+    translatorNames[ identifier ] = selectedTranslator.translations[ 0 ].name
+    return translatorNames[ identifier ]
+  }
+
+  const onClickTranslatorsHandler = ( event: React.MouseEvent<HTMLButtonElement> ) => {
+    seTTranslatorsAnchorElement( event.currentTarget )
+  }
+
+  const onCloseTranslatorsHandler = () => {
+    seTTranslatorsAnchorElement( null )
+  }
+
+  const onPageScroll = () => {
+    if( window.pageYOffset > document.documentElement.scrollHeight * 0.4 ) {
+      setIsLoadingMore( true )
+    }
+
+    if( window.pageYOffset > MAX_SCROLL_OFFSET && document.documentElement.scrollHeight > MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER ) {
+      setIsSurahTitleFixed( true )
+    } else {
+      setIsSurahTitleFixed( false )
+    }
+  }
+
+  const onTranslationToggle = ( translator_id: string ) => {
+    const index = selectedTranslations.indexOf( translator_id )
+
+    if( index !== -1 ) {
+      const updatedSelectedTranslations = [ ...selectedTranslations ]
+      updatedSelectedTranslations.splice( index, 1 )
+      setSelectedTranslations( updatedSelectedTranslations )
+    } else {
+      setSelectedTranslations( [ ...selectedTranslations, translator_id ] )
+    }
+  }
+
   return (
     <div>
       <Helmet>
@@ -402,6 +431,14 @@ export const SurahPage: React.FunctionComponent = () => {
                 <SurahPageMainContainer>
                   <SurahPageMainContainerHeader className={ isSurahTitleFixed ? "fixed" : "" }>
                     <SurahPageMainContainerTitleContainer>
+                      {
+                        isSurahTitleFixed && (
+                          <SurahPageMainContainerHeaderBackIconContainer onClick={ () => history.push( "/" ) }>
+                            <StyledArrowBackIcon />
+                            <SurahPageMainContainerHeaderBackText>Back</SurahPageMainContainerHeaderBackText>
+                          </SurahPageMainContainerHeaderBackIconContainer>
+                        )
+                      }
                       <SurahPageMainContainerTitle dangerouslySetInnerHTML={ { __html: selectedSurah.unicode } } className={ isSurahTitleFixed ? "fixed" : "" } />
                       <SurahPageMainContainerTransliteratedTitle>{ selectedSurah.transliterations[ 0 ].text }</SurahPageMainContainerTransliteratedTitle>
                       <SurahPageMainContainerTranslatedTitle>{ selectedSurah.translations[ 0 ].text } &#8226; { selectedSurah.number_of_ayahs } verses</SurahPageMainContainerTranslatedTitle>
@@ -456,7 +493,14 @@ export const SurahPage: React.FunctionComponent = () => {
                       {
                         ayahs?.map( ( ayah ) => (
                           <SurahPageMainContainerAyahContainer key={ ayah.number }>
-                            <SurahPageMainContainerAyahArabicText className={ `p${ ayah.page }` }>{ ayah.text.mushaf }</SurahPageMainContainerAyahArabicText>
+                            <SurahPageMainContainerAyahNumberContainer>{ ayah.surah_id }:{ ayah.number_in_surah }</SurahPageMainContainerAyahNumberContainer>
+                            <SurahPageMainContainerAyahArabicText className={ `p${ ayah.page }` }>
+                              {
+                                ayah.words.map( ( word ) => (
+                                  <span key={ word.id }>{ word.text.mushaf }</span>
+                                ) )
+                              }
+                            </SurahPageMainContainerAyahArabicText>
                             {
                               ayah.translations && Object.keys( ayah.translations ).map( ( identifier ) => (
                                 <SurahPageMainContainerAyahTranslationContainer key={ identifier }>

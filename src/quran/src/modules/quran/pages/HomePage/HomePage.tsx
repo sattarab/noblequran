@@ -380,6 +380,15 @@ export const HomePage: React.FunctionComponent = () => {
   const [ selectViewType, setSelectedViewType ] = useState<ViewType>( ViewType.GRID )
   const [ surahs, setSurahs ] = useState<Surah[]>( getSurahs() )
 
+  useEffectOnce( () => {
+    window.scrollTo( 0, 0 )
+    window.addEventListener( "scroll", onPageScroll )
+
+    return () => {
+      window.removeEventListener( "scroll", onPageScroll )
+    }
+  } )
+
   let regex = searchText ? new RegExp( escapeRegex( searchText ), "i" ) : null
 
   const clearSearch = () => {
@@ -437,14 +446,6 @@ export const HomePage: React.FunctionComponent = () => {
     setMyDisplayBookmarks( ! displayMyBookmarks )
     filterSurahs()
   }
-
-  useEffectOnce( () => {
-    window.addEventListener( "scroll", onPageScroll )
-
-    return () => {
-      window.removeEventListener( "scroll", onPageScroll )
-    }
-  } )
 
   return (
     <HomePageContainer>

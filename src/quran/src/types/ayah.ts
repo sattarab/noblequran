@@ -1,3 +1,9 @@
+export const enum WordType {
+  END = "end",
+  PAUSE = "pause",
+  WORD = "word",
+}
+
 export interface Ayah {
   hizb: number
   id: string
@@ -14,4 +20,17 @@ export interface Ayah {
     uthmani: string
   }
   translations?: { [ identifier: string ]: string }
+  words: Array<{
+    id: string
+    type: WordType
+    text: {
+      indopak: string
+      mushaf: string
+      uthmani: string
+    }
+    translations: Array<{
+      language: string
+      text: string
+    }>
+  }>
 }
