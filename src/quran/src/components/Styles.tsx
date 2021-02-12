@@ -1,5 +1,6 @@
 // Colors
 export const BLUE_COLOR = "#1a73e8"
+export const BLUE_COLOR_WITH_LESS_OPACITY = "rgba( 26, 115, 232, 0.25 )"
 export const BLUE_COLOR_WITH_OPACITY = "rgba( 26, 115, 232, 0.10 )"
 export const BORDER_COLOR = "#dadce0"
 export const DARK_BLUE_COLOR = "#174ea6"

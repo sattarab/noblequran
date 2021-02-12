@@ -5,8 +5,9 @@ import MenuItem from "@material-ui/core/MenuItem"
 import Popover, { PopoverOrigin } from "@material-ui/core/Popover"
 import { makeStyles, withStyles } from "@material-ui/core/styles"
 import { groupBy } from "lodash"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { Helmet } from "react-helmet"
+import InfiniteScroll from "react-infinite-scroll-component"
 import { matchPath, useHistory, useLocation } from "react-router-dom"
 import { useEffectOnce } from "react-use"
 import styled from "styled-components"
@@ -22,6 +23,12 @@ import { QLoader } from "../../components/Loader"
 import { useQuranState } from "../../components/QuranContext"
 import { AL_QURAN, MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER } from "../../constants/common"
 import { getSurahAyahs, getTranslatorsGroupedByLanguage } from "../../services/surah"
+
+const LoadingText = styled.div`
+  font-weight: 500;
+  margin-top: 15px;
+  text-align: center;
+`
 
 const MAX_SCROLL_OFFSET = 205
 
@@ -123,7 +130,7 @@ const SurahPageMainContainerAyahContainer = styled.div`
   }
 `
 
-const SurahPageMainContainerAyahsContainer = styled.div`
+const SurahPageMainContainerAyahsContainer = styled( InfiniteScroll )`
   display: flex;
   flex-direction: column;
 `
@@ -272,7 +279,7 @@ const useStyles = makeStyles( () => ( {
   },
   paper: {
     background: `${ DEFAULT_TEXT_COLOR }`,
-    padding: "8px 15px",
+    padding: "8px",
   },
 } ) )
 
@@ -297,8 +304,8 @@ export const SurahPage: React.FunctionComponent = () => {
   const [ ayahs, setAyahs ] = useState<Ayah[]>( [] )
   const [ displayError, setDisplayError ] = useState<boolean>( false )
   const [ groupedTranslators, setGroupedTranslators ] = useState<{ [ language: string ]: Translator[] }>( {} )
+  const [ hasMore, setHasMore ] = useState( true )
   const [ isLoading, setIsLoading ] = useState<boolean>( true )
-  const [ isLoadingMore, setIsLoadingMore ] = useState<boolean>( false )
   const [ isSurahTitleFixed, setIsSurahTitleFixed ] = useState<boolean>( false )
   const [ pagination, setPagination ] = useState<Pagination | null>( null )
   const [ popoverMap, setPopoverMap ] = useState<{ [ key: string ]: Element | null }>( {} )
@@ -310,29 +317,6 @@ export const SurahPage: React.FunctionComponent = () => {
     "vertical": "bottom",
   }
   const translatorNames: { [ identifier: string ]: string } = {}
-
-  useEffect( () => {
-    if( pagination?.next_page ) {
-      getSurahAyahs( id, { page: pagination.next_page, per_page: 7, translations: selectedTranslations } )
-        .then( ( response ) => {
-          const { items, pagination } = response
-          const updatedAyahs: Ayah[] = [ ...ayahs ]
-
-          for( const ayah of items ) {
-            updatedAyahs.push( ayah )
-          }
-
-          setAyahs( [ ...ayahs, ...items ] )
-          setPagination( { ...pagination } )
-        } )
-        .catch( ( err ) => {
-          console.error( err )
-        } )
-        .finally( () => {
-          setIsLoadingMore( false )
-        } )
-    }
-  }, [ isLoadingMore ] )
 
   useEffect( () => {
     getSurahAyahs( id, { page: 1, per_page: pagination?.page_end || 7, translations: selectedTranslations } )
@@ -398,6 +382,30 @@ export const SurahPage: React.FunctionComponent = () => {
     return translatorNames[ identifier ]
   }
 
+  const loadAyahs = () => {
+    if( ayahs.length === selectedSurah.number_of_ayahs || ! pagination?.next_page ) {
+      setHasMore( false )
+      return
+    }
+
+    getSurahAyahs( id, { page: pagination.next_page, per_page: 7, translations: selectedTranslations } )
+      .then( ( response ) => {
+        const { items } = response
+        const updatedAyahs: Ayah[] = [ ...ayahs ]
+
+        for( const ayah of items ) {
+          updatedAyahs.push( ayah )
+        }
+
+        setAyahs( [ ...ayahs, ...items ] )
+
+        setPagination( { ...pagination, ...response.pagination } )
+      } )
+      .catch( ( err ) => {
+        console.error( err )
+      } )
+  }
+
   const onClickTranslatorsHandler = ( event: React.MouseEvent<HTMLButtonElement> ) => {
     seTTranslatorsAnchorElement( event.currentTarget )
   }
@@ -406,17 +414,13 @@ export const SurahPage: React.FunctionComponent = () => {
     seTTranslatorsAnchorElement( null )
   }
 
-  const onPageScroll = () => {
-    if( window.pageYOffset > document.documentElement.scrollHeight * 0.4 ) {
-      setIsLoadingMore( true )
-    }
-
+  const onPageScroll = useCallback( () => {
     if( window.pageYOffset > MAX_SCROLL_OFFSET && document.documentElement.scrollHeight > MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER ) {
       setIsSurahTitleFixed( true )
     } else {
       setIsSurahTitleFixed( false )
     }
-  }
+  }, [] )
 
   const onPopoverClose = ( key: string ) => {
     setPopoverMap( { [ key ]: null } )
@@ -519,7 +523,12 @@ export const SurahPage: React.FunctionComponent = () => {
                         }
                       </StyledMenu>
                     </SurahPageMainContainerSettingsContainer>
-                    <SurahPageMainContainerAyahsContainer>
+                    <SurahPageMainContainerAyahsContainer
+                      dataLength={ ayahs.length }
+                      next={ loadAyahs }
+                      hasMore={ hasMore }
+                      loader={ <LoadingText>Loading…</LoadingText> }
+                    >
                       {
                         ayahs?.map( ( ayah ) => (
                           <SurahPageMainContainerAyahContainer key={ ayah.number }>
@@ -531,7 +540,6 @@ export const SurahPage: React.FunctionComponent = () => {
                                     <span
                                       aria-owns={ Boolean( popoverMap[ `${ ayah.id }_${ word.id }` ] ) ? `mouse-over-popover-${ ayah.id }_${ word.id }` : undefined }
                                       aria-haspopup="true"
-                                      onClick={ ( event ) => onPopoverOpen( `${ ayah.id }_${ word.id }`, event ) }
                                       onMouseEnter={ ( event ) => onPopoverOpen( `${ ayah.id }_${ word.id }`, event ) }
                                       onMouseLeave={ () => onPopoverClose( `${ ayah.id }_${ word.id }` ) }
                                     >
@@ -546,11 +554,11 @@ export const SurahPage: React.FunctionComponent = () => {
                                       open={ Boolean( popoverMap[ `${ ayah.id }_${ word.id }` ] ) }
                                       anchorEl={ popoverMap[ `${ ayah.id }_${ word.id }` ] }
                                       anchorOrigin={ {
-                                        vertical: "bottom",
+                                        vertical: "top",
                                         horizontal: "left",
                                       } }
                                       transformOrigin={ {
-                                        vertical: "top",
+                                        vertical: 30,
                                         horizontal: "left",
                                       } }
                                       onClose={ () => onPopoverClose( `${ ayah.id }_${ word.id }` ) }

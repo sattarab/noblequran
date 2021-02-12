@@ -1,10 +1,49 @@
-import React from "react"
-import Loader from "react-loader-spinner"
+import React, { memo } from "react"
+import styled from "styled-components"
 
-import { BLUE_COLOR } from "../../../components/Styles"
+const LoaderContainer = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
 
-export const QLoader: React.FunctionComponent = () => {
+  > div {
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    margin: 10px;
+    background-image: linear-gradient( 145deg, rgba( 255, 255, 255, 0.5 ) 0%, rgba( 0, 0 ,0 ,0 ) 100% );
+  }
+`
+
+const LoaderYellowDot = styled.div`
+  animation: bounce 1.5s 0s linear infinite;
+  background: #feb60a;
+`
+
+const LoaderRedDot = styled.div`
+  animation: bounce 1.5s 0.1s linear infinite;
+  background: #ff0062;
+`
+
+const LoaderBlueDot = styled.div`
+  animation: bounce 1.5s 0.2s linear infinite;
+  background-color: #00dbf9;
+`
+
+const LoaderVioletDot = styled.div`
+  animation: bounce 1.5s 0.3s linear infinite;
+  background: #da00f7;
+`
+
+const QLoaderFunction: React.FunctionComponent = () => {
   return (
-    <Loader type="ThreeDots" color={ BLUE_COLOR } width="100" height="100" />
+    <LoaderContainer>
+      <LoaderYellowDot />
+      <LoaderRedDot />
+      <LoaderBlueDot />
+      <LoaderVioletDot />
+    </LoaderContainer>
   )
 }
+
+export const QLoader = memo( QLoaderFunction )
