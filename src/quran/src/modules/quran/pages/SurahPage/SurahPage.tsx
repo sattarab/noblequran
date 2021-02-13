@@ -357,8 +357,9 @@ export const SurahPage: React.FunctionComponent = () => {
         } )
         setGroupedTranslators( groupBy( translators, "language" ) )
       } )
-      .catch( () => {
+      .catch( ( error ) => {
         setDisplayError( true )
+        logError( error )
       } )
   } )
 
@@ -410,9 +411,8 @@ export const SurahPage: React.FunctionComponent = () => {
 
         setPagination( { ...pagination, ...response.pagination } )
       } )
-      .catch( ( err ) => {
-        logError( err )
-      } )
+      .catch( logError )
+
   }, [ pagination ] )
 
   const onClickTranslatorsHandler = ( event: React.MouseEvent<HTMLButtonElement> ) => {

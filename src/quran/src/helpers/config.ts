@@ -6,4 +6,5 @@ export enum ConfigEnv {
 
 export const config = {
   env: process.env.REACT_APP_ENV as ConfigEnv,
+  version: process.env.REACT_APP_VERSION as string,
 }
