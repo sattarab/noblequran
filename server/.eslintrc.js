@@ -25,14 +25,13 @@ module.exports = {
     "object-curly-spacing": ["error", "always"],
     "quotes": ["error", "double"],
     "semi": ["error", "never"],
-    "import/order": [ "error", {
-      "groups": [ "external", "builtin", "internal", "parent", "sibling", "index", "object" ],
+    "import/order": ["error", {
+      "groups": ["external", "builtin", "internal", "parent", "sibling", "index", "object"],
       "alphabetize": {
         "order": "asc",
         "caseInsensitive": true
       }
     } ],
-    "sort-keys": ["error"],
     "space-in-parens": ["error", "always"],
   },
 };

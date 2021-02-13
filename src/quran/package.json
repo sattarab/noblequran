@@ -1,9 +1,10 @@
 {
   "name": "quran",
-  "version": "0.0.0",
+  "version": "0.0.0-1",
   "private": true,
   "dependencies": {
     "@material-ui/core": "4.11.3",
+    "@sentry/react": "6.1.0",
     "@testing-library/jest-dom": "5.11.8",
     "@testing-library/react": "11.2.3",
     "@testing-library/user-event": "12.6.0",
@@ -17,7 +18,6 @@
     "@types/styled-components": "5.1.7",
     "axios": "0.21.1",
     "history": "5.0.0",
-    "lodash": "4.17.20",
     "node-sass": "4.14",
     "react": "17.0.1",
     "react-dom": "17.0.1",
@@ -39,11 +39,15 @@
     "eslint-plugin-react": "7.22.0",
     "express": "4.17.1",
     "http-proxy-middleware": "1.0.6",
-    "prettier": "2.2.1"
+    "prettier": "2.2.1",
+    "source-map-explorer": "2.5.2"
   },
   "scripts": {
-    "start": "./node_modules/.bin/react-scripts start",
-    "build": "./node_modules/.bin/react-scripts build",
+    "analyze": "./node_modules/.bin/source-map-explorer 'build/static/js/*.js'",
+    "start": "REACT_APP_ENV=dev ./node_modules/.bin/react-scripts start",
+    "build": "REACT_APP_ENV=dev ./node_modules/.bin/react-scripts build",
+    "build-stg": "REACT_APP_ENV=stg ./node_modules/.bin/react-scripts build",
+    "build-prd": "REACT_APP_ENV=prd ./node_modules/.bin/react-scripts build",
     "test": "./node_modules/.bin/react-scripts test",
     "eject": "./node_modules/.bin/react-scripts eject"
   },

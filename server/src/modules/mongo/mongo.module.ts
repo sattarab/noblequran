@@ -1,14 +1,11 @@
-import { DynamicModule, Global, Module, OnModuleDestroy, Provider } from "@nestjs/common"
+import { DynamicModule, Global, Logger, Module, OnModuleDestroy, Provider } from "@nestjs/common"
 import { ConfigModule, ConfigService } from "@nestjs/config"
 import { ModuleRef } from "@nestjs/core"
-import * as Debug from "debug"
 import { MongoClient } from "mongodb"
 
-import { getClientToken, getDbToken } from "./mongo.util"
-import { DEFAULT_MONGO_CLIENT_OPTIONS } from "./mongo.constants"
 import configuration from "../common/config"
-
-const debug = Debug( "noblequran:modules:mongo" )
+import { DEFAULT_MONGO_CLIENT_OPTIONS } from "./mongo.constants"
+import { getClientToken, getDbToken } from "./mongo.util"
 
 @Global()
 @Module( {
@@ -22,7 +19,7 @@ export class MongoModule implements OnModuleDestroy {
       inject: [ ConfigService ],
       provide: getClientToken(),
       useFactory: async ( configService: ConfigService ) => {
-        debug( "Mongo open connection" )
+        Logger.debug( "Mongo open connection" )
         const client = new MongoClient( configService.get<string>( "mongo.uri" ), DEFAULT_MONGO_CLIENT_OPTIONS )
         return await client.connect()
       },

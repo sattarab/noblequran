@@ -174,3 +174,10 @@ export function getLanguageLabel( code: string ) {
 export function escapeRegex( string: string ){
   return string.replace( ESCAPE_REGEX, "\\$1" )
 }
+
+export function groupBy( array: any[], key: string ) {
+  return array.reduce( ( group:{ [ key: string ]: any[] }, value ) => {
+    ( group[ value [ key ] ] = group[ value[ key ] ] || [] ).push( value )
+    return group
+  }, {} )
+}

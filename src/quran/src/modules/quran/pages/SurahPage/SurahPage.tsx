@@ -2,9 +2,9 @@ import Checkbox from "@material-ui/core/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
 import Menu from "@material-ui/core/Menu"
 import MenuItem from "@material-ui/core/MenuItem"
-import Popover, { PopoverOrigin } from "@material-ui/core/Popover"
+import { PopoverOrigin } from "@material-ui/core/Popover"
+import Popper from "@material-ui/core/Popper"
 import { makeStyles, withStyles } from "@material-ui/core/styles"
-import { groupBy } from "lodash"
 import React, { useCallback, useEffect, useState } from "react"
 import { Helmet } from "react-helmet"
 import InfiniteScroll from "react-infinite-scroll-component"
@@ -14,15 +14,17 @@ import styled from "styled-components"
 
 import { ArrowBackIcon, ArrowDownIcon, ArrowUpIcon } from "../../../../components/Icon"
 import { BLUE_COLOR, BLUE_COLOR_WITH_OPACITY, BORDER_COLOR, DARK_TEXT_COLOR, DEFAULT_TEXT_COLOR, WHITE_SMOKE_COLOR } from "../../../../components/Styles"
+import { logError } from "../../../../helpers/error"
 import { LARGE_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
-import { getLanguageLabel } from "../../../../helpers/utility"
+import { getLanguageLabel, groupBy } from "../../../../helpers/utility"
 import { Ayah } from "../../../../types/ayah"
 import { Pagination } from "../../../../types/pagination"
+import { Surah } from "../../../../types/surah"
 import { Translator } from "../../../../types/translator"
 import { QLoader } from "../../components/Loader"
 import { useQuranState } from "../../components/QuranContext"
 import { AL_QURAN, MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER } from "../../constants/common"
-import { getSurahAyahs, getTranslatorsGroupedByLanguage } from "../../services/surah"
+import { getSurahs, getSurahAyahs, getTranslatorsGroupedByLanguage } from "../../services/surah"
 
 const LoadingText = styled.div`
   font-weight: 500;
@@ -160,13 +162,13 @@ const SurahPageMainContainerAyahTranslatorName = styled.div`
   margin-bottom: 5px;
 `
 
-const SurahPageMainContainerAyahWordContainer = styled.div`
-  display: inline;
+const SurahPageMainContainerAyahWord = styled.span`
+  cursor: pointer;
+  position: relative;
 `
 
-const SurahPageMainContainerAyahWordTranslation = styled.span`
-  color: #ffffff;
-  font-size: 15px;
+const SurahPageMainContainerAyahWordContainer = styled.div`
+  display: inline;
 `
 
 const SurahPageMainContainerHeaderBackIconContainer = styled.div`
@@ -274,31 +276,33 @@ const SurahPageMainContainerTransliteratedTitle = styled.div`
 `
 
 const useStyles = makeStyles( () => ( {
-  popover: {
-    pointerEvents: "none",
-  },
   paper: {
     background: `${ DEFAULT_TEXT_COLOR }`,
+    color: "#ffffff",
     padding: "8px",
   },
 } ) )
 
 
 export const SurahPage: React.FunctionComponent = () => {
-  const classes = useStyles()
   const DEFAULT_TRANSLATION = "en.sahih"
 
+  const classes = useStyles()
   const history = useHistory()
   const location = useLocation()
   const { surahs } = useQuranState()
 
   const match = matchPath( location.pathname, "/:id" )
   const id = ( match?.params as { id: string } ).id
-  const selectedSurah = surahs[ id ]
+  let selectedSurah: Surah = surahs[ id ]
 
   if( ! selectedSurah ) {
-    history.replace( "/" )
-    return null
+    selectedSurah = getSurahs().find( ( surah ) => surah.query_indexes.includes( id ) ) as Surah
+
+    if( ! selectedSurah ) {
+      history.replace( "/" )
+      return null
+    }
   }
 
   const [ ayahs, setAyahs ] = useState<Ayah[]>( [] )
@@ -319,14 +323,15 @@ export const SurahPage: React.FunctionComponent = () => {
   const translatorNames: { [ identifier: string ]: string } = {}
 
   useEffect( () => {
-    getSurahAyahs( id, { page: 1, per_page: pagination?.page_end || 7, translations: selectedTranslations } )
+    getSurahAyahs( selectedSurah.id, { page: 1, per_page: pagination?.page_end || 10, translations: selectedTranslations } )
       .then( ( response ) => {
         const { items, pagination } = response
         setAyahs( [ ...items ] )
         setPagination( { ...pagination } )
       } )
-      .catch( () => {
+      .catch( ( error ) => {
         setDisplayError( true )
+        logError( error )
       } )
       .finally( () => {
         setIsLoading( false )
@@ -365,7 +370,11 @@ export const SurahPage: React.FunctionComponent = () => {
     }
   } )
 
-  const getTranslatorName = ( identifier: string ) => {
+  const closePopover = ( key: string ) => {
+    setPopoverMap(  { ...popoverMap, ...{ [ key ]: null } } )
+  }
+
+  const getTranslatorName = useCallback( ( identifier: string ) => {
     const language = identifier.split( "." )[ 0 ]
 
     if( translatorNames[ identifier ] ) {
@@ -380,15 +389,15 @@ export const SurahPage: React.FunctionComponent = () => {
 
     translatorNames[ identifier ] = selectedTranslator.translations[ 0 ].name
     return translatorNames[ identifier ]
-  }
+  }, [ groupedTranslators ] )
 
-  const loadAyahs = () => {
+  const loadAyahs = useCallback( () => {
     if( ayahs.length === selectedSurah.number_of_ayahs || ! pagination?.next_page ) {
       setHasMore( false )
       return
     }
 
-    getSurahAyahs( id, { page: pagination.next_page, per_page: 7, translations: selectedTranslations } )
+    getSurahAyahs( selectedSurah.id, { page: pagination.next_page, per_page: 10, translations: selectedTranslations } )
       .then( ( response ) => {
         const { items } = response
         const updatedAyahs: Ayah[] = [ ...ayahs ]
@@ -402,9 +411,9 @@ export const SurahPage: React.FunctionComponent = () => {
         setPagination( { ...pagination, ...response.pagination } )
       } )
       .catch( ( err ) => {
-        console.error( err )
+        logError( err )
       } )
-  }
+  }, [ pagination ] )
 
   const onClickTranslatorsHandler = ( event: React.MouseEvent<HTMLButtonElement> ) => {
     seTTranslatorsAnchorElement( event.currentTarget )
@@ -422,12 +431,8 @@ export const SurahPage: React.FunctionComponent = () => {
     }
   }, [] )
 
-  const onPopoverClose = ( key: string ) => {
-    setPopoverMap( { [ key ]: null } )
-  }
-
-  const onPopoverOpen = ( key: string, event: React.MouseEvent<HTMLSpanElement> ) => {
-    setPopoverMap( { [ key ]: event.currentTarget } )
+  const openPopover = ( key: string, event: React.MouseEvent<HTMLSpanElement> ) => {
+    setPopoverMap(  { ...popoverMap, ...{ [ key ]: event.currentTarget } } )
   }
 
   const onTranslationToggle = ( translator_id: string ) => {
@@ -536,36 +541,25 @@ export const SurahPage: React.FunctionComponent = () => {
                             <SurahPageMainContainerAyahArabicText className={ `p${ ayah.page }` }>
                               {
                                 ayah.words.map( ( word ) => (
-                                  <SurahPageMainContainerAyahWordContainer key={ word.id }>
-                                    <span
-                                      aria-owns={ Boolean( popoverMap[ `${ ayah.id }_${ word.id }` ] ) ? `mouse-over-popover-${ ayah.id }_${ word.id }` : undefined }
-                                      aria-haspopup="true"
-                                      onMouseEnter={ ( event ) => onPopoverOpen( `${ ayah.id }_${ word.id }`, event ) }
-                                      onMouseLeave={ () => onPopoverClose( `${ ayah.id }_${ word.id }` ) }
+                                  <SurahPageMainContainerAyahWordContainer key={ `${ ayah.number_in_surah }_${ word.id }` }>
+                                    <SurahPageMainContainerAyahWord
+                                      aria-describedby={ `${ ayah.number_in_surah }_${ word.id }` }
+                                      onMouseOut={ () => closePopover( `${ ayah.number_in_surah }_${ word.id }` ) }
+                                      onMouseOver={ ( event ) => openPopover( `${ ayah.number_in_surah }_${ word.id }`, event ) }
                                     >
                                       { word.text.mushaf }
-                                    </span>
-                                    <Popover
-                                      className={ classes.popover }
-                                      classes={ {
-                                        paper: classes.paper,
-                                      } }
-                                      id={ `mouse-over-popover-${ ayah.id }_${ word.id }` }
-                                      open={ Boolean( popoverMap[ `${ ayah.id }_${ word.id }` ] ) }
-                                      anchorEl={ popoverMap[ `${ ayah.id }_${ word.id }` ] }
-                                      anchorOrigin={ {
-                                        vertical: "top",
-                                        horizontal: "left",
-                                      } }
-                                      transformOrigin={ {
-                                        vertical: 30,
-                                        horizontal: "left",
-                                      } }
-                                      onClose={ () => onPopoverClose( `${ ayah.id }_${ word.id }` ) }
-                                      disableRestoreFocus
-                                    >
-                                      <SurahPageMainContainerAyahWordTranslation>{ word.translations[ 0 ].text }</SurahPageMainContainerAyahWordTranslation>
-                                    </Popover>
+                                    </SurahPageMainContainerAyahWord>
+                                    {
+                                      word.translations[ 0 ].text && (
+                                        <Popper
+                                          anchorEl={ popoverMap[ `${ ayah.number_in_surah }_${ word.id }` ] }
+                                          id={id}
+                                          open={ Boolean( popoverMap[ `${ ayah.number_in_surah }_${ word.id }` ] ) }
+                                        >
+                                          <div className={ classes.paper }>{ word.translations[ 0 ].text }</div>
+                                        </Popper>
+                                      )
+                                    }
                                   </SurahPageMainContainerAyahWordContainer>
                                 ) )
                               }

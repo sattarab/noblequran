@@ -1,47 +1,60 @@
 import React, { memo } from "react"
 import styled from "styled-components"
 
+import { BLUE_COLOR } from "../../../components/Styles"
+
 const LoaderContainer = styled.div`
   align-items: center;
   display: flex;
   justify-content: center;
 
   > div {
-    width: 30px;
-    height: 30px;
     border-radius: 100%;
+    height: 20px;
     margin: 10px;
-    background-image: linear-gradient( 145deg, rgba( 255, 255, 255, 0.5 ) 0%, rgba( 0, 0 ,0 ,0 ) 100% );
+    width: 20px;
+  }
+
+  @keyframes bounce {
+    0%, 50%, 100% {
+      transform: scale( 1 ) ;
+    }
+    25% {
+      transform: scale( 0.6 );
+    }
+    75% {
+      transform: scale( 1.4 );
+    }
   }
 `
 
-const LoaderYellowDot = styled.div`
+const LoaderFirstDot = styled.div`
   animation: bounce 1.5s 0s linear infinite;
-  background: #feb60a;
+  background: ${ BLUE_COLOR };
 `
 
-const LoaderRedDot = styled.div`
+const LoaderSecondDot = styled.div`
   animation: bounce 1.5s 0.1s linear infinite;
-  background: #ff0062;
+  background: ${ BLUE_COLOR };
 `
 
-const LoaderBlueDot = styled.div`
+const LoaderThirdDot = styled.div`
   animation: bounce 1.5s 0.2s linear infinite;
-  background-color: #00dbf9;
+  background: ${ BLUE_COLOR };
 `
 
-const LoaderVioletDot = styled.div`
+const LoaderFourthDot = styled.div`
   animation: bounce 1.5s 0.3s linear infinite;
-  background: #da00f7;
+  background: ${ BLUE_COLOR };
 `
 
 const QLoaderFunction: React.FunctionComponent = () => {
   return (
     <LoaderContainer>
-      <LoaderYellowDot />
-      <LoaderRedDot />
-      <LoaderBlueDot />
-      <LoaderVioletDot />
+      <LoaderFirstDot />
+      <LoaderSecondDot />
+      <LoaderThirdDot />
+      <LoaderFourthDot />
     </LoaderContainer>
   )
 }

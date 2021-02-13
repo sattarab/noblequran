@@ -1,8 +1,18 @@
+import * as Sentry from "@sentry/browser"
 import axios from "axios"
 
+
+import { config, ConfigEnv } from "./config"
+import { HttpError } from "./error"
 interface HttpRequestData {
   [ key: string ]: number | string | HttpRequestData
 }
+
+Sentry.init( {
+  dsn: process.env.REACT_APP_SENTRY,
+  enabled: config.env !== ConfigEnv.DEV,
+  environment: config.env,
+} )
 
 export interface HttpRequestOption {
   method: HttpMethod
@@ -34,7 +44,7 @@ export async function sendHttpRequest<T>( options: HttpRequestOption ) {
         if( error.response ) {
           const { data } = error.response
           const message = data.message || DEFAULT_ERROR_MESSAGE
-          throw new Error( message )
+          throw new HttpError( message, { statusCode: error.response.status } )
         }
 
         throw new Error( DEFAULT_ERROR_MESSAGE )
