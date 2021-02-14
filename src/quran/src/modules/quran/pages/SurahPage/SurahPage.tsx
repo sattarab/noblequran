@@ -1,22 +1,20 @@
 import Checkbox from "@material-ui/core/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
-import Menu from "@material-ui/core/Menu"
 import MenuItem from "@material-ui/core/MenuItem"
-import { PopoverOrigin } from "@material-ui/core/Popover"
 import Popper from "@material-ui/core/Popper"
 import { makeStyles, withStyles } from "@material-ui/core/styles"
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import { Helmet } from "react-helmet"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { matchPath, useHistory, useLocation } from "react-router-dom"
-import { useEffectOnce } from "react-use"
+import { useClickAway, useEffectOnce } from "react-use"
 import styled from "styled-components"
 
-import { ArrowBackIcon, ArrowDownIcon, ArrowUpIcon } from "../../../../components/Icon"
+import { ArrowBackIcon, ArrowDownIcon, ArrowUpIcon, SearchIcon } from "../../../../components/Icon"
 import { BLUE_COLOR, BLUE_COLOR_WITH_OPACITY, BORDER_COLOR, DARK_TEXT_COLOR, DEFAULT_TEXT_COLOR, WHITE_SMOKE_COLOR } from "../../../../components/Styles"
 import { logError } from "../../../../helpers/error"
 import { LARGE_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
-import { getLanguageLabel, groupBy } from "../../../../helpers/utility"
+import { escapeRegex, getLanguageLabel, groupBy } from "../../../../helpers/utility"
 import { Ayah } from "../../../../types/ayah"
 import { Pagination } from "../../../../types/pagination"
 import { Surah } from "../../../../types/surah"
@@ -37,35 +35,15 @@ const MAX_SCROLL_OFFSET = 205
 const MenuHeader = styled.div`
   font-size: 12px;
   font-weight: 500;
-  padding: 15px 15px 0;
-`
-
-const StyledArrowBackIcon = styled( ArrowBackIcon )`
-  fill: ${ DARK_TEXT_COLOR };
-`
-
-const StyledArrowDownIcon = styled( ArrowDownIcon )`
-  fill: ${ BLUE_COLOR };
-`
-
-const StyledArrowUpIcon = styled( ArrowUpIcon )`
-  fill: ${ BLUE_COLOR };
+  padding-top: 15px;
 `
 
 const StyledFormControlLabel = withStyles( {
   label: {
     "fontSize": "15px",
+    "whiteSpace": "normal",
   },
 } )( FormControlLabel )
-
-const StyledMenu = withStyles( {
-  paper: {
-    "borderRadius": "8px",
-    "marginTop": "8px",
-    "maxHeight": "400px",
-    "overflow": "scroll",
-  },
-} )( Menu )
 
 
 const SurahPageErrorBody = styled.div`
@@ -275,6 +253,85 @@ const SurahPageMainContainerTransliteratedTitle = styled.div`
   font-weight: 500;
 `
 
+const SurahPageTranslatorsContainer = styled.div`
+  position: relative;
+`
+
+const SurahPageTranslatorsMenu = styled.div`
+  background: #ffffff;
+  border: 1px solid ${ BORDER_COLOR };
+  border-radius: 8px;
+  max-height: 400px;
+  min-height: 400px;
+  overflow-y: scroll;
+  padding: 15px;
+  position: absolute;
+  top: 40px;
+  width: 280px;
+  z-index: 10;
+`
+
+const SurahPageTranslatorsMenuAdditionalSearchText = styled.div`
+  font-size: 13px;
+  margin-top: 30px;
+  text-align: center;
+
+  ul {
+    padding-inline-start: 20px;
+  }
+`
+
+const SurahPageTranslatorsMenuPlaceholderText = styled.div`
+  font-weight: 500;
+  margin-top: 15px;
+`
+
+const SurahPageTranslatorsSearchInput = styled.input`
+  border: none;
+  color: ${ DEFAULT_TEXT_COLOR };
+  flex: 1;
+  font-size: 16px;
+  font-weight: 500;
+
+  &::-moz-placeholder,
+  &:-moz-placeholder
+  &::placeholder,
+  &::-webkit-input-placeholder {
+    color: ${ DEFAULT_TEXT_COLOR };
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.45;
+    opacity: 1;
+  }
+`
+
+const SurahPageTranslatorsSearchInputContainer = styled.div`
+  align-items: center;
+  border: 1px solid ${ BORDER_COLOR };
+  border-radius: 25px;
+  display: flex;
+  height: 45px;
+  outline: none;
+  padding: 0 15px;
+  margin: 15px 0 ;
+`
+
+const StyledArrowBackIcon = styled( ArrowBackIcon )`
+  fill: ${ DARK_TEXT_COLOR };
+`
+
+const StyledArrowDownIcon = styled( ArrowDownIcon )`
+  fill: ${ BLUE_COLOR };
+`
+
+const StyledArrowUpIcon = styled( ArrowUpIcon )`
+  fill: ${ BLUE_COLOR };
+`
+
+const StyledSearchIcon = styled( SearchIcon )`
+  fill: ${ DEFAULT_TEXT_COLOR };
+`
+
 const useStyles = makeStyles( () => ( {
   paper: {
     background: `${ DEFAULT_TEXT_COLOR }`,
@@ -283,18 +340,19 @@ const useStyles = makeStyles( () => ( {
   },
 } ) )
 
-
 export const SurahPage: React.FunctionComponent = () => {
   const DEFAULT_TRANSLATION = "en.sahih"
 
   const classes = useStyles()
   const history = useHistory()
   const location = useLocation()
+  const translatorsMenuRef = useRef( null )
   const { surahs } = useQuranState()
 
   const match = matchPath( location.pathname, "/:id" )
   const id = ( match?.params as { id: string } ).id
   let selectedSurah: Surah = surahs[ id ]
+
 
   if( ! selectedSurah ) {
     selectedSurah = getSurahs().find( ( surah ) => surah.query_indexes.includes( id ) ) as Surah
@@ -308,19 +366,25 @@ export const SurahPage: React.FunctionComponent = () => {
   const [ ayahs, setAyahs ] = useState<Ayah[]>( [] )
   const [ displayError, setDisplayError ] = useState<boolean>( false )
   const [ groupedTranslators, setGroupedTranslators ] = useState<{ [ language: string ]: Translator[] }>( {} )
+  const [ filteredGroupedTranslators, setFilteredGroupedTranslators ] = useState<{ [ language: string ]: Translator[] }>( {} )
   const [ hasMore, setHasMore ] = useState( true )
   const [ isLoading, setIsLoading ] = useState<boolean>( true )
   const [ isSurahTitleFixed, setIsSurahTitleFixed ] = useState<boolean>( false )
   const [ pagination, setPagination ] = useState<Pagination | null>( null )
   const [ popoverMap, setPopoverMap ] = useState<{ [ key: string ]: Element | null }>( {} )
+  const [ searchText, setSearchText ] = useState<string>( "" )
   const [ selectedTranslations, setSelectedTranslations ] = useState<string[]>( [ DEFAULT_TRANSLATION ] )
-  const [ translatorsAnchorElement, seTTranslatorsAnchorElement ] = useState<Element | null>( null )
+  const [ displayTranslatorsMenu, setDisplayTranslatorsMenu ] = useState<boolean>( false )
 
-  const menuPopoverOrigin: PopoverOrigin = {
-    "horizontal": "left",
-    "vertical": "bottom",
-  }
+  let regex = searchText ? new RegExp( escapeRegex( searchText ), "i" ) : null
+
   const translatorNames: { [ identifier: string ]: string } = {}
+
+  useClickAway( translatorsMenuRef, () => {
+    if( displayTranslatorsMenu ) {
+      setDisplayTranslatorsMenu( false )
+    }
+  } )
 
   useEffect( () => {
     getSurahAyahs( selectedSurah.id, { page: 1, per_page: pagination?.page_end || 10, translations: selectedTranslations } )
@@ -355,7 +419,10 @@ export const SurahPage: React.FunctionComponent = () => {
 
           return 0
         } )
-        setGroupedTranslators( groupBy( translators, "language" ) )
+
+        const updatedGroupedTranslators = groupBy( translators, "language" )
+        setGroupedTranslators( updatedGroupedTranslators )
+        setFilteredGroupedTranslators( updatedGroupedTranslators )
       } )
       .catch( ( error ) => {
         setDisplayError( true )
@@ -375,7 +442,40 @@ export const SurahPage: React.FunctionComponent = () => {
     setPopoverMap(  { ...popoverMap, ...{ [ key ]: null } } )
   }
 
+  const filterTranslators = () => {
+    if( ! regex ) {
+      setFilteredGroupedTranslators( groupedTranslators )
+      return
+    }
+
+    const updatedFilteredGroupedTranslators: { [ language: string ]: Translator[] } = {}
+
+    for( const language in groupedTranslators ) {
+      if( groupedTranslators[ language ] ) {
+        if( regex.test( getLanguageLabel( language ) ) ) {
+          updatedFilteredGroupedTranslators[ language ] = [ ...groupedTranslators[ language ] ]
+          continue
+        }
+        for( const translator of groupedTranslators[ language ] ) {
+          if( regex.test( translator.name ) || regex.test( translator.translations[ 0 ].name ) ) {
+            if( ! updatedFilteredGroupedTranslators[ language ] ) {
+              updatedFilteredGroupedTranslators[ language ] = []
+            }
+
+            updatedFilteredGroupedTranslators[ language ].push( translator )
+          }
+        }
+      }
+    }
+
+    setFilteredGroupedTranslators( updatedFilteredGroupedTranslators )
+  }
+
   const getTranslatorName = useCallback( ( identifier: string ) => {
+    if( ! groupedTranslators ) {
+      return
+    }
+
     const language = identifier.split( "." )[ 0 ]
 
     if( translatorNames[ identifier ] ) {
@@ -390,7 +490,7 @@ export const SurahPage: React.FunctionComponent = () => {
 
     translatorNames[ identifier ] = selectedTranslator.translations[ 0 ].name
     return translatorNames[ identifier ]
-  }, [ groupedTranslators ] )
+  }, [ filteredGroupedTranslators ] )
 
   const loadAyahs = useCallback( () => {
     if( ayahs.length === selectedSurah.number_of_ayahs || ! pagination?.next_page ) {
@@ -415,12 +515,8 @@ export const SurahPage: React.FunctionComponent = () => {
 
   }, [ pagination ] )
 
-  const onClickTranslatorsHandler = ( event: React.MouseEvent<HTMLButtonElement> ) => {
-    seTTranslatorsAnchorElement( event.currentTarget )
-  }
-
-  const onCloseTranslatorsHandler = () => {
-    seTTranslatorsAnchorElement( null )
+  const onClickTranslatorsHandler = () => {
+    setDisplayTranslatorsMenu( ! displayTranslatorsMenu )
   }
 
   const onPageScroll = useCallback( () => {
@@ -445,6 +541,12 @@ export const SurahPage: React.FunctionComponent = () => {
     } else {
       setSelectedTranslations( [ ...selectedTranslations, translator_id ] )
     }
+  }
+
+  const onSearch = ( event: React.ChangeEvent<HTMLInputElement> ) => {
+    regex = event.target.value ? new RegExp( escapeRegex( event.target.value ), "i" ) : null
+    setSearchText( event.target.value )
+    filterTranslators()
   }
 
   return (
@@ -485,48 +587,64 @@ export const SurahPage: React.FunctionComponent = () => {
                   </SurahPageMainContainerHeader>
                   <SurahPageMainContainerBody>
                     <SurahPageMainContainerSettingsContainer>
-                      <SurahPageMainContainerSettingsContainerButton aria-controls="translators-menu" aria-haspopup="true" onClick={ onClickTranslatorsHandler }>
-                        Translations
+                      <SurahPageTranslatorsContainer>
+                        <SurahPageMainContainerSettingsContainerButton aria-controls="translators-menu" aria-haspopup="true" onClick={ onClickTranslatorsHandler }>
+                          Translations
+                          {
+                            displayTranslatorsMenu
+                            ? (
+                              <StyledArrowUpIcon />
+                            ) : (
+                              <StyledArrowDownIcon />
+                            )
+                          }
+                        </SurahPageMainContainerSettingsContainerButton>
                         {
-                          translatorsAnchorElement
-                          ? (
-                            <StyledArrowUpIcon />
-                          ) : (
-                            <StyledArrowDownIcon />
+                          displayTranslatorsMenu && (
+                            <SurahPageTranslatorsMenu ref={ translatorsMenuRef }>
+                              <SurahPageTranslatorsSearchInputContainer>
+                                <StyledSearchIcon />
+                                <SurahPageTranslatorsSearchInput autoComplete="false" onChange={ onSearch } placeholder="Search" type="text" value={ searchText }/>
+                              </SurahPageTranslatorsSearchInputContainer>
+                              {
+                                Object.keys( filteredGroupedTranslators ).length
+                                ? (
+                                  Object.entries( filteredGroupedTranslators ).map( ( [ language, translators ] ) => (
+                                    <div key={ language }>
+                                      <MenuHeader>{ getLanguageLabel( language ) }</MenuHeader>
+                                      {
+                                        translators.map( ( translator ) => (
+                                          <MenuItem key={ translator.id }>
+                                            <StyledFormControlLabel
+                                              control={
+                                                <Checkbox
+                                                  defaultChecked={ selectedTranslations.indexOf( translator.id ) !== -1 }
+                                                  onChange={ () => onTranslationToggle( translator.id ) }
+                                                />
+                                              }
+                                              label={ translator.translations[ 0 ].name }
+                                            />
+                                          </MenuItem>
+                                        ) )
+                                      }
+                                    </div>
+                                  ) )
+                                ) : (
+                                  <div>
+                                    <SurahPageTranslatorsMenuPlaceholderText>Sorry, we couldn’t find any matches for this search.</SurahPageTranslatorsMenuPlaceholderText>
+                                    <SurahPageTranslatorsMenuAdditionalSearchText>
+                                      <div>Try another search, or:</div>
+                                      <ul>
+                                        <li>Perhaps you can try searching by language</li>
+                                      </ul>
+                                    </SurahPageTranslatorsMenuAdditionalSearchText>
+                                  </div>
+                                )
+                              }
+                            </SurahPageTranslatorsMenu>
                           )
                         }
-                      </SurahPageMainContainerSettingsContainerButton>
-                      <StyledMenu
-                        anchorEl={ translatorsAnchorElement }
-                        anchorOrigin={ menuPopoverOrigin }
-                        id="translators-menu"
-                        getContentAnchorEl={ null }
-                        onClose={ onCloseTranslatorsHandler }
-                        open={ Boolean( translatorsAnchorElement ) }
-                      >
-                        {
-                          Object.entries( groupedTranslators ).map( ( [ language, translators ] ) => (
-                            <div key={ language }>
-                              <MenuHeader>{ getLanguageLabel( language ) }</MenuHeader>
-                              {
-                                translators.map( ( translator ) => (
-                                  <MenuItem key={ translator.id }>
-                                    <StyledFormControlLabel
-                                      control={
-                                        <Checkbox
-                                          defaultChecked={ selectedTranslations.indexOf( translator.id ) !== -1 }
-                                          onChange={ () => onTranslationToggle( translator.id ) }
-                                        />
-                                      }
-                                      label={ translator.translations[ 0 ].name }
-                                    />
-                                  </MenuItem>
-                                ) )
-                              }
-                            </div>
-                          ) )
-                        }
-                      </StyledMenu>
+                      </SurahPageTranslatorsContainer>
                     </SurahPageMainContainerSettingsContainer>
                     <SurahPageMainContainerAyahsContainer
                       dataLength={ ayahs.length }

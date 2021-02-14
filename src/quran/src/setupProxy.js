@@ -5,7 +5,7 @@ module.exports = function( app ) {
   const options = {
     changeOrigin: true,
     secure: false,
-    target: "http://localhost:3000",
+    target: "https://local.noblequran.cloud",
   }
 
   const proxy = createProxyMiddleware( options )
