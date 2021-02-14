@@ -335,6 +335,7 @@ const StyledSearchIcon = styled( SearchIcon )`
 const useStyles = makeStyles( () => ( {
   paper: {
     background: `${ DEFAULT_TEXT_COLOR }`,
+    borderRadius: "5px",
     color: "#ffffff",
     padding: "8px",
   },
@@ -671,7 +672,7 @@ export const SurahPage: React.FunctionComponent = () => {
                                       word.translations[ 0 ].text && (
                                         <Popper
                                           anchorEl={ popoverMap[ `${ ayah.number_in_surah }_${ word.id }` ] }
-                                          id={id}
+                                          id={ `${ ayah.number_in_surah }_${ word.id }` }
                                           open={ Boolean( popoverMap[ `${ ayah.number_in_surah }_${ word.id }` ] ) }
                                         >
                                           <div className={ classes.paper }>{ word.translations[ 0 ].text }</div>

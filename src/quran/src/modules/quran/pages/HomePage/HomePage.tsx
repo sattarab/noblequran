@@ -1,3 +1,6 @@
+import IconButton from "@material-ui/core/IconButton"
+import Popper from "@material-ui/core/Popper"
+import { makeStyles, withStyles } from "@material-ui/core/styles"
 import React, { useState } from "react"
 import { Helmet } from "react-helmet"
 import { useHistory } from "react-router-dom"
@@ -124,9 +127,12 @@ const HomePageMyBookmarksButton = styled.div`
   }
 `
 
-const HomePageRefreshIconContainer = styled.div`
-  padding: 0 15px;
-`
+const HomePageRefreshButtonIconContainer = withStyles( {
+  root: {
+    margin: "0 5px",
+  },
+} )( IconButton )
+
 
 const HomePageSearchContainer = styled.div`
   align-items: center;
@@ -358,6 +364,10 @@ const StyledListIcon = styled( ListIcon )`
 `
 const StyledRefreshIcon = styled( RefreshIcon )`
   fill: ${ DEFAULT_TEXT_COLOR };
+
+  &.disable {
+    fill: ${ BORDER_COLOR };
+  }
 `
 
 const StyledSearchIcon = styled( SearchIcon )`
@@ -369,13 +379,24 @@ enum ViewType {
   LIST = "list",
 }
 
+const useStyles = makeStyles( () => ( {
+  paper: {
+    background: `${ DEFAULT_TEXT_COLOR }`,
+    borderRadius: "5px",
+    color: "#ffffff",
+    padding: "8px",
+  },
+} ) )
+
 export const HomePage: React.FunctionComponent = () => {
   const MAX_SCROLL_OFFSET = 87
 
+  const classes = useStyles()
   const history = useHistory()
   const { isMobileDevice } = useQuranState()
   const [ isSearchContainerFixed, setIsSearchContainerFixed ] = useState<boolean>( false )
   const [ displayMyBookmarks, setMyDisplayBookmarks ] = useState<boolean>( false )
+  const [ popoverMap, setPopoverMap ] = useState<{ [ key: string ]: Element | null }>( {} )
   const [ searchText, setSearchText ] = useState<string>( "" )
   const [ selectViewType, setSelectedViewType ] = useState<ViewType>( ViewType.GRID )
   const [ surahs, setSurahs ] = useState<Surah[]>( getSurahs() )
@@ -395,6 +416,10 @@ export const HomePage: React.FunctionComponent = () => {
     regex = null
     setSearchText( "" )
     filterSurahs()
+  }
+
+  const closePopover = ( key: string ) => {
+    setPopoverMap(  { ...popoverMap, ...{ [ key ]: null } } )
   }
 
   const filterSurahs = () => {
@@ -437,9 +462,19 @@ export const HomePage: React.FunctionComponent = () => {
     filterSurahs()
   }
 
+  const openPopover = ( key: string, event: React.MouseEvent<HTMLSpanElement> ) => {
+    setPopoverMap(  { ...popoverMap, ...{ [ key ]: event.currentTarget } } )
+  }
+
   const readSurah = ( surah: Surah ) => {
     history.push( `/${ surah.id }` )
     window.scroll( 0, 0 )
+  }
+
+  const resetFilters = () => {
+    setMyDisplayBookmarks( false )
+    setSearchText( "" )
+    filterSurahs()
   }
 
   const toggleDisplayMyBookmarks = () => {
@@ -474,9 +509,20 @@ export const HomePage: React.FunctionComponent = () => {
             )
           }
         </HomePageMyBookmarksContainer>
-        <HomePageRefreshIconContainer>
-          <StyledRefreshIcon />
-        </HomePageRefreshIconContainer>
+        <HomePageRefreshButtonIconContainer
+          disabled={ ! displayMyBookmarks && ! searchText }
+          onClick={ resetFilters }
+          onMouseOut={ () => closePopover( "reset" ) }
+          onMouseOver={ ( event ) => openPopover( "reset", event ) }
+        >
+          <StyledRefreshIcon className={ ! displayMyBookmarks && ! searchText ?  "disable" :  "" } />
+          <Popper
+            anchorEl={ popoverMap[ "reset" ] }
+            open={ Boolean( popoverMap[ "reset" ] ) }
+          >
+            <div className={ classes.paper }>Reset</div>
+          </Popper>
+        </HomePageRefreshButtonIconContainer>
       </HomePageSearchContainer>
       <HomePageMainContainer>
         <HomePageContentContainer>
@@ -504,7 +550,7 @@ export const HomePage: React.FunctionComponent = () => {
                 <HomePageSurahsGridContainer>
                   {
                     surahs.map( ( surah ) => (
-                      <HomePageSurahGridContainer key={ surah.id } onClick={ () => readSurah( surah ) }>
+                      <HomePageSurahGridContainer aria-label={ surah.transliterations[ 0 ].text } onClick={ () => readSurah( surah ) } key={ surah.id }>
                         <HomePageSurahGridInnerContainer>
                           <HomePageSurahGridTitleContainer>
                             <HomePageSurahGridTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } />
@@ -531,7 +577,7 @@ export const HomePage: React.FunctionComponent = () => {
                 <HomePageSurahsListContainer>
                   {
                     surahs.map( ( surah ) => (
-                      <HomePageSurahListContainer key={ surah.id } onClick={ () => readSurah( surah ) }>
+                      <HomePageSurahListContainer aria-label={ surah.transliterations[ 0 ].text } onClick={ () => readSurah( surah ) } key={ surah.id }>
                         <HomePageSurahListTitleContainer>
                           <HomePageSurahTranslatedText>{ surah.translations[ 0 ].text }</HomePageSurahTranslatedText>
                           <HomePageSurahListTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } />
