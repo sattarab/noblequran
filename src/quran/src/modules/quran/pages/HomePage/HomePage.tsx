@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom"
 import { useEffectOnce } from "react-use"
 import styled from "styled-components"
 
-import { BookmarkIcon, ClearIcon, GridIcon, ListIcon, RefreshIcon, SearchIcon } from "../../../../components/Icon"
+import { BookmarksIcon, BookmarkAddIcon, BookmarkRemoveIcon, ClearIcon, GridIcon, ListIcon, RefreshIcon, SearchIcon } from "../../../../components/Icon"
 import {
   BLUE_COLOR,
   BLUE_COLOR_WITH_OPACITY,
@@ -127,19 +127,28 @@ const HomePageMyBookmarksButton = styled.div`
     }
   }
 `
+const HomePageNoSurahsClearFilterLink = styled.div`
+  color: ${ BLUE_COLOR };
+  font-weight: 500;
+  margin-top: 30px;
+`
 
 const HomePageNoSurahsPlaceholderContainer = styled.div`
   text-align: center;
 `
 
+const HomePageNoSurahsSmallPlaceholderListText = styled.ul`
+  font-size: 13px;
+  list-style-type: none;
+  margin: 10px auto;
+  padding-inline-start: 0;
+  text-align: left;
+  max-width: 300px;
+`
+
 const HomePageNoSurahsSmallPlaceholderText = styled.div`
   font-size: 13px;
   margin-top: 30px;
-
-  ul {
-    list-style-type: none;
-    padding-inline-start: 0;
-  }
 `
 
 const HomePageNoSurahsPlaceholderText = styled.div`
@@ -364,12 +373,20 @@ const HomePageSurahTransliteratedText = styled.div`
   font-weight: 500;
 `
 
-const StyledBookmarkIcon = styled( BookmarkIcon )`
+const StyledBookmarksIcon = styled( BookmarksIcon )`
   fill: ${ DEFAULT_TEXT_COLOR };
 
   &.active {
     fill: ${ BLUE_COLOR };
   }
+`
+
+const StyledBookmarkAddIcon = styled( BookmarkAddIcon )`
+  fill: ${ DEFAULT_TEXT_COLOR };
+`
+
+const StyledBookmarkRemoveIcon = styled( BookmarkRemoveIcon )`
+  fill: ${ BLUE_COLOR };
 `
 
 const StyledClearIcon = styled( ClearIcon )`
@@ -540,7 +557,7 @@ export const HomePage: React.FunctionComponent = () => {
           {
             isMobileDevice
             ? (
-              <StyledBookmarkIcon className={ displayMyBookmarks ?  "active" :  "" }/>
+              <StyledBookmarksIcon className={ displayMyBookmarks ?  "active" :  "" }/>
             ) : (
               <HomePageMyBookmarksButton className={ displayMyBookmarks ?  "active" :  "" }>My Bookmarks</HomePageMyBookmarksButton>
             )
@@ -586,12 +603,12 @@ export const HomePage: React.FunctionComponent = () => {
               ? (
                 <HomePageNoSurahsPlaceholderContainer>
                   <HomePageNoSurahsPlaceholderText>Sorry, we couldn&apos;t find any matches for this search.</HomePageNoSurahsPlaceholderText>
-                  <HomePageNoSurahsSmallPlaceholderText>
-                    <div>Try another search, or:</div>
-                    <ul>
-                      <li>&#8226;&nbsp;Perhaps you can try searching by number or revelation type</li>
-                    </ul>
-                  </HomePageNoSurahsSmallPlaceholderText>
+                  <HomePageNoSurahsSmallPlaceholderText>Try another search, or:</HomePageNoSurahsSmallPlaceholderText>
+                  <HomePageNoSurahsSmallPlaceholderListText>
+                    <li>&#8226;&nbsp;Search by number</li>
+                    <li>&#8226;&nbsp;Perhaps you can try searching by surah type</li>
+                  </HomePageNoSurahsSmallPlaceholderListText>
+                  <HomePageNoSurahsClearFilterLink onClick={ resetFilters }>Clear your filters and try again.</HomePageNoSurahsClearFilterLink>
                 </HomePageNoSurahsPlaceholderContainer>
               ) : (
                 <div>
@@ -615,7 +632,14 @@ export const HomePage: React.FunctionComponent = () => {
                                 </HomePageSurahGridDetailsContainer>
                                 <HomePageSurahGridFooterContainer>
                                   <HomePageSurahBookmarkContainer onClick={ ( event ) => toggleBookmarkSurah( event, surah.id ) }>
-                                    <StyledBookmarkIcon className={ myBookmarks.includes( surah.id ) ?  "active" :  "" }/>
+                                    {
+                                      myBookmarks.includes( surah.id )
+                                      ? (
+                                        <StyledBookmarkRemoveIcon />
+                                      ) : (
+                                        <StyledBookmarkAddIcon />
+                                      )
+                                    }
                                   </HomePageSurahBookmarkContainer>
                                   <HomePageSurahGridReadSurahButton>Read</HomePageSurahGridReadSurahButton>
                                 </HomePageSurahGridFooterContainer>
@@ -637,7 +661,14 @@ export const HomePage: React.FunctionComponent = () => {
                                 <HomePageSurahTransliteratedText>{ surah.number } &#8226; { surah.transliterations[ 0 ].text }</HomePageSurahTransliteratedText>
                                 <HomePageSurahListDetailsText>{ surah.number_of_ayahs } verses &#8226; { getRevelationTypeText( surah.revelation.place ) }</HomePageSurahListDetailsText>
                                 <HomePageSurahBookmarkContainer onClick={ ( event ) => toggleBookmarkSurah( event, surah.id ) }>
-                                  <StyledBookmarkIcon className={ myBookmarks.includes( surah.id ) ?  "active" :  "" } />
+                                  {
+                                    myBookmarks.includes( surah.id )
+                                    ? (
+                                      <StyledBookmarkRemoveIcon />
+                                    ) : (
+                                      <StyledBookmarkAddIcon />
+                                    )
+                                  }
                                 </HomePageSurahBookmarkContainer>
                               </HomePageSurahListDetailsContainer>
                             </HomePageSurahListContainer>
