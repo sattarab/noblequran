@@ -1,7 +1,7 @@
 import IconButton from "@material-ui/core/IconButton"
 import Popper from "@material-ui/core/Popper"
 import { makeStyles, withStyles } from "@material-ui/core/styles"
-import React, { useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { Helmet } from "react-helmet"
 import { useHistory } from "react-router-dom"
 import { useEffectOnce } from "react-use"
@@ -17,7 +17,7 @@ import {
   WHITE_SMOKE_COLOR,
 } from "../../../../components/Styles"
 import { LARGE_SCREEN_MEDIA_QUERY, MEDIUM_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
-import { escapeRegex } from "../../../../helpers/utility"
+import { escapeRegex, getObjectFromLocalStorage, setObjectInLocalStorage } from "../../../../helpers/utility"
 import { Surah } from "../../../../types/surah"
 import { useQuranState } from "../../components/QuranContext"
 import { AL_QURAN, MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER } from "../../constants/common"
@@ -342,8 +342,7 @@ const HomePageSurahTransliteratedText = styled.div`
   font-weight: 500;
 `
 
-// eslint-disable-next-line space-in-parens
-const StyledBookmarkIcon = styled(BookmarkIcon)`
+const StyledBookmarkIcon = styled( BookmarkIcon )`
   fill: ${ DEFAULT_TEXT_COLOR };
 
   &.active {
@@ -396,6 +395,7 @@ export const HomePage: React.FunctionComponent = () => {
   const { isMobileDevice } = useQuranState()
   const [ isSearchContainerFixed, setIsSearchContainerFixed ] = useState<boolean>( false )
   const [ displayMyBookmarks, setMyDisplayBookmarks ] = useState<boolean>( false )
+  const [ myBookmarks, setMyBookmarks ] = useState<string[]>( getObjectFromLocalStorage( "surahBookmarks" ) || [] )
   const [ popoverMap, setPopoverMap ] = useState<{ [ key: string ]: Element | null }>( {} )
   const [ searchText, setSearchText ] = useState<string>( "" )
   const [ selectViewType, setSelectedViewType ] = useState<ViewType>( ViewType.GRID )
@@ -412,18 +412,23 @@ export const HomePage: React.FunctionComponent = () => {
 
   let regex = searchText ? new RegExp( escapeRegex( searchText ), "i" ) : null
 
-  const clearSearch = () => {
-    regex = null
-    setSearchText( "" )
-    filterSurahs()
+  const toggleBookmarkSurah = ( event: React.MouseEvent<HTMLDivElement, MouseEvent>, surahId: string ) => {
+    event.preventDefault()
+    event.stopPropagation()
+
+    const updatedMyBookmarks = [ ...myBookmarks ]
+    const index = updatedMyBookmarks.indexOf( surahId )
+    if( index !== -1 ) {
+      updatedMyBookmarks.splice( index, 1 )
+    } else {
+      updatedMyBookmarks.push( surahId )
+    }
+    setObjectInLocalStorage( "surahBookmarks", updatedMyBookmarks )
+    setMyBookmarks( updatedMyBookmarks )
   }
 
-  const closePopover = ( key: string ) => {
-    setPopoverMap(  { ...popoverMap, ...{ [ key ]: null } } )
-  }
-
-  const filterSurahs = () => {
-    if( ! regex ) {
+  useEffect( () => {
+    if( ! regex && ! displayMyBookmarks ) {
       setSurahs( getSurahs() )
       return
     }
@@ -433,54 +438,64 @@ export const HomePage: React.FunctionComponent = () => {
     for( const surah of getSurahs() ) {
       if( regex ) {
         for( const queryIndex of surah.query_indexes ) {
-          if( regex.test( queryIndex ) ) {
+          if( regex.test( queryIndex )
+              && ( ! displayMyBookmarks || myBookmarks.includes( surah.id ) )
+          ) {
             filteredSurahs.push( surah )
             break
           }
         }
+      } else if( displayMyBookmarks && myBookmarks.includes( surah.id ) ) {
+        filteredSurahs.push( surah )
       }
     }
 
     setSurahs( filteredSurahs )
+  }, [ displayMyBookmarks, myBookmarks, searchText ] )
+
+  const clearSearch = useCallback( () => {
+    regex = null
+    setSearchText( "" )
+  }, [] )
+
+  const closePopover = ( key: string ) => {
+    setPopoverMap(  { ...popoverMap, ...{ [ key ]: null } } )
   }
 
-  const getRevelationTypeText = ( type: string ) => {
+  const getRevelationTypeText = useCallback( ( type: string ) => {
     return type.charAt( 0 ).toUpperCase() + type.slice( 1 )
-  }
+  }, [] )
 
-  const onPageScroll = () => {
+  const onPageScroll = useCallback( () => {
     if( window.pageYOffset > MAX_SCROLL_OFFSET && document.documentElement.scrollHeight > MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER ) {
       setIsSearchContainerFixed( true )
     } else {
       setIsSearchContainerFixed( false )
     }
-  }
+  }, [] )
 
-  const onSearch = ( event: React.ChangeEvent<HTMLInputElement> ) => {
+  const onSearch = useCallback( ( event: React.ChangeEvent<HTMLInputElement> ) => {
     regex = event.target.value ? new RegExp( escapeRegex( event.target.value ), "i" ) : null
     setSearchText( event.target.value )
-    filterSurahs()
-  }
+  }, [] )
 
   const openPopover = ( key: string, event: React.MouseEvent<HTMLSpanElement> ) => {
     setPopoverMap(  { ...popoverMap, ...{ [ key ]: event.currentTarget } } )
   }
 
-  const readSurah = ( surah: Surah ) => {
+  const readSurah = useCallback( ( surah: Surah ) => {
     history.push( `/${ surah.id }` )
     window.scroll( 0, 0 )
-  }
+  }, [] )
 
-  const resetFilters = () => {
+  const resetFilters = useCallback( () => {
     setMyDisplayBookmarks( false )
     setSearchText( "" )
-    filterSurahs()
-  }
+  }, [] )
 
-  const toggleDisplayMyBookmarks = () => {
+  const toggleDisplayMyBookmarks = useCallback( () => {
     setMyDisplayBookmarks( ! displayMyBookmarks )
-    filterSurahs()
-  }
+  }, [ displayMyBookmarks ] )
 
   return (
     <HomePageContainer>
@@ -511,7 +526,7 @@ export const HomePage: React.FunctionComponent = () => {
         </HomePageMyBookmarksContainer>
         <HomePageRefreshButtonIconContainer
           disabled={ ! displayMyBookmarks && ! searchText }
-          onClick={ resetFilters }
+          onClick={ () => resetFilters() }
           onMouseOut={ () => closePopover( "reset" ) }
           onMouseOver={ ( event ) => openPopover( "reset", event ) }
         >
@@ -563,8 +578,8 @@ export const HomePage: React.FunctionComponent = () => {
                             <HomePageSurahDetailsText>{ surah.number_of_ayahs } verses &#8226; { getRevelationTypeText( surah.revelation.place ) }</HomePageSurahDetailsText>
                           </HomePageSurahGridDetailsContainer>
                           <HomePageSurahGridFooterContainer>
-                            <HomePageSurahBookmarkContainer>
-                              <StyledBookmarkIcon />
+                            <HomePageSurahBookmarkContainer onClick={ ( event ) => toggleBookmarkSurah( event, surah.id ) }>
+                              <StyledBookmarkIcon className={ myBookmarks.includes( surah.id ) ?  "active" :  "" }/>
                             </HomePageSurahBookmarkContainer>
                             <HomePageSurahGridReadSurahButton>Read</HomePageSurahGridReadSurahButton>
                           </HomePageSurahGridFooterContainer>
@@ -585,8 +600,8 @@ export const HomePage: React.FunctionComponent = () => {
                         <HomePageSurahListDetailsContainer>
                           <HomePageSurahTransliteratedText>{ surah.number } &#8226; { surah.transliterations[ 0 ].text }</HomePageSurahTransliteratedText>
                           <HomePageSurahListDetailsText>{ surah.number_of_ayahs } verses &#8226; { getRevelationTypeText( surah.revelation.place ) }</HomePageSurahListDetailsText>
-                          <HomePageSurahBookmarkContainer>
-                            <StyledBookmarkIcon />
+                          <HomePageSurahBookmarkContainer onClick={ ( event ) => toggleBookmarkSurah( event, surah.id ) }>
+                            <StyledBookmarkIcon className={ myBookmarks.includes( surah.id ) ?  "active" :  "" } />
                           </HomePageSurahBookmarkContainer>
                         </HomePageSurahListDetailsContainer>
                       </HomePageSurahListContainer>

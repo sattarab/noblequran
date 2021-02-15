@@ -271,6 +271,10 @@ const SurahPageTranslatorsMenu = styled.div`
   z-index: 10;
 `
 
+const SurahPageTranslatorsMenuPlaceholderContainer = styled.div`
+  margin-top: 120px;
+`
+
 const SurahPageTranslatorsMenuAdditionalSearchText = styled.div`
   font-size: 13px;
   margin-top: 30px;
@@ -403,6 +407,35 @@ export const SurahPage: React.FunctionComponent = () => {
       } )
   }, [ selectedTranslations ] )
 
+  useEffect( () =>  {
+    if( ! regex ) {
+      setFilteredGroupedTranslators( groupedTranslators )
+      return
+    }
+
+    const updatedFilteredGroupedTranslators: { [ language: string ]: Translator[] } = {}
+
+    for( const language in groupedTranslators ) {
+      if( groupedTranslators[ language ] ) {
+        if( regex.test( getLanguageLabel( language ) ) ) {
+          updatedFilteredGroupedTranslators[ language ] = [ ...groupedTranslators[ language ] ]
+          continue
+        }
+        for( const translator of groupedTranslators[ language ] ) {
+          if( regex.test( translator.name ) || regex.test( translator.translations[ 0 ].name ) ) {
+            if( ! updatedFilteredGroupedTranslators[ language ] ) {
+              updatedFilteredGroupedTranslators[ language ] = []
+            }
+
+            updatedFilteredGroupedTranslators[ language ].push( translator )
+          }
+        }
+      }
+    }
+
+    setFilteredGroupedTranslators( updatedFilteredGroupedTranslators )
+  }, [ searchText ] )
+
   useEffectOnce( () => {
     getTranslatorsGroupedByLanguage()
       .then( ( translators ) => {
@@ -441,35 +474,6 @@ export const SurahPage: React.FunctionComponent = () => {
 
   const closePopover = ( key: string ) => {
     setPopoverMap(  { ...popoverMap, ...{ [ key ]: null } } )
-  }
-
-  const filterTranslators = () => {
-    if( ! regex ) {
-      setFilteredGroupedTranslators( groupedTranslators )
-      return
-    }
-
-    const updatedFilteredGroupedTranslators: { [ language: string ]: Translator[] } = {}
-
-    for( const language in groupedTranslators ) {
-      if( groupedTranslators[ language ] ) {
-        if( regex.test( getLanguageLabel( language ) ) ) {
-          updatedFilteredGroupedTranslators[ language ] = [ ...groupedTranslators[ language ] ]
-          continue
-        }
-        for( const translator of groupedTranslators[ language ] ) {
-          if( regex.test( translator.name ) || regex.test( translator.translations[ 0 ].name ) ) {
-            if( ! updatedFilteredGroupedTranslators[ language ] ) {
-              updatedFilteredGroupedTranslators[ language ] = []
-            }
-
-            updatedFilteredGroupedTranslators[ language ].push( translator )
-          }
-        }
-      }
-    }
-
-    setFilteredGroupedTranslators( updatedFilteredGroupedTranslators )
   }
 
   const getTranslatorName = useCallback( ( identifier: string ) => {
@@ -516,9 +520,9 @@ export const SurahPage: React.FunctionComponent = () => {
 
   }, [ pagination ] )
 
-  const onClickTranslatorsHandler = () => {
+  const onClickTranslatorsHandler = useCallback( () => {
     setDisplayTranslatorsMenu( ! displayTranslatorsMenu )
-  }
+  }, [ displayTranslatorsMenu ] )
 
   const onPageScroll = useCallback( () => {
     if( window.pageYOffset > MAX_SCROLL_OFFSET && document.documentElement.scrollHeight > MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER ) {
@@ -532,7 +536,7 @@ export const SurahPage: React.FunctionComponent = () => {
     setPopoverMap(  { ...popoverMap, ...{ [ key ]: event.currentTarget } } )
   }
 
-  const onTranslationToggle = ( translator_id: string ) => {
+  const onTranslationToggle = useCallback( ( translator_id: string ) => {
     const index = selectedTranslations.indexOf( translator_id )
 
     if( index !== -1 ) {
@@ -542,18 +546,18 @@ export const SurahPage: React.FunctionComponent = () => {
     } else {
       setSelectedTranslations( [ ...selectedTranslations, translator_id ] )
     }
-  }
+  }, [] )
 
-  const onSearch = ( event: React.ChangeEvent<HTMLInputElement> ) => {
+  const onSearch = useCallback( ( event: React.ChangeEvent<HTMLInputElement> ) => {
     regex = event.target.value ? new RegExp( escapeRegex( event.target.value ), "i" ) : null
     setSearchText( event.target.value )
-    filterTranslators()
-  }
+  }, [] )
 
   return (
     <div>
       <Helmet>
         <title>{ selectedSurah.transliterations[ 0 ].text } - The Noble Quran - { AL_QURAN }</title>
+        <meta name="description" content={ `Surah ${ selectedSurah.transliterations[ 0 ].text }(${ selectedSurah.name }) - ${ selectedSurah.ayahs?.[ 0 ].text.uthmani }` } />
       </Helmet>
       {
           isLoading
@@ -631,15 +635,15 @@ export const SurahPage: React.FunctionComponent = () => {
                                     </div>
                                   ) )
                                 ) : (
-                                  <div>
-                                    <SurahPageTranslatorsMenuPlaceholderText>Sorry, we couldn’t find any matches for this search.</SurahPageTranslatorsMenuPlaceholderText>
+                                  <SurahPageTranslatorsMenuPlaceholderContainer>
+                                    <SurahPageTranslatorsMenuPlaceholderText>Sorry, we couldn&apos;t find any matches for this search.</SurahPageTranslatorsMenuPlaceholderText>
                                     <SurahPageTranslatorsMenuAdditionalSearchText>
                                       <div>Try another search, or:</div>
                                       <ul>
                                         <li>Perhaps you can try searching by language</li>
                                       </ul>
                                     </SurahPageTranslatorsMenuAdditionalSearchText>
-                                  </div>
+                                  </SurahPageTranslatorsMenuPlaceholderContainer>
                                 )
                               }
                             </SurahPageTranslatorsMenu>

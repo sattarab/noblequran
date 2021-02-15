@@ -1,6 +1,5 @@
 const ESCAPE_REGEX = /([.*+?^=!:${}()|\[\]\/\\])/g
 
-
 export function getLanguageLabel( code: string ) {
   switch( code ) {
     case "az": {
@@ -175,11 +174,33 @@ export function escapeRegex( string: string ){
   return string.replace( ESCAPE_REGEX, "\\$1" )
 }
 
+export function getObjectFromLocalStorage<T>( key: string ) {
+  try {
+    return localStorage.getItem( key ) != null ? JSON.parse( localStorage.getItem( key ) as string ) as T : null
+  } catch( exception ) {
+    console.error( "Problem storing in localStorage", exception )
+  }
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function groupBy( array: any[], key: string ) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return array.reduce( ( group:{ [ key: string ]: any[] }, value ) => {
-    ( group[ value [ key ] ] = group[ value[ key ] ] || [] ).push( value )
+    const groupKey = value[ key ] as string
+    if( ! group[ groupKey ] ) {
+      group[ groupKey ] = []
+    }
+    group[ groupKey ].push( value )
     return group
   }, {} )
 }
+
+export function setObjectInLocalStorage<T>( key: string, object: T ) {
+  try {
+    localStorage.setItem( key, JSON.stringify( object ) )
+  } catch( exception ) {
+    console.error( "Problem storing in localStorage", exception )
+  }
+}
+
+
