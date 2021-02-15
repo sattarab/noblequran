@@ -12,6 +12,7 @@ import {
   BLUE_COLOR,
   BLUE_COLOR_WITH_OPACITY,
   BORDER_COLOR,
+  DARKER_TEXT_COLOR,
   DARK_TEXT_COLOR,
   DEFAULT_TEXT_COLOR,
   WHITE_SMOKE_COLOR,
@@ -125,6 +126,27 @@ const HomePageMyBookmarksButton = styled.div`
       background: ${ BLUE_COLOR_WITH_OPACITY };
     }
   }
+`
+
+const HomePageNoSurahsPlaceholderContainer = styled.div`
+  text-align: center;
+`
+
+const HomePageNoSurahsSmallPlaceholderText = styled.div`
+  font-size: 13px;
+  margin-top: 30px;
+
+  ul {
+    list-style-type: none;
+    padding-inline-start: 0;
+  }
+`
+
+const HomePageNoSurahsPlaceholderText = styled.div`
+  color: ${ DARKER_TEXT_COLOR };
+  font-size: 24px;
+  font-weight: 400;
+  margin-top: 64px;
 `
 
 const HomePageRefreshButtonIconContainer = withStyles( {
@@ -560,54 +582,71 @@ export const HomePage: React.FunctionComponent = () => {
           </HomePageContentOptionsContainer>
           <HomePageSurahsContentContainer>
             {
-              selectViewType === ViewType.GRID
+              surahs.length === 0
               ? (
-                <HomePageSurahsGridContainer>
-                  {
-                    surahs.map( ( surah ) => (
-                      <HomePageSurahGridContainer aria-label={ surah.transliterations[ 0 ].text } onClick={ () => readSurah( surah ) } key={ surah.id }>
-                        <HomePageSurahGridInnerContainer>
-                          <HomePageSurahGridTitleContainer>
-                            <HomePageSurahGridTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } />
-                            <HomePageSurahGridTranslatedTextContainer>
-                              <HomePageSurahTranslatedText>{ surah.translations[ 0 ].text }</HomePageSurahTranslatedText>
-                            </HomePageSurahGridTranslatedTextContainer>
-                          </HomePageSurahGridTitleContainer>
-                          <HomePageSurahGridDetailsContainer>
-                            <HomePageSurahTransliteratedText>{ surah.number } &#8226; { surah.transliterations[ 0 ].text }</HomePageSurahTransliteratedText>
-                            <HomePageSurahDetailsText>{ surah.number_of_ayahs } verses &#8226; { getRevelationTypeText( surah.revelation.place ) }</HomePageSurahDetailsText>
-                          </HomePageSurahGridDetailsContainer>
-                          <HomePageSurahGridFooterContainer>
-                            <HomePageSurahBookmarkContainer onClick={ ( event ) => toggleBookmarkSurah( event, surah.id ) }>
-                              <StyledBookmarkIcon className={ myBookmarks.includes( surah.id ) ?  "active" :  "" }/>
-                            </HomePageSurahBookmarkContainer>
-                            <HomePageSurahGridReadSurahButton>Read</HomePageSurahGridReadSurahButton>
-                          </HomePageSurahGridFooterContainer>
-                        </HomePageSurahGridInnerContainer>
-                      </HomePageSurahGridContainer>
-                    ) )
-                  }
-                </HomePageSurahsGridContainer>
+                <HomePageNoSurahsPlaceholderContainer>
+                  <HomePageNoSurahsPlaceholderText>Sorry, we couldn&apos;t find any matches for this search.</HomePageNoSurahsPlaceholderText>
+                  <HomePageNoSurahsSmallPlaceholderText>
+                    <div>Try another search, or:</div>
+                    <ul>
+                      <li>&#8226;&nbsp;Perhaps you can try searching by number or revelation type</li>
+                    </ul>
+                  </HomePageNoSurahsSmallPlaceholderText>
+                </HomePageNoSurahsPlaceholderContainer>
               ) : (
-                <HomePageSurahsListContainer>
+                <div>
                   {
-                    surahs.map( ( surah ) => (
-                      <HomePageSurahListContainer aria-label={ surah.transliterations[ 0 ].text } onClick={ () => readSurah( surah ) } key={ surah.id }>
-                        <HomePageSurahListTitleContainer>
-                          <HomePageSurahTranslatedText>{ surah.translations[ 0 ].text }</HomePageSurahTranslatedText>
-                          <HomePageSurahListTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } />
-                        </HomePageSurahListTitleContainer>
-                        <HomePageSurahListDetailsContainer>
-                          <HomePageSurahTransliteratedText>{ surah.number } &#8226; { surah.transliterations[ 0 ].text }</HomePageSurahTransliteratedText>
-                          <HomePageSurahListDetailsText>{ surah.number_of_ayahs } verses &#8226; { getRevelationTypeText( surah.revelation.place ) }</HomePageSurahListDetailsText>
-                          <HomePageSurahBookmarkContainer onClick={ ( event ) => toggleBookmarkSurah( event, surah.id ) }>
-                            <StyledBookmarkIcon className={ myBookmarks.includes( surah.id ) ?  "active" :  "" } />
-                          </HomePageSurahBookmarkContainer>
-                        </HomePageSurahListDetailsContainer>
-                      </HomePageSurahListContainer>
-                    ) )
+                    selectViewType === ViewType.GRID
+                    ? (
+                      <HomePageSurahsGridContainer>
+                        {
+                          surahs.map( ( surah ) => (
+                            <HomePageSurahGridContainer aria-label={ surah.transliterations[ 0 ].text } onClick={ () => readSurah( surah ) } key={ surah.id }>
+                              <HomePageSurahGridInnerContainer>
+                                <HomePageSurahGridTitleContainer>
+                                  <HomePageSurahGridTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } />
+                                  <HomePageSurahGridTranslatedTextContainer>
+                                    <HomePageSurahTranslatedText>{ surah.translations[ 0 ].text }</HomePageSurahTranslatedText>
+                                  </HomePageSurahGridTranslatedTextContainer>
+                                </HomePageSurahGridTitleContainer>
+                                <HomePageSurahGridDetailsContainer>
+                                  <HomePageSurahTransliteratedText>{ surah.number } &#8226; { surah.transliterations[ 0 ].text }</HomePageSurahTransliteratedText>
+                                  <HomePageSurahDetailsText>{ surah.number_of_ayahs } verses &#8226; { getRevelationTypeText( surah.revelation.place ) }</HomePageSurahDetailsText>
+                                </HomePageSurahGridDetailsContainer>
+                                <HomePageSurahGridFooterContainer>
+                                  <HomePageSurahBookmarkContainer onClick={ ( event ) => toggleBookmarkSurah( event, surah.id ) }>
+                                    <StyledBookmarkIcon className={ myBookmarks.includes( surah.id ) ?  "active" :  "" }/>
+                                  </HomePageSurahBookmarkContainer>
+                                  <HomePageSurahGridReadSurahButton>Read</HomePageSurahGridReadSurahButton>
+                                </HomePageSurahGridFooterContainer>
+                              </HomePageSurahGridInnerContainer>
+                            </HomePageSurahGridContainer>
+                          ) )
+                        }
+                      </HomePageSurahsGridContainer>
+                    ) : (
+                      <HomePageSurahsListContainer>
+                        {
+                          surahs.map( ( surah ) => (
+                            <HomePageSurahListContainer aria-label={ surah.transliterations[ 0 ].text } onClick={ () => readSurah( surah ) } key={ surah.id }>
+                              <HomePageSurahListTitleContainer>
+                                <HomePageSurahTranslatedText>{ surah.translations[ 0 ].text }</HomePageSurahTranslatedText>
+                                <HomePageSurahListTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } />
+                              </HomePageSurahListTitleContainer>
+                              <HomePageSurahListDetailsContainer>
+                                <HomePageSurahTransliteratedText>{ surah.number } &#8226; { surah.transliterations[ 0 ].text }</HomePageSurahTransliteratedText>
+                                <HomePageSurahListDetailsText>{ surah.number_of_ayahs } verses &#8226; { getRevelationTypeText( surah.revelation.place ) }</HomePageSurahListDetailsText>
+                                <HomePageSurahBookmarkContainer onClick={ ( event ) => toggleBookmarkSurah( event, surah.id ) }>
+                                  <StyledBookmarkIcon className={ myBookmarks.includes( surah.id ) ?  "active" :  "" } />
+                                </HomePageSurahBookmarkContainer>
+                              </HomePageSurahListDetailsContainer>
+                            </HomePageSurahListContainer>
+                          ) )
+                        }
+                      </HomePageSurahsListContainer>
+                    )
                   }
-                </HomePageSurahsListContainer>
+                </div>
               )
             }
           </HomePageSurahsContentContainer>

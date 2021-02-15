@@ -1,5 +1,6 @@
 import Checkbox from "@material-ui/core/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
+import IconButton from "@material-ui/core/IconButton"
 import MenuItem from "@material-ui/core/MenuItem"
 import Popper from "@material-ui/core/Popper"
 import { makeStyles, withStyles } from "@material-ui/core/styles"
@@ -10,11 +11,11 @@ import { matchPath, useHistory, useLocation } from "react-router-dom"
 import { useClickAway, useEffectOnce } from "react-use"
 import styled from "styled-components"
 
-import { ArrowBackIcon, ArrowDownIcon, ArrowUpIcon, SearchIcon } from "../../../../components/Icon"
+import { ArrowBackIcon, ArrowDownIcon, ArrowUpIcon, RefreshIcon, SearchIcon } from "../../../../components/Icon"
 import { BLUE_COLOR, BLUE_COLOR_WITH_OPACITY, BORDER_COLOR, DARK_TEXT_COLOR, DEFAULT_TEXT_COLOR, WHITE_SMOKE_COLOR } from "../../../../components/Styles"
 import { logError } from "../../../../helpers/error"
 import { LARGE_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
-import { escapeRegex, getLanguageLabel, groupBy } from "../../../../helpers/utility"
+import { escapeRegex, getLanguageLabel, getObjectFromLocalStorage, groupBy, setObjectInLocalStorage } from "../../../../helpers/utility"
 import { Ayah } from "../../../../types/ayah"
 import { Pagination } from "../../../../types/pagination"
 import { Surah } from "../../../../types/surah"
@@ -131,6 +132,7 @@ const SurahPageMainContainerAyahTranslationContainer = styled.div`
 `
 
 const SurahPageMainContainerAyahTranslatedText = styled.div`
+  line-height: 1.5;
 `
 
 const SurahPageMainContainerAyahTranslatorName = styled.div`
@@ -205,10 +207,16 @@ const SurahPageMainContainerSettingsContainerButton = styled.button`
   border-radius: 20px;
   display: flex;
   color: ${ DEFAULT_TEXT_COLOR };
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   min-height: 32px;
   padding: 0 15px;
+
+  &.active {
+    background: ${ BLUE_COLOR_WITH_OPACITY };
+    border: 1px solid ${ BLUE_COLOR };
+    color: ${ BLUE_COLOR };
+  }
 
   &:hover {
     background: ${ WHITE_SMOKE_COLOR };
@@ -273,15 +281,16 @@ const SurahPageTranslatorsMenu = styled.div`
 
 const SurahPageTranslatorsMenuPlaceholderContainer = styled.div`
   margin-top: 120px;
+  text-align: center;
 `
 
-const SurahPageTranslatorsMenuAdditionalSearchText = styled.div`
+const SurahPageTranslatorsMenuSmallPlaceholderText = styled.div`
   font-size: 13px;
   margin-top: 30px;
-  text-align: center;
 
   ul {
-    padding-inline-start: 20px;
+    list-style-type: none;
+    padding-inline-start: 0;
   }
 `
 
@@ -317,7 +326,17 @@ const SurahPageTranslatorsSearchInputContainer = styled.div`
   height: 45px;
   outline: none;
   padding: 0 15px;
-  margin: 15px 0 ;
+  margin: 5px 0 10px;
+`
+
+const SurahPageTranslatorsSearchInputResetButton = withStyles( {
+  root: {
+    margin: "0 5px",
+  },
+} )( IconButton )
+
+const SurahPageTranslatorsSearchInputResetContainer = styled.div`
+  border-left: 1px solid ${ BORDER_COLOR };
 `
 
 const StyledArrowBackIcon = styled( ArrowBackIcon )`
@@ -330,6 +349,14 @@ const StyledArrowDownIcon = styled( ArrowDownIcon )`
 
 const StyledArrowUpIcon = styled( ArrowUpIcon )`
   fill: ${ BLUE_COLOR };
+`
+
+const StyledRefreshIcon = styled( RefreshIcon )`
+  fill: ${ DEFAULT_TEXT_COLOR };
+
+  &.disable {
+    fill: ${ BORDER_COLOR };
+  }
 `
 
 const StyledSearchIcon = styled( SearchIcon )`
@@ -378,7 +405,7 @@ export const SurahPage: React.FunctionComponent = () => {
   const [ pagination, setPagination ] = useState<Pagination | null>( null )
   const [ popoverMap, setPopoverMap ] = useState<{ [ key: string ]: Element | null }>( {} )
   const [ searchText, setSearchText ] = useState<string>( "" )
-  const [ selectedTranslations, setSelectedTranslations ] = useState<string[]>( [ DEFAULT_TRANSLATION ] )
+  const [ selectedTranslations, setSelectedTranslations ] = useState<string[]>( getObjectFromLocalStorage( "translations" ) || [ DEFAULT_TRANSLATION ] )
   const [ displayTranslatorsMenu, setDisplayTranslatorsMenu ] = useState<boolean>( false )
 
   let regex = searchText ? new RegExp( escapeRegex( searchText ), "i" ) : null
@@ -476,6 +503,14 @@ export const SurahPage: React.FunctionComponent = () => {
     setPopoverMap(  { ...popoverMap, ...{ [ key ]: null } } )
   }
 
+  const getTranslationsButtonText = () => {
+    if( selectedTranslations.length <= 1 ) {
+      return "Translations"
+    }
+
+    return `${ getTranslatorName( selectedTranslations[ 0 ] )} +${ selectedTranslations.length - 1 }`
+  }
+
   const getTranslatorName = useCallback( ( identifier: string ) => {
     if( ! groupedTranslators ) {
       return
@@ -537,20 +572,27 @@ export const SurahPage: React.FunctionComponent = () => {
   }
 
   const onTranslationToggle = useCallback( ( translator_id: string ) => {
-    const index = selectedTranslations.indexOf( translator_id )
+    const updatedSelectedTranslations = [ ...selectedTranslations ]
+    const index = updatedSelectedTranslations.indexOf( translator_id )
 
     if( index !== -1 ) {
-      const updatedSelectedTranslations = [ ...selectedTranslations ]
       updatedSelectedTranslations.splice( index, 1 )
-      setSelectedTranslations( updatedSelectedTranslations )
     } else {
-      setSelectedTranslations( [ ...selectedTranslations, translator_id ] )
+      updatedSelectedTranslations.push( translator_id )
     }
-  }, [] )
+
+    setObjectInLocalStorage( "translations", updatedSelectedTranslations )
+    setSelectedTranslations( updatedSelectedTranslations )
+  }, [ selectedTranslations ] )
 
   const onSearch = useCallback( ( event: React.ChangeEvent<HTMLInputElement> ) => {
     regex = event.target.value ? new RegExp( escapeRegex( event.target.value ), "i" ) : null
     setSearchText( event.target.value )
+  }, [] )
+
+  const resetFilters = useCallback( () => {
+    setSearchText( "" )
+    setSelectedTranslations( [ DEFAULT_TRANSLATION ] )
   }, [] )
 
   return (
@@ -593,8 +635,13 @@ export const SurahPage: React.FunctionComponent = () => {
                   <SurahPageMainContainerBody>
                     <SurahPageMainContainerSettingsContainer>
                       <SurahPageTranslatorsContainer>
-                        <SurahPageMainContainerSettingsContainerButton aria-controls="translators-menu" aria-haspopup="true" onClick={ onClickTranslatorsHandler }>
-                          Translations
+                        <SurahPageMainContainerSettingsContainerButton
+                          aria-controls="translators-menu"
+                          aria-haspopup="true"
+                          className={ selectedTranslations.length > 1 ? "active" : "" }
+                          onClick={ onClickTranslatorsHandler }
+                        >
+                          { getTranslationsButtonText() }
                           {
                             displayTranslatorsMenu
                             ? (
@@ -610,6 +657,14 @@ export const SurahPage: React.FunctionComponent = () => {
                               <SurahPageTranslatorsSearchInputContainer>
                                 <StyledSearchIcon />
                                 <SurahPageTranslatorsSearchInput autoComplete="false" onChange={ onSearch } placeholder="Search" type="text" value={ searchText }/>
+                                <SurahPageTranslatorsSearchInputResetContainer>
+                                    <SurahPageTranslatorsSearchInputResetButton
+                                      disabled={ selectedTranslations.includes( DEFAULT_TRANSLATION ) && selectedTranslations.length === 1 && ! searchText }
+                                      onClick={ () => resetFilters() }
+                                    >
+                                    <StyledRefreshIcon className={ selectedTranslations.includes( DEFAULT_TRANSLATION ) && selectedTranslations.length === 1 && ! searchText ?  "disable" :  "" } />
+                                  </SurahPageTranslatorsSearchInputResetButton>
+                                </SurahPageTranslatorsSearchInputResetContainer>
                               </SurahPageTranslatorsSearchInputContainer>
                               {
                                 Object.keys( filteredGroupedTranslators ).length
@@ -624,6 +679,7 @@ export const SurahPage: React.FunctionComponent = () => {
                                               control={
                                                 <Checkbox
                                                   defaultChecked={ selectedTranslations.indexOf( translator.id ) !== -1 }
+                                                  checked={ selectedTranslations.indexOf( translator.id ) !== -1 }
                                                   onChange={ () => onTranslationToggle( translator.id ) }
                                                 />
                                               }
@@ -637,12 +693,12 @@ export const SurahPage: React.FunctionComponent = () => {
                                 ) : (
                                   <SurahPageTranslatorsMenuPlaceholderContainer>
                                     <SurahPageTranslatorsMenuPlaceholderText>Sorry, we couldn&apos;t find any matches for this search.</SurahPageTranslatorsMenuPlaceholderText>
-                                    <SurahPageTranslatorsMenuAdditionalSearchText>
+                                    <SurahPageTranslatorsMenuSmallPlaceholderText>
                                       <div>Try another search, or:</div>
                                       <ul>
-                                        <li>Perhaps you can try searching by language</li>
+                                        <li>&#8226;&nbsp;Perhaps you can try searching by language</li>
                                       </ul>
-                                    </SurahPageTranslatorsMenuAdditionalSearchText>
+                                    </SurahPageTranslatorsMenuSmallPlaceholderText>
                                   </SurahPageTranslatorsMenuPlaceholderContainer>
                                 )
                               }
