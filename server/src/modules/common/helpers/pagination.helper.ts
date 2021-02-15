@@ -56,7 +56,7 @@ export function getPaginationOptions( query: { page?: string, per_page?: string 
 
 export async function getPaginationResults<T, U>( collection: Collection<T>, query: FilterQuery<T>, options: PaginationOptions, fromDocument: ( doc: T ) => U ) {
   const skip = ( options.page - 1 ) * options.per_page
-  const cursor: Cursor<T> = collection.find<T>( query ).skip( skip ).limit( options.per_page )
+  const cursor: Cursor<T> = collection.find<T>( query, { skip, limit: options.per_page } )
 
   if( options.project ) {
     cursor.project( options.project )
