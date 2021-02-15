@@ -1,7 +1,13 @@
 version: 2
 updates:
-- package-ecosystem: npm
-  directory: "/server"
-  schedule:
-    interval: daily
-  open-pull-requests-limit: 10
+  - package-ecosystem: npm
+    directory: "/server"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: npm
+    directory: "/src/quran"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
