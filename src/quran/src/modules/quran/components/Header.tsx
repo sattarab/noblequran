@@ -1,5 +1,6 @@
-import { SwipeableDrawer } from "@material-ui/core"
-import React, { useState } from "react"
+import IconButton from "@material-ui/core/IconButton"
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer"
+import React, { memo, useCallback, useState } from "react"
 import { Link, useHistory, useLocation } from "react-router-dom"
 import styled from "styled-components"
 
@@ -12,7 +13,19 @@ const HeaderActionIconContainer = styled.div`
   align-items: center;
   display: flex;
   margin-left: 30px;
+  position: relative;
 `
+
+const HeaderActionIconIndicator = styled.div`
+  border-radius: 50%;
+  background: #d93025;
+  height: 6px;
+  position: absolute;
+  right: 4px;
+  top: 10px;
+  width: 6px;
+`
+
 const HeaderContainer = styled.div`
   align-items: center;
   border-bottom: 1px solid ${ BORDER_COLOR };
@@ -148,13 +161,19 @@ const StyledMenuIcon = styled(MenuIcon)`
 `
 
 export const QHeader: React.FunctionComponent = () => {
+  const { selectedAyahs } = useQuranState()
   const history = useHistory()
   const location = useLocation()
-  const [ isMenuOpen, setIsMenuOpen ] = useState<boolean>( false )
+  const [ isLeftMenuOpen, setIsLeftMenuOpen ] = useState<boolean>( false )
+  const [ isRightMenuOpen, setIsRightMenuOpen ] = useState<boolean>( false )
   const { isMobileDevice } = useQuranState()
 
-  const toggleMenu = ( open: boolean ) => {
-    setIsMenuOpen( open )
+  const toggleLeftMenu = ( open: boolean ) => {
+    setIsLeftMenuOpen( open )
+  }
+
+  const toggleRightMenu = ( open: boolean ) => {
+    setIsRightMenuOpen( open )
   }
 
   return (
@@ -163,7 +182,7 @@ export const QHeader: React.FunctionComponent = () => {
         <HeaderTitleContainer>
           {
             isMobileDevice && (
-              <div onClick={ () => toggleMenu( ! isMenuOpen ) }><StyledMenuIcon/></div>
+              <div onClick={ () => toggleLeftMenu( ! isLeftMenuOpen ) }><StyledMenuIcon/></div>
             )
           }
           <HeaderTitle onClick={ () => history.push( "/" ) }>Quran</HeaderTitle>
@@ -181,19 +200,26 @@ export const QHeader: React.FunctionComponent = () => {
           )
         }
         <HeaderActionIconContainer>
-          <StyledTaskIcon />
+          <IconButton onClick={ () => toggleRightMenu( ! isRightMenuOpen ) }>
+            <StyledTaskIcon />
+          </IconButton>
+          {
+            selectedAyahs && (
+              <HeaderActionIconIndicator />
+            )
+          }
         </HeaderActionIconContainer>
       </HeaderContainer>
-      <SwipeableDrawer onClose={ () => toggleMenu( false ) } onOpen={ () => toggleMenu( true ) } open={ isMenuOpen } >
+      <SwipeableDrawer onClose={ () => toggleLeftMenu( false ) } onOpen={ () => toggleLeftMenu( true ) } open={ isLeftMenuOpen } >
         <MenuContainer>
           <MenuTitleContainer>
             <HeaderTitle>Quran</HeaderTitle>
           </MenuTitleContainer>
           <MenuNavigationTabContainer>
-            <StyledLink to="/" onClick={ () => toggleMenu( false ) }>
+            <StyledLink to="/" onClick={ () => toggleLeftMenu( false ) }>
               <MenuTabContainer className={ location.pathname === "/" ? "nav-tab--selected" : "" }>Browse Surahs</MenuTabContainer>
             </StyledLink>
-            <StyledLink to="/about" onClick={ () => toggleMenu( false ) }>
+            <StyledLink to="/about" onClick={ () => toggleLeftMenu( false ) }>
               <MenuTabContainer className={ location.pathname === "/about" ? "nav-tab--selected" : "" }>About</MenuTabContainer>
             </StyledLink>
           </MenuNavigationTabContainer>

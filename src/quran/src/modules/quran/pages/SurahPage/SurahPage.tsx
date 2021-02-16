@@ -21,7 +21,7 @@ import { Pagination } from "../../../../types/pagination"
 import { Surah } from "../../../../types/surah"
 import { Translator } from "../../../../types/translator"
 import { QLoader } from "../../components/Loader"
-import { useQuranState } from "../../components/QuranContext"
+import { SelectedAyahs, useQuranState } from "../../components/QuranContext"
 import { AL_QURAN, MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER } from "../../constants/common"
 import { getSurahs, getSurahAyahs, getTranslatorsGroupedByLanguage } from "../../services/surah"
 
@@ -88,6 +88,21 @@ const SurahPageContainer = styled.div`
 const SurahPageMainContainer = styled.div`
   box-sizing: border-box;
   max-width: 100%;
+`
+
+const SurahPageMainContainerAyahActionsContainer = styled.div`
+  align-items: center;
+  display: flex;
+  margin-top: 30px;
+`
+
+const SurahPageMainContainerAyahActionSelect = styled.a`
+  cursor: pointer;
+  font-weight: 500;
+
+  span {
+    color: ${ BLUE_COLOR };
+  }
 `
 
 const SurahPageMainContainerAyahArabicText = styled.div`
@@ -376,6 +391,7 @@ const useStyles = makeStyles( () => ( {
 export const SurahPage: React.FunctionComponent = () => {
   const DEFAULT_TRANSLATION = "en.sahih"
 
+  const { selectedAyahs, setSelectedAyahs } = useQuranState()
   const classes = useStyles()
   const history = useHistory()
   const location = useLocation()
@@ -591,6 +607,25 @@ export const SurahPage: React.FunctionComponent = () => {
     setSearchText( event.target.value )
   }, [] )
 
+  const toggleAyahSelection = ( ayah: Ayah ) => {
+    const updatedSelectedAyahs: SelectedAyahs = {
+      ...selectedAyahs,
+    }
+
+    if( updatedSelectedAyahs[ ayah.id ] ) {
+      delete updatedSelectedAyahs[ ayah.id ]
+    } else {
+      updatedSelectedAyahs[ ayah.id ] = {
+        id: ayah.id,
+        number_in_surah: ayah.number_in_surah,
+        text: ayah.text,
+      }
+    }
+
+    setSelectedAyahs( updatedSelectedAyahs )
+    setObjectInLocalStorage( "selectedAyahs", updatedSelectedAyahs )
+  }
+
   const resetFilters = useCallback( () => {
     setSearchText( "" )
     setSelectedTranslations( [ DEFAULT_TRANSLATION ] )
@@ -752,6 +787,18 @@ export const SurahPage: React.FunctionComponent = () => {
                                 </SurahPageMainContainerAyahTranslationContainer>
                               ) )
                             }
+                            <SurahPageMainContainerAyahActionsContainer>
+                              <SurahPageMainContainerAyahActionSelect onClick={ () => toggleAyahSelection( ayah ) }>
+                                {
+                                  selectedAyahs[ ayah.id ]
+                                  ? (
+                                    <span>&#8211; Remove this verse</span>
+                                  ) : (
+                                    <span>&#43; Select this verse</span>
+                                  )
+                                }
+                              </SurahPageMainContainerAyahActionSelect>
+                            </SurahPageMainContainerAyahActionsContainer>
                           </SurahPageMainContainerAyahContainer>
                         ) )
                       }

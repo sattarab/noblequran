@@ -45,9 +45,9 @@
     "analyze": "./node_modules/.bin/source-map-explorer 'build/static/js/*.js'",
     "clean": "rm -rf ./node_modules",
     "start": "REACT_APP_ENV=dev REACT_APP_VERSION=$npm_package_version ./node_modules/.bin/react-scripts start",
-    "build": "REACT_APP_ENV=dev ./node_modules/.bin/react-scripts build",
-    "build-stg": "REACT_APP_ENV=stg ./node_modules/.bin/react-scripts build",
-    "build-prd": "REACT_APP_ENV=prd ./node_modules/.bin/react-scripts build",
+    "build": "REACT_APP_ENV=dev REACT_APP_VERSION=$npm_package_version ./node_modules/.bin/react-scripts build",
+    "build-stg": "REACT_APP_ENV=stg REACT_APP_VERSION=$npm_package_version ./node_modules/.bin/react-scripts build",
+    "build-prd": "REACT_APP_ENV=prd REACT_APP_VERSION=$npm_package_version ./node_modules/.bin/react-scripts build",
     "test": "./node_modules/.bin/react-scripts test",
     "eject": "./node_modules/.bin/react-scripts eject"
   },
