@@ -1,3 +1,5 @@
+import { withStyles } from "@material-ui/core"
+import Button from "@material-ui/core/Button"
 import IconButton from "@material-ui/core/IconButton"
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer"
 import React, { memo, useCallback, useState } from "react"
@@ -9,6 +11,32 @@ import { BLUE_COLOR, BLUE_COLOR_WITH_OPACITY, BORDER_COLOR, DARK_BLUE_COLOR, DEF
 import { LARGE_SCREEN_MEDIA_QUERY } from "../../../helpers/responsive"
 import { QPopper } from "./Popper"
 import { useQuranState } from "./QuranContext"
+
+const StyledButton = withStyles( {
+  root: {
+    borderRadius: 0,
+    color: `${ DEFAULT_TEXT_COLOR }`,
+    fontSize: "16px",
+    fontWeight: 500,
+    padding: "0 15px",
+    textTransform: "none",
+  },
+} )( Button )
+
+const StyledLink = styled( Link )`
+  display: flex;
+  height: 100%;
+  text-decoration: none;
+`
+
+const StyledMenuIcon = styled( MenuIcon )`
+  fill: ${ DEFAULT_TEXT_COLOR };
+  margin-right: 15px;
+`
+
+const StyledTaskIcon = styled( AddTaskIcon )`
+  fill: ${ DEFAULT_TEXT_COLOR };
+`
 
 const HeaderActionIconContainer = styled.div`
   align-items: center;
@@ -47,34 +75,25 @@ const HeaderNavigationContainer = styled.nav`
   height: 100%;
 `
 
-const HeaderNavigationTab = styled.div`
+const HeaderNavigationTab = styled( StyledButton )`
   align-items: center;
-  box-sizing: border-box;
-  color: ${ DEFAULT_TEXT_COLOR };
-  cursor: pointer;
   display: flex;
-  font-size: 16px;
-  font-weight: 500;
-  height: 100%;
-  padding: 0 15px;
-  text-align: center;
-  text-decoration: none;
 
   &:hover {
     background-color: ${ WHITE_SMOKE_COLOR };
   }
 
-  & + & {
-    margin-left: 10px;
-  }
-
   &.nav-tab--selected {
     border-bottom: 2px solid ${ BLUE_COLOR };
-    color: ${ BLUE_COLOR };
+    .MuiButton-label {
+      color: ${ BLUE_COLOR };
+    }
 
     &:hover {
       background-color: ${ BLUE_COLOR_WITH_OPACITY };
-      color: ${ DARK_BLUE_COLOR };
+      .MuiButton-label {
+        color: ${ DARK_BLUE_COLOR };
+      }
     }
   }
 `
@@ -141,24 +160,6 @@ const MenuTitleContainer = styled.div`
   height: 63px;
   margin-bottom: 4px;
   padding-left: 24px;
-`
-
-// eslint-disable-next-line space-in-parens
-const StyledTaskIcon = styled(AddTaskIcon)`
-  fill: ${ DEFAULT_TEXT_COLOR };
-`
-
-// eslint-disable-next-line space-in-parens
-const StyledLink = styled(Link)`
-  display: flex;
-  height: 100%;
-  text-decoration: none;
-`
-
-// eslint-disable-next-line space-in-parens
-const StyledMenuIcon = styled(MenuIcon)`
-  fill: ${ DEFAULT_TEXT_COLOR };
-  margin-right: 15px;
 `
 
 const QHeaderFunction: React.FunctionComponent = () => {

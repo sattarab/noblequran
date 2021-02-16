@@ -25,18 +25,18 @@ import { SelectedAyahs, useQuranState } from "../../components/QuranContext"
 import { AL_QURAN, MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER } from "../../constants/common"
 import { getSurahs, getSurahAyahs, getTranslatorsGroupedByLanguage } from "../../services/surah"
 
-const LoadingText = styled.div`
-  font-weight: 500;
-  margin-top: 15px;
-  text-align: center;
-`
-
 const MAX_SCROLL_OFFSET = 205
 
-const MenuHeader = styled.div`
-  font-size: 12px;
-  font-weight: 500;
-  padding-top: 15px;
+const StyledArrowBackIcon = styled( ArrowBackIcon )`
+  fill: ${ DARK_TEXT_COLOR };
+`
+
+const StyledArrowDownIcon = styled( ArrowDownIcon )`
+  fill: ${ BLUE_COLOR };
+`
+
+const StyledArrowUpIcon = styled( ArrowUpIcon )`
+  fill: ${ BLUE_COLOR };
 `
 
 const StyledFormControlLabel = withStyles( {
@@ -46,6 +46,29 @@ const StyledFormControlLabel = withStyles( {
   },
 } )( FormControlLabel )
 
+const StyledRefreshIcon = styled( RefreshIcon )`
+  fill: ${ DEFAULT_TEXT_COLOR };
+
+  &.disable {
+    fill: ${ BORDER_COLOR };
+  }
+`
+
+const StyledSearchIcon = styled( SearchIcon )`
+  fill: ${ DEFAULT_TEXT_COLOR };
+`
+
+const LoadingText = styled.div`
+  font-weight: 500;
+  margin-top: 15px;
+  text-align: center;
+`
+
+const MenuHeader = styled.div`
+  font-size: 12px;
+  font-weight: 500;
+  padding-top: 15px;
+`
 
 const SurahPageErrorBody = styled.div`
   font-size: 16px;
@@ -353,30 +376,6 @@ const SurahPageTranslatorsSearchInputResetButton = withStyles( {
 
 const SurahPageTranslatorsSearchInputResetContainer = styled.div`
   border-left: 1px solid ${ BORDER_COLOR };
-`
-
-const StyledArrowBackIcon = styled( ArrowBackIcon )`
-  fill: ${ DARK_TEXT_COLOR };
-`
-
-const StyledArrowDownIcon = styled( ArrowDownIcon )`
-  fill: ${ BLUE_COLOR };
-`
-
-const StyledArrowUpIcon = styled( ArrowUpIcon )`
-  fill: ${ BLUE_COLOR };
-`
-
-const StyledRefreshIcon = styled( RefreshIcon )`
-  fill: ${ DEFAULT_TEXT_COLOR };
-
-  &.disable {
-    fill: ${ BORDER_COLOR };
-  }
-`
-
-const StyledSearchIcon = styled( SearchIcon )`
-  fill: ${ DEFAULT_TEXT_COLOR };
 `
 
 export const SurahPage: React.FunctionComponent = () => {

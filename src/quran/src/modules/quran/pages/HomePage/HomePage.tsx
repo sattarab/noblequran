@@ -139,11 +139,12 @@ const HomePageNoSurahsPlaceholderContainer = styled.div`
 
 const HomePageNoSurahsSmallPlaceholderListText = styled.ul`
   font-size: 13px;
+  line-height: 1.5;
   list-style-type: none;
   margin: 10px auto;
+  max-width: 300px;
   padding-inline-start: 0;
   text-align: left;
-  max-width: 300px;
 `
 
 const HomePageNoSurahsSmallPlaceholderText = styled.div`
@@ -222,7 +223,7 @@ const HomePageSurahsContentContainer = styled.div`
   padding: 15px;
 `
 
-const HomePageSurahBookmarkContainer = styled.div`
+const HomePageSurahBookmarkContainer = styled( IconButton )`
   cursor: pointer;
 `
 
@@ -441,7 +442,7 @@ export const HomePage: React.FunctionComponent = () => {
 
   let regex = searchText ? new RegExp( escapeRegex( searchText ), "i" ) : null
 
-  const toggleBookmarkSurah = ( event: React.MouseEvent<HTMLDivElement, MouseEvent>, surahId: string ) => {
+  const toggleBookmarkSurah = ( event: React.MouseEvent<HTMLButtonElement, MouseEvent>, surahId: string ) => {
     event.preventDefault()
     event.stopPropagation()
 
@@ -547,7 +548,9 @@ export const HomePage: React.FunctionComponent = () => {
           {
             isMobileDevice
             ? (
-              <StyledBookmarksIcon className={ displayMyBookmarks ?  "active" :  "" }/>
+              <IconButton>
+                <StyledBookmarksIcon className={ displayMyBookmarks ?  "active" :  "" }/>
+              </IconButton>
             ) : (
               <HomePageMyBookmarksButton className={ displayMyBookmarks ?  "active" :  "" }>My Bookmarks</HomePageMyBookmarksButton>
             )
