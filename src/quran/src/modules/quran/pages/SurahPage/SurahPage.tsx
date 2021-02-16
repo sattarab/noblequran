@@ -2,8 +2,7 @@ import Checkbox from "@material-ui/core/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
 import IconButton from "@material-ui/core/IconButton"
 import MenuItem from "@material-ui/core/MenuItem"
-import Popper from "@material-ui/core/Popper"
-import { makeStyles, withStyles } from "@material-ui/core/styles"
+import { withStyles } from "@material-ui/core/styles"
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { Helmet } from "react-helmet"
 import InfiniteScroll from "react-infinite-scroll-component"
@@ -21,6 +20,7 @@ import { Pagination } from "../../../../types/pagination"
 import { Surah } from "../../../../types/surah"
 import { Translator } from "../../../../types/translator"
 import { QLoader } from "../../components/Loader"
+import { QPopper } from "../../components/Popper"
 import { SelectedAyahs, useQuranState } from "../../components/QuranContext"
 import { AL_QURAN, MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER } from "../../constants/common"
 import { getSurahs, getSurahAyahs, getTranslatorsGroupedByLanguage } from "../../services/surah"
@@ -379,24 +379,13 @@ const StyledSearchIcon = styled( SearchIcon )`
   fill: ${ DEFAULT_TEXT_COLOR };
 `
 
-const useStyles = makeStyles( () => ( {
-  paper: {
-    background: `${ DEFAULT_TEXT_COLOR }`,
-    borderRadius: "5px",
-    color: "#ffffff",
-    padding: "8px",
-  },
-} ) )
-
 export const SurahPage: React.FunctionComponent = () => {
   const DEFAULT_TRANSLATION = "en.sahih"
 
-  const { selectedAyahs, setSelectedAyahs } = useQuranState()
-  const classes = useStyles()
   const history = useHistory()
   const location = useLocation()
+  const { selectedAyahs, setSelectedAyahs, surahs } = useQuranState()
   const translatorsMenuRef = useRef( null )
-  const { surahs } = useQuranState()
 
   const match = matchPath( location.pathname, "/:id" )
   const id = ( match?.params as { id: string } ).id
@@ -766,13 +755,12 @@ export const SurahPage: React.FunctionComponent = () => {
                                     </SurahPageMainContainerAyahWord>
                                     {
                                       word.translations[ 0 ].text && (
-                                        <Popper
+                                        <QPopper
                                           anchorEl={ popoverMap[ `${ ayah.number_in_surah }_${ word.id }` ] }
                                           id={ `${ ayah.number_in_surah }_${ word.id }` }
                                           open={ Boolean( popoverMap[ `${ ayah.number_in_surah }_${ word.id }` ] ) }
-                                        >
-                                          <div className={ classes.paper }>{ word.translations[ 0 ].text }</div>
-                                        </Popper>
+                                          text={ word.translations[ 0 ].text }
+                                        />
                                       )
                                     }
                                   </SurahPageMainContainerAyahWordContainer>

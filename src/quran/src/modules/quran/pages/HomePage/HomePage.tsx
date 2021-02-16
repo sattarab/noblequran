@@ -1,6 +1,5 @@
 import IconButton from "@material-ui/core/IconButton"
-import Popper from "@material-ui/core/Popper"
-import { makeStyles, withStyles } from "@material-ui/core/styles"
+import { withStyles } from "@material-ui/core/styles"
 import React, { useCallback, useEffect, useState } from "react"
 import { Helmet } from "react-helmet"
 import { useHistory } from "react-router-dom"
@@ -20,6 +19,7 @@ import {
 import { LARGE_SCREEN_MEDIA_QUERY, MEDIUM_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
 import { escapeRegex, getObjectFromLocalStorage, setObjectInLocalStorage } from "../../../../helpers/utility"
 import { Surah } from "../../../../types/surah"
+import { QPopper } from "../../components/Popper"
 import { useQuranState } from "../../components/QuranContext"
 import { AL_QURAN, MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER } from "../../constants/common"
 import { getSurahs } from "../../services/surah"
@@ -417,19 +417,9 @@ enum ViewType {
   LIST = "list",
 }
 
-const useStyles = makeStyles( () => ( {
-  paper: {
-    background: `${ DEFAULT_TEXT_COLOR }`,
-    borderRadius: "5px",
-    color: "#ffffff",
-    padding: "8px",
-  },
-} ) )
-
 export const HomePage: React.FunctionComponent = () => {
   const MAX_SCROLL_OFFSET = 87
 
-  const classes = useStyles()
   const history = useHistory()
   const { isMobileDevice } = useQuranState()
   const [ isSearchContainerFixed, setIsSearchContainerFixed ] = useState<boolean>( false )
@@ -570,12 +560,11 @@ export const HomePage: React.FunctionComponent = () => {
           onMouseOver={ ( event ) => openPopover( "reset", event ) }
         >
           <StyledRefreshIcon className={ ! displayMyBookmarks && ! searchText ?  "disable" :  "" } />
-          <Popper
+          <QPopper
             anchorEl={ popoverMap[ "reset" ] }
             open={ Boolean( popoverMap[ "reset" ] ) }
-          >
-            <div className={ classes.paper }>Reset</div>
-          </Popper>
+            text="Reset"
+          />
         </HomePageRefreshButtonIconContainer>
       </HomePageSearchContainer>
       <HomePageMainContainer>

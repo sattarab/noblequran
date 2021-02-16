@@ -7,6 +7,7 @@ import styled from "styled-components"
 import { AddTaskIcon, MenuIcon } from "../../../components/Icon"
 import { BLUE_COLOR, BLUE_COLOR_WITH_OPACITY, BORDER_COLOR, DARK_BLUE_COLOR, DEFAULT_TEXT_COLOR, WHITE_SMOKE_COLOR } from "../../../components/Styles"
 import { LARGE_SCREEN_MEDIA_QUERY } from "../../../helpers/responsive"
+import { QPopper } from "./Popper"
 import { useQuranState } from "./QuranContext"
 
 const HeaderActionIconContainer = styled.div`
@@ -160,21 +161,29 @@ const StyledMenuIcon = styled(MenuIcon)`
   margin-right: 15px;
 `
 
-export const QHeader: React.FunctionComponent = () => {
-  const { selectedAyahs } = useQuranState()
+const QHeaderFunction: React.FunctionComponent = () => {
   const history = useHistory()
   const location = useLocation()
+  const { isMobileDevice, selectedAyahs } = useQuranState()
   const [ isLeftMenuOpen, setIsLeftMenuOpen ] = useState<boolean>( false )
   const [ isRightMenuOpen, setIsRightMenuOpen ] = useState<boolean>( false )
-  const { isMobileDevice } = useQuranState()
+  const [ popoverMap, setPopoverMap ] = useState<{ [ key: string ]: Element | null }>( {} )
 
-  const toggleLeftMenu = ( open: boolean ) => {
+  const closePopover = ( key: string ) => {
+    setPopoverMap(  { ...popoverMap, ...{ [ key ]: null } } )
+  }
+
+  const openPopover = ( key: string, event: React.MouseEvent<HTMLSpanElement> ) => {
+    setPopoverMap(  { ...popoverMap, ...{ [ key ]: event.currentTarget } } )
+  }
+
+  const toggleLeftMenu = useCallback( ( open: boolean ) => {
     setIsLeftMenuOpen( open )
-  }
+  }, [] )
 
-  const toggleRightMenu = ( open: boolean ) => {
+  const toggleRightMenu = useCallback( ( open: boolean ) => {
     setIsRightMenuOpen( open )
-  }
+  }, [] )
 
   return (
     <React.Fragment>
@@ -200,11 +209,22 @@ export const QHeader: React.FunctionComponent = () => {
           )
         }
         <HeaderActionIconContainer>
-          <IconButton onClick={ () => toggleRightMenu( ! isRightMenuOpen ) }>
+          <IconButton
+            onClick={ () => toggleRightMenu( ! isRightMenuOpen ) }
+            onMouseOut={ () => closePopover( "selectedAyahs" ) }
+            onMouseOver={ ( event ) => openPopover( "selectedAyahs", event ) }
+          >
             <StyledTaskIcon />
           </IconButton>
           {
-            selectedAyahs && (
+            <QPopper
+              anchorEl={ popoverMap[ "selectedAyahs" ] }
+              open={ Boolean( popoverMap[ "selectedAyahs" ] ) }
+              text="View your select ayahs"
+            />
+          }
+          {
+            Object.keys( selectedAyahs ).length !== 0 && (
               <HeaderActionIconIndicator />
             )
           }
@@ -228,3 +248,5 @@ export const QHeader: React.FunctionComponent = () => {
     </React.Fragment>
   )
 }
+
+export const QHeader = memo( QHeaderFunction )
