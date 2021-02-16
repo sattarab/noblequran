@@ -269,6 +269,7 @@ const SurahPageTranslatorsMenu = styled.div`
   background: #ffffff;
   border: 1px solid ${ BORDER_COLOR };
   border-radius: 8px;
+  box-shadow: 0 2px 4px -1px rgb( 0 0 0 / 20% ), 0 4px 5px 0 rgb( 0 0 0 / 14% ), 0 1px 10px 0 rgb( 0 0 0 / 12% );
   max-height: 400px;
   min-height: 400px;
   overflow-y: scroll;
