@@ -1,4 +1,6 @@
+import Backdrop from "@material-ui/core/Backdrop"
 import Checkbox from "@material-ui/core/Checkbox"
+import CircularProgress from "@material-ui/core/CircularProgress"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
 import IconButton from "@material-ui/core/IconButton"
 import MenuItem from "@material-ui/core/MenuItem"
@@ -38,6 +40,12 @@ const StyledArrowDownIcon = styled( ArrowDownIcon )`
 const StyledArrowUpIcon = styled( ArrowUpIcon )`
   fill: ${ BLUE_COLOR };
 `
+
+const StyledBackdrop = withStyles( {
+  root: {
+    zIndex: 1000,
+  },
+} )( Backdrop )
 
 const StyledFormControlLabel = withStyles( {
   label: {
@@ -233,13 +241,18 @@ const SurahPageMainContainerHeader = styled.div`
 
 const SurahPageMainContainerSettingsButtonContainer = styled.div`
   position: relative;
+
+  & + & {
+    margin-left: 15px;
+  }
 `
 
 const SurahPageMainContainerSettingsContainer = styled.div`
   align-items: center;
   display: flex;
-  margin-top: 10px;
-  margin-bottom: 40px;
+  margin-bottom: 10px;
+  margin-top: 40px;
+  padding: 0 15px;
 `
 
 const SurahPageMainContainerSettingsButton = styled.button`
@@ -303,27 +316,36 @@ const SurahPageMainContainerTransliteratedTitle = styled.div`
   font-weight: 500;
 `
 
-const SurahPageTranslatorsMenu = styled.div`
+const SurahPageSettingsButtonMenu = styled.div`
   background: #ffffff;
   border: 1px solid ${ BORDER_COLOR };
   border-radius: 8px;
   box-shadow: 0 2px 4px -1px rgb( 0 0 0 / 20% ), 0 4px 5px 0 rgb( 0 0 0 / 14% ), 0 1px 10px 0 rgb( 0 0 0 / 12% );
   max-height: 400px;
-  min-height: 400px;
   overflow-y: scroll;
   padding: 15px;
   position: absolute;
   top: 40px;
-  width: 280px;
+  max-width: 280px;
+  min-width: 100px;
   z-index: 10;
 `
 
-const SurahPageTranslatorsMenuPlaceholderContainer = styled.div`
+const SurahPageSettingsButtonMenuItem = styled.div`
+  cursor: pointer;
+  padding: 15px;
+
+  &:hover {
+    background: ${ WHITE_SMOKE_COLOR };
+  }
+`
+
+const SurahPageSettingsButtonMenuPlaceholderContainer = styled.div`
   margin-top: 120px;
   text-align: center;
 `
 
-const SurahPageTranslatorsMenuSmallPlaceholderText = styled.div`
+const SurahPageSettingsButtonMenuSmallPlaceholderText = styled.div`
   font-size: 13px;
   margin-top: 30px;
 
@@ -333,7 +355,7 @@ const SurahPageTranslatorsMenuSmallPlaceholderText = styled.div`
   }
 `
 
-const SurahPageTranslatorsMenuPlaceholderText = styled.div`
+const SurahPageSettingsButtonMenuPlaceholderText = styled.div`
   font-weight: 500;
   margin-top: 15px;
 `
@@ -385,6 +407,7 @@ export const SurahPage: React.FunctionComponent = () => {
   const location = useLocation()
   const { selectedAyahs, setSelectedAyahs, surahs } = useQuranState()
   const translatorsMenuRef = useRef( null )
+  const versesMenuRef = useRef( null )
 
   const match = matchPath( location.pathname, "/:id" )
   const id = ( match?.params as { id: string } ).id
@@ -400,18 +423,21 @@ export const SurahPage: React.FunctionComponent = () => {
     }
   }
 
+  const numberOfAyahsArray = new Array( selectedSurah.number_of_ayahs ).fill( 0 ).map( ( value, index ) => index + 1 )
   const [ ayahs, setAyahs ] = useState<Ayah[]>( [] )
   const [ displayError, setDisplayError ] = useState<boolean>( false )
+  const [ displayTranslatorsMenu, setDisplayTranslatorsMenu ] = useState<boolean>( false )
+  const [ displayVerseMenu, setDisplayVerseMenu ] = useState<boolean>( false )
   const [ groupedTranslators, setGroupedTranslators ] = useState<{ [ language: string ]: Translator[] }>( {} )
   const [ filteredGroupedTranslators, setFilteredGroupedTranslators ] = useState<{ [ language: string ]: Translator[] }>( {} )
   const [ hasMore, setHasMore ] = useState( true )
   const [ isLoading, setIsLoading ] = useState<boolean>( true )
+  const [ isLoadingAyahsForJump, setIsLoadingAyahsForJump ] = useState<boolean>( false )
   const [ isSurahTitleFixed, setIsSurahTitleFixed ] = useState<boolean>( false )
   const [ pagination, setPagination ] = useState<Pagination | null>( null )
   const [ popoverMap, setPopoverMap ] = useState<{ [ key: string ]: Element | null }>( {} )
   const [ searchText, setSearchText ] = useState<string>( "" )
   const [ selectedTranslations, setSelectedTranslations ] = useState<string[]>( getObjectFromLocalStorage( "translations" ) || [ DEFAULT_TRANSLATION ] )
-  const [ displayTranslatorsMenu, setDisplayTranslatorsMenu ] = useState<boolean>( false )
 
   let regex = searchText ? new RegExp( escapeRegex( searchText ), "i" ) : null
 
@@ -420,6 +446,12 @@ export const SurahPage: React.FunctionComponent = () => {
   useClickAway( translatorsMenuRef, () => {
     if( displayTranslatorsMenu ) {
       setDisplayTranslatorsMenu( false )
+    }
+  } )
+
+  useClickAway( versesMenuRef, () => {
+    if( displayVerseMenu ) {
+      setDisplayVerseMenu( false )
     }
   } )
 
@@ -537,28 +569,78 @@ export const SurahPage: React.FunctionComponent = () => {
     return translatorNames[ identifier ]
   }, [ filteredGroupedTranslators ] )
 
+  const goToAyah = async ( ayahNumberInSurah: number ) => {
+    if( ! pagination ) {
+      return
+    }
+
+    setDisplayVerseMenu( false )
+    setIsLoadingAyahsForJump( true )
+
+    if( pagination.page_end && pagination.page_end < ayahNumberInSurah - 1 ) {
+      const response = await getSurahAyahs( selectedSurah.id, { page: 1, per_page: ayahNumberInSurah + 5, translations: selectedTranslations } )
+        .catch( logError )
+
+
+      if( ! response ) {
+        setIsLoadingAyahsForJump( false )
+        return
+      }
+
+      const { items } = response
+      const updatedAyahs: Ayah[] = [ ...ayahs ]
+
+      for( const ayah of items ) {
+        if( updatedAyahs.findIndex( ( existingAyah ) => existingAyah.id === ayah.id ) === -1 ) {
+          updatedAyahs.push( ayah )
+        }
+      }
+
+      setAyahs( updatedAyahs )
+
+      setPagination( { ...pagination, ...response.pagination } )
+    }
+
+    setTimeout( () => {
+      const verse = document.getElementById( `verse-${ ayahNumberInSurah }` )
+      setIsLoadingAyahsForJump( false )
+
+      if( ! verse ) {
+        return
+      }
+
+      window.scrollTo( 0, verse.getBoundingClientRect().top + window.scrollY - 450 )
+    }, 200 )
+  }
+
   const loadAyahs = useCallback( () => {
     if( ayahs.length === selectedSurah.number_of_ayahs || ! pagination?.next_page ) {
       setHasMore( false )
       return
     }
 
-    getSurahAyahs( selectedSurah.id, { page: pagination.next_page, per_page: 10, translations: selectedTranslations } )
+    getSurahAyahs( selectedSurah.id, { page: pagination.next_page, per_page: pagination.per_page, translations: selectedTranslations } )
       .then( ( response ) => {
         const { items } = response
         const updatedAyahs: Ayah[] = [ ...ayahs ]
 
         for( const ayah of items ) {
-          updatedAyahs.push( ayah )
+          if( updatedAyahs.findIndex( ( existingAyah ) => existingAyah.id === ayah.id ) === -1 ) {
+            updatedAyahs.push( ayah )
+          }
         }
 
-        setAyahs( [ ...ayahs, ...items ] )
+        setAyahs( updatedAyahs )
 
         setPagination( { ...pagination, ...response.pagination } )
       } )
       .catch( logError )
 
   }, [ pagination ] )
+
+  const onClickSelectVerseHandler = useCallback( () => {
+    setDisplayVerseMenu( ! displayVerseMenu )
+  }, [ displayVerseMenu ] )
 
   const onClickTranslatorsHandler = useCallback( () => {
     setDisplayTranslatorsMenu( ! displayTranslatorsMenu )
@@ -640,6 +722,9 @@ export const SurahPage: React.FunctionComponent = () => {
               </SurahPageErrorContainer>
             ) : (
               <SurahPageContainer>
+                <StyledBackdrop open={ isLoadingAyahsForJump }>
+                  <CircularProgress />
+                </StyledBackdrop>
                 <SurahPageMainContainer>
                   <SurahPageMainContainerHeader className={ isSurahTitleFixed ? "fixed" : "" }>
                     <SurahPageMainContainerTitleContainer>
@@ -655,8 +740,6 @@ export const SurahPage: React.FunctionComponent = () => {
                       <SurahPageMainContainerTransliteratedTitle>{ selectedSurah.transliterations[ 0 ].text }</SurahPageMainContainerTransliteratedTitle>
                       <SurahPageMainContainerTranslatedTitle>{ selectedSurah.translations[ 0 ].text } &#8226; { selectedSurah.number_of_ayahs } verses</SurahPageMainContainerTranslatedTitle>
                     </SurahPageMainContainerTitleContainer>
-                  </SurahPageMainContainerHeader>
-                  <SurahPageMainContainerBody>
                     <SurahPageMainContainerSettingsContainer>
                       <SurahPageMainContainerSettingsButtonContainer>
                         <SurahPageMainContainerSettingsButton
@@ -677,7 +760,7 @@ export const SurahPage: React.FunctionComponent = () => {
                         </SurahPageMainContainerSettingsButton>
                         {
                           displayTranslatorsMenu && (
-                            <SurahPageTranslatorsMenu ref={ translatorsMenuRef }>
+                            <SurahPageSettingsButtonMenu ref={ translatorsMenuRef }>
                               <SurahPageTranslatorsSearchInputContainer>
                                 <StyledSearchIcon />
                                 <SurahPageTranslatorsSearchInput autoComplete="false" onChange={ onSearch } placeholder="Search" type="text" value={ searchText }/>
@@ -691,7 +774,7 @@ export const SurahPage: React.FunctionComponent = () => {
                                 </SurahPageTranslatorsSearchInputResetContainer>
                               </SurahPageTranslatorsSearchInputContainer>
                               {
-                                Object.keys( filteredGroupedTranslators ).length
+                                Object.keys( filteredGroupedTranslators ).length > 0
                                 ? (
                                   Object.entries( filteredGroupedTranslators ).map( ( [ language, translators ] ) => (
                                     <div key={ language }>
@@ -715,22 +798,53 @@ export const SurahPage: React.FunctionComponent = () => {
                                     </div>
                                   ) )
                                 ) : (
-                                  <SurahPageTranslatorsMenuPlaceholderContainer>
-                                    <SurahPageTranslatorsMenuPlaceholderText>Sorry, we couldn&apos;t find any matches for this search.</SurahPageTranslatorsMenuPlaceholderText>
-                                    <SurahPageTranslatorsMenuSmallPlaceholderText>
+                                  <SurahPageSettingsButtonMenuPlaceholderContainer>
+                                    <SurahPageSettingsButtonMenuPlaceholderText>Sorry, we couldn&apos;t find any matches for this search.</SurahPageSettingsButtonMenuPlaceholderText>
+                                    <SurahPageSettingsButtonMenuSmallPlaceholderText>
                                       <div>Try another search, or:</div>
                                       <ul>
                                         <li>&#8226;&nbsp;Perhaps you can try searching by language</li>
                                       </ul>
-                                    </SurahPageTranslatorsMenuSmallPlaceholderText>
-                                  </SurahPageTranslatorsMenuPlaceholderContainer>
+                                    </SurahPageSettingsButtonMenuSmallPlaceholderText>
+                                  </SurahPageSettingsButtonMenuPlaceholderContainer>
                                 )
                               }
-                            </SurahPageTranslatorsMenu>
+                            </SurahPageSettingsButtonMenu>
+                          )
+                        }
+                      </SurahPageMainContainerSettingsButtonContainer>
+                      <SurahPageMainContainerSettingsButtonContainer>
+                        <SurahPageMainContainerSettingsButton
+                          aria-controls="verse-menu"
+                          aria-haspopup="true"
+                          className={ displayVerseMenu ? "active" : "" }
+                          onClick={ onClickSelectVerseHandler }
+                        >
+                          Verse
+                          {
+                            displayVerseMenu
+                            ? (
+                              <StyledArrowUpIcon />
+                            ) : (
+                              <StyledArrowDownIcon />
+                            )
+                          }
+                        </SurahPageMainContainerSettingsButton>
+                        {
+                          displayVerseMenu && (
+                            <SurahPageSettingsButtonMenu ref={ versesMenuRef }>
+                              {
+                                numberOfAyahsArray.map( ( ayah_number ) => (
+                                  <SurahPageSettingsButtonMenuItem key={ ayah_number } onClick={ () => goToAyah( ayah_number ) }>{ ayah_number }</SurahPageSettingsButtonMenuItem>
+                                ) )
+                              }
+                            </SurahPageSettingsButtonMenu>
                           )
                         }
                       </SurahPageMainContainerSettingsButtonContainer>
                     </SurahPageMainContainerSettingsContainer>
+                  </SurahPageMainContainerHeader>
+                  <SurahPageMainContainerBody>
                     <SurahPageMainContainerAyahsContainer
                       dataLength={ ayahs.length }
                       next={ loadAyahs }
@@ -739,7 +853,7 @@ export const SurahPage: React.FunctionComponent = () => {
                     >
                       {
                         ayahs?.map( ( ayah ) => (
-                          <SurahPageMainContainerAyahContainer key={ ayah.number }>
+                          <SurahPageMainContainerAyahContainer key={ ayah.number } id={ `verse-${ ayah.number_in_surah }` }>
                             <SurahPageMainContainerAyahNumberContainer>{ ayah.surah_id }:{ ayah.number_in_surah }</SurahPageMainContainerAyahNumberContainer>
                             <SurahPageMainContainerAyahArabicText className={ `p${ ayah.page }` }>
                               {
