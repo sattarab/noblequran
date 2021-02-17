@@ -231,6 +231,10 @@ const SurahPageMainContainerHeader = styled.div`
   }
 `
 
+const SurahPageMainContainerSettingsButtonContainer = styled.div`
+  position: relative;
+`
+
 const SurahPageMainContainerSettingsContainer = styled.div`
   align-items: center;
   display: flex;
@@ -238,7 +242,7 @@ const SurahPageMainContainerSettingsContainer = styled.div`
   margin-bottom: 40px;
 `
 
-const SurahPageMainContainerSettingsContainerButton = styled.button`
+const SurahPageMainContainerSettingsButton = styled.button`
   align-items: center;
   background: transparent;
   border: 1px solid ${ BORDER_COLOR };
@@ -297,10 +301,6 @@ const SurahPageMainContainerTranslatedTitle = styled.div`
 const SurahPageMainContainerTransliteratedTitle = styled.div`
   font-size: 16px;
   font-weight: 500;
-`
-
-const SurahPageTranslatorsContainer = styled.div`
-  position: relative;
 `
 
 const SurahPageTranslatorsMenu = styled.div`
@@ -658,8 +658,8 @@ export const SurahPage: React.FunctionComponent = () => {
                   </SurahPageMainContainerHeader>
                   <SurahPageMainContainerBody>
                     <SurahPageMainContainerSettingsContainer>
-                      <SurahPageTranslatorsContainer>
-                        <SurahPageMainContainerSettingsContainerButton
+                      <SurahPageMainContainerSettingsButtonContainer>
+                        <SurahPageMainContainerSettingsButton
                           aria-controls="translators-menu"
                           aria-haspopup="true"
                           className={ selectedTranslations.length > 1 || displayTranslatorsMenu ? "active" : "" }
@@ -674,7 +674,7 @@ export const SurahPage: React.FunctionComponent = () => {
                               <StyledArrowDownIcon />
                             )
                           }
-                        </SurahPageMainContainerSettingsContainerButton>
+                        </SurahPageMainContainerSettingsButton>
                         {
                           displayTranslatorsMenu && (
                             <SurahPageTranslatorsMenu ref={ translatorsMenuRef }>
@@ -729,7 +729,7 @@ export const SurahPage: React.FunctionComponent = () => {
                             </SurahPageTranslatorsMenu>
                           )
                         }
-                      </SurahPageTranslatorsContainer>
+                      </SurahPageMainContainerSettingsButtonContainer>
                     </SurahPageMainContainerSettingsContainer>
                     <SurahPageMainContainerAyahsContainer
                       dataLength={ ayahs.length }
