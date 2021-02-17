@@ -9,6 +9,8 @@
     "prebuild": "rimraf dist",
     "build": "nest build",
     "clean": "rm -rf ./node_modules",
+    "clean-install": "rm -rf ./node_modules && npm install",
+    "clean-build-start": "rm -rf ./node_modules && npm install && npm run start:dev",
     "format": "prettier --write \"server/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
