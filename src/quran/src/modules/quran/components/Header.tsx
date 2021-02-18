@@ -29,6 +29,12 @@ const StyledLink = styled( Link )`
   text-decoration: none;
 `
 
+const StyledLinkWithMargin = styled( StyledLink )`
+  & + & {
+    margin-left: 10px;
+  }
+`
+
 const StyledMenuIcon = styled( MenuIcon )`
   fill: ${ DEFAULT_TEXT_COLOR };
   margin-right: 15px;
@@ -200,12 +206,12 @@ const QHeaderFunction: React.FunctionComponent = () => {
         {
           ! isMobileDevice && (
             <HeaderNavigationContainer>
-              <StyledLink to="/">
+              <StyledLinkWithMargin to="/">
                 <HeaderNavigationTab className={ location.pathname === "/" ? "nav-tab--selected" : "" }>Browse Surahs</HeaderNavigationTab>
-              </StyledLink>
-              <StyledLink to="/about">
+              </StyledLinkWithMargin>
+              <StyledLinkWithMargin to="/about">
                 <HeaderNavigationTab className={ location.pathname === "/about" ? "nav-tab--selected" : "" }>About</HeaderNavigationTab>
-              </StyledLink>
+              </StyledLinkWithMargin>
             </HeaderNavigationContainer>
           )
         }

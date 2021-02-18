@@ -8,7 +8,8 @@ export const DARK_TEXT_COLOR = "#3c4043"
 export const DARKER_TEXT_COLOR = "#333333"
 export const DEFAULT_TEXT_COLOR = "#5f6368"
 export const WHITE_SMOKE_COLOR = "#f5f5f5"
-export const WHITE_SMOKE_COLOR_WITH_OPACITY = "rgba( 245, 245, 245, 0.7 )"
+export const LIGHT_WHITE_SMOKE_COLOR = "rgba( 245, 245, 245, 0.7 )"
+export const LIGHTER_WHITE_SMOKE_COLOR = "rgba( 245, 245, 245, 0.2 )"
 
 // Font Family
 export const BASE_FONT_FAMILY = "HarmoniaSansPro"
