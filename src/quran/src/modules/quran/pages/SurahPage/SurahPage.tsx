@@ -426,7 +426,7 @@ export const SurahPage: React.FunctionComponent = () => {
 
   const history = useHistory()
   const location = useLocation()
-  const { isMobileDevice, selectedAyahs, setSelectedAyahs, surahs } = useQuranState()
+  const { isMobileDevice, isSurahNamesFontLoaded, selectedAyahs, setSelectedAyahs, surahs } = useQuranState()
   const translatorsMenuRef = useRef( null )
   const versesMenuRef = useRef( null )
 
@@ -763,7 +763,7 @@ export const SurahPage: React.FunctionComponent = () => {
                         </SurahPageMainContainerHeaderBackIconContainer>
                       )
                     }
-                    <SurahPageMainContainerTitle dangerouslySetInnerHTML={ { __html: selectedSurah.unicode } } className={ isSurahTitleFixed ? "fixed" : "" } />
+                    <SurahPageMainContainerTitle dangerouslySetInnerHTML={ { __html: selectedSurah.unicode } } className={ isSurahTitleFixed ? "fixed" : "" } style={ { visibility: isSurahNamesFontLoaded ? "visible" : "hidden" } } />
                     <SurahPageMainContainerTransliteratedTitle>{ selectedSurah.transliterations[ 0 ].text }</SurahPageMainContainerTransliteratedTitle>
                     <SurahPageMainContainerTranslatedTitle>{ selectedSurah.translations[ 0 ].text } &#8226; { selectedSurah.number_of_ayahs } verses</SurahPageMainContainerTranslatedTitle>
                   </SurahPageMainContainerTitleContainer>

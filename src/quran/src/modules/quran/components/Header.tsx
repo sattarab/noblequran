@@ -1,7 +1,7 @@
 import { withStyles } from "@material-ui/core"
 import Button from "@material-ui/core/Button"
+import Drawer from "@material-ui/core/Drawer"
 import IconButton from "@material-ui/core/IconButton"
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer"
 import React, { memo, useCallback, useState } from "react"
 import { Link, useHistory, useLocation } from "react-router-dom"
 import styled from "styled-components"
@@ -237,7 +237,7 @@ const QHeaderFunction: React.FunctionComponent = () => {
           }
         </HeaderActionIconContainer>
       </HeaderContainer>
-      <SwipeableDrawer onClose={ () => toggleLeftMenu( false ) } onOpen={ () => toggleLeftMenu( true ) } open={ isLeftMenuOpen } >
+      <Drawer onClose={ () => toggleLeftMenu( false ) } open={ isLeftMenuOpen } >
         <MenuContainer>
           <MenuTitleContainer>
             <HeaderTitle>Quran</HeaderTitle>
@@ -251,7 +251,7 @@ const QHeaderFunction: React.FunctionComponent = () => {
             </StyledLink>
           </MenuNavigationTabContainer>
         </MenuContainer>
-      </SwipeableDrawer>
+      </Drawer>
     </React.Fragment>
   )
 }

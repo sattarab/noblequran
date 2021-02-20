@@ -1,0 +1,11 @@
+{
+  "name": "noblequran",
+  "version": "0.0.0-1",
+  "description": "",
+  "author": "NobleQuran",
+  "private": true,
+  "scripts": {
+    "start-haproxy": "cd ops/haproxy && haproxy -f ./dev.cfg",
+    "start-server": "cd server && npm run start:dev"
+  }
+}

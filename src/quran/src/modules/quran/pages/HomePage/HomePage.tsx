@@ -422,7 +422,7 @@ export const HomePage: React.FunctionComponent = () => {
   const MAX_SCROLL_OFFSET = 87
 
   const history = useHistory()
-  const { isMobileDevice } = useQuranState()
+  const { isMobileDevice, isSurahNamesFontLoaded } = useQuranState()
   const [ isSearchContainerFixed, setIsSearchContainerFixed ] = useState<boolean>( false )
   const [ displayMyBookmarks, setMyDisplayBookmarks ] = useState<boolean>( false )
   const [ myBookmarks, setMyBookmarks ] = useState<string[]>( getObjectFromLocalStorage( "surahBookmarks" ) || [] )
@@ -613,7 +613,7 @@ export const HomePage: React.FunctionComponent = () => {
                             <HomePageSurahGridContainer aria-label={ surah.transliterations[ 0 ].text } onClick={ () => readSurah( surah ) } key={ surah.id }>
                               <HomePageSurahGridInnerContainer>
                                 <HomePageSurahGridTitleContainer>
-                                  <HomePageSurahGridTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } />
+                                  <HomePageSurahGridTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } style={ { visibility: isSurahNamesFontLoaded ? "visible" : "hidden" } } />
                                   <HomePageSurahGridTranslatedTextContainer>
                                     <HomePageSurahTranslatedText>{ surah.translations[ 0 ].text }</HomePageSurahTranslatedText>
                                   </HomePageSurahGridTranslatedTextContainer>
@@ -647,7 +647,7 @@ export const HomePage: React.FunctionComponent = () => {
                             <HomePageSurahListContainer aria-label={ surah.transliterations[ 0 ].text } onClick={ () => readSurah( surah ) } key={ surah.id }>
                               <HomePageSurahListTitleContainer>
                                 <HomePageSurahTranslatedText>{ surah.translations[ 0 ].text }</HomePageSurahTranslatedText>
-                                <HomePageSurahListTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } />
+                                <HomePageSurahListTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } style={ { visibility: isSurahNamesFontLoaded ? "visible" : "hidden" } } />
                               </HomePageSurahListTitleContainer>
                               <HomePageSurahListDetailsContainer>
                                 <HomePageSurahTransliteratedText>{ surah.number } &#8226; { surah.transliterations[ 0 ].text }</HomePageSurahTransliteratedText>

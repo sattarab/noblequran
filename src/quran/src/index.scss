@@ -21,7 +21,9 @@
 
 @font-face {
   font-family: "QuranKarim";
-  src: url( "./fonts/QuranKarim/QuranKarim.ttf" ) format( "truetype" );
+  src: url( "./fonts/QuranKarim/QuranKarim.woff2" ) format( "woff2" ),
+       url( "./fonts/QuranKarim/QuranKarim.woff" ) format( "woff" ),
+       url( "./fonts/QuranKarim/QuranKarim.ttf" ) format( "truetype" ),;
 }
 
 @for $i from 1 through 604 {
@@ -41,6 +43,10 @@ body {
   font-family: "HarmoniaSansPro", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+body, html {
+  height: 100%;
 }
 
 a,

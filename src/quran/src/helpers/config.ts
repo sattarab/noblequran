@@ -1,10 +1,12 @@
 export enum ConfigEnv {
-  DEV = "dev",
-  STG = "stg",
-  PRD = "prd",
+  DEV = "development",
+  STG = "staging",
+  PRD = "production",
 }
 
 export const config = {
-  env: process.env.REACT_APP_ENV as ConfigEnv,
+  env: process.env.NODE_ENV as ConfigEnv,
   version: process.env.REACT_APP_VERSION as string,
 }
+
+console.log( "config.env", config.env )
