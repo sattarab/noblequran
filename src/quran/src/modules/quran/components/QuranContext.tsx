@@ -15,10 +15,12 @@ export interface SelectedAyahs {
 
 interface QuranContextType {
   isMobileDevice: boolean
+  isRightDrawerOpen: boolean
   isSurahNamesFontLoaded: boolean
   selectedAyahs: SelectedAyahs
   surahs: { [ id: string ]: Surah }
 
+  setIsRightDrawerOpen( isRightDrawerOpen: boolean ): void
   setIsSurahNamesFontLoaded( isSurahNamesFontLoaded: boolean ): void
   setSelectedAyahs( selectedAyahs: SelectedAyahs ): void
 }
@@ -26,8 +28,9 @@ interface QuranContextType {
 export const QuranContext = createContext<QuranContextType | null>( null )
 
 
-export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildren<Record<string, JSX.Element[]>>> = ( props ) => {
+export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildren<Record<string, JSX.Element>>> = ( props ) => {
   const isMobileDevice = useMedia( MOBILE_SCREEN_MEDIA_QUERY, ! isGreaterThanMediumScreen() )
+  const [ isRightDrawerOpen, setIsRightDrawerOpen ] = useState<boolean>( false )
   const [ isSurahNamesFontLoaded, setIsSurahNamesFontLoaded ] = useState<boolean>( false )
   const [ selectedAyahs, setSelectedAyahs ] = useState<{ [ id: string ]: SelectedAyahModel }>( getObjectFromLocalStorage( "selectedAyahs" ) || {} )
   const surahs = getSurahs().reduce( ( result: { [ id: string ]: Surah }, surah ) => {
@@ -45,10 +48,12 @@ export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildr
 
   const contextValue: QuranContextType = {
     isMobileDevice,
+    isRightDrawerOpen,
     isSurahNamesFontLoaded,
     selectedAyahs,
     surahs,
 
+    setIsRightDrawerOpen,
     setIsSurahNamesFontLoaded,
     setSelectedAyahs,
   }

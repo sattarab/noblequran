@@ -12,6 +12,9 @@ interface QPopperProps {
 }
 
 const useStyles = makeStyles( () => ( {
+  root: {
+    zIndex: 10000,
+  },
   paper: {
     background: `${ DEFAULT_TEXT_COLOR }`,
     borderRadius: "5px",
@@ -27,6 +30,7 @@ const QPopperFunction: React.FunctionComponent<QPopperProps> = ( { anchorEl, id,
   return (
     <Popper
       anchorEl={ anchorEl }
+      className={ classes.root }
       id={ id }
       open={ open }
     >

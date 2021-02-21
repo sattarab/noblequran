@@ -14,6 +14,7 @@ import {
   DARKER_TEXT_COLOR,
   DARK_TEXT_COLOR,
   DEFAULT_TEXT_COLOR,
+  HEADER_HEIGHT,
   WHITE_SMOKE_COLOR,
 } from "../../../../components/Styles"
 import { LARGE_SCREEN_MEDIA_QUERY, MEDIUM_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
@@ -180,6 +181,7 @@ const HomePageSearchContainer = styled.div`
     border: none;
     border-bottom: 1px solid ${ BORDER_COLOR };
     border-radius: 0;
+    height: ${ HEADER_HEIGHT };
     left: 0;
     margin: 0;
     position: fixed;
@@ -239,11 +241,11 @@ const HomePageSurahGridContainer = styled.div`
   padding: 15px;
 
   @media ${ MEDIUM_SCREEN_MEDIA_QUERY } {
-    flex: 0 1 33%;
+    flex: 0 1 50%;
   }
 
   @media ${ LARGE_SCREEN_MEDIA_QUERY } {
-    flex: 0 1 25%;
+    flex: 0 1 33%;
   }
 `
 
@@ -610,7 +612,10 @@ export const HomePage: React.FunctionComponent = () => {
                       <HomePageSurahsGridContainer>
                         {
                           surahs.map( ( surah ) => (
-                            <HomePageSurahGridContainer aria-label={ surah.transliterations[ 0 ].text } onClick={ () => readSurah( surah ) } key={ surah.id }>
+                            <HomePageSurahGridContainer
+                              aria-label={ surah.transliterations[ 0 ].text }
+                              onClick={ () => readSurah( surah ) } key={ surah.id }
+                            >
                               <HomePageSurahGridInnerContainer>
                                 <HomePageSurahGridTitleContainer>
                                   <HomePageSurahGridTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } style={ { visibility: isSurahNamesFontLoaded ? "visible" : "hidden" } } />

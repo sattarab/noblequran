@@ -14,3 +14,6 @@ export const LIGHTER_WHITE_SMOKE_COLOR = "rgba( 245, 245, 245, 0.2 )"
 // Font Family
 export const BASE_FONT_FAMILY = "HarmoniaSansPro"
 export const QURAN_KARIM_FONT_FAMILY = "QuranKarim"
+
+// Height Constants
+export const HEADER_HEIGHT = "63px"
