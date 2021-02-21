@@ -245,7 +245,7 @@ const HomePageSurahGridContainer = styled.div`
   }
 
   @media ${ LARGE_SCREEN_MEDIA_QUERY } {
-    flex: 0 1 33%;
+    flex: 0 1 33.3333%;
   }
 `
 

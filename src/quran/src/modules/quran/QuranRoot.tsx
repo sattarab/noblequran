@@ -55,6 +55,7 @@ const useStyles = makeStyles( ( theme: Theme ) =>
       width: RIGHT_DRAWER_WIDTH,
     },
     drawerCloseIcon: {
+      cursor: "pointer",
       fill: DEFAULT_TEXT_COLOR,
     },
     drawerHeaderContainer: {
