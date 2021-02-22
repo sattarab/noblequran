@@ -1,5 +1,7 @@
+import Button from "@material-ui/core/Button"
 import IconButton from "@material-ui/core/IconButton"
-import { withStyles } from "@material-ui/core/styles"
+import { createStyles, makeStyles, withStyles } from "@material-ui/core/styles"
+import clsx from "clsx"
 import React, { useCallback, useEffect, useState } from "react"
 import { Helmet } from "react-helmet"
 import { useHistory } from "react-router-dom"
@@ -45,9 +47,6 @@ const HomePageContentContainer = styled.div`
   flex: 1;
 `
 
-const HomePageContentOptionContainer = styled.div`
-`
-
 const HomePageContentOptionsContainer = styled.div`
   align-items: center;
   display: flex;
@@ -55,13 +54,14 @@ const HomePageContentOptionsContainer = styled.div`
   padding: 0 30px;
 `
 
-const HomePageContentViewOptionContainer = styled.div`
+const HomePageContentViewOptionContainer = styled( Button )`
   align-items: center;
   border-radius: 8px;
   cursor: pointer;
   display: flex;
   font-size: 14px;
   font-weight: 400;
+  text-transform: none;
 
   & + & {
     margin-left: 20px;
@@ -96,9 +96,9 @@ const HomePageDisplayNumberContainer = styled.div`
 
 const HomePageMainContainer = styled.div`
   display: flex;
+  max-width: 100%;
   min-height: 100%;
   width: 100%;
-  max-width: 100%;
 `
 
 const HomePageMyBookmarksContainer = styled.div`
@@ -109,29 +109,35 @@ const HomePageMyBookmarksContainer = styled.div`
   padding: 0 15px;
 `
 
-const HomePageMyBookmarksButton = styled.div`
+const HomePageMyBookmarksButton = styled( Button )`
   border-radius: 5px;
   cursor: pointer;
   font-size: 15px;
   font-weight: 500;
   padding: 10px 15px;
+  text-transform: none;
 
   &:hover {
     background-color: ${ WHITE_SMOKE_COLOR };
   }
 
   &.active {
-    color: ${ BLUE_COLOR };
+    .MuiButton-label {
+      color: ${ BLUE_COLOR };
+    }
 
     &:hover {
       background: ${ BLUE_COLOR_WITH_OPACITY };
     }
   }
 `
-const HomePageNoSurahsClearFilterLink = styled.div`
+
+const HomePageNoSurahsClearFilterLink = styled.a`
   color: ${ BLUE_COLOR };
+  cursor: pointer;
   font-weight: 500;
   margin-top: 30px;
+  text-decoration: none;
 `
 
 const HomePageNoSurahsPlaceholderContainer = styled.div`
@@ -197,6 +203,7 @@ const HomePageSearchInput = styled.input`
   color: ${ DEFAULT_TEXT_COLOR };
   font-size: 16px;
   font-weight: 500;
+  height: 32px;
   width: calc( 100% - 70px );
 
   &::-moz-placeholder,
@@ -215,9 +222,9 @@ const HomePageSearchInputContainer = styled.div`
   align-items: center;
   border-right: 1px solid ${ BORDER_COLOR };
   display: flex;
+  flex: 1;
   height: 100%;
   min-width: 100px;
-  flex: 1;
   padding-left: 15px;
 `
 
@@ -245,7 +252,7 @@ const HomePageSurahGridContainer = styled.div`
   }
 
   @media ${ LARGE_SCREEN_MEDIA_QUERY } {
-    flex: 0 1 33.3333%;
+    flex: 0 1 33.33%;
   }
 `
 
@@ -281,8 +288,8 @@ const HomePageSurahGridTitleText = styled.div`
 const HomePageSurahGridDetailsContainer = styled.div`
   border-bottom: 1px solid ${ BORDER_COLOR };
   display: flex;
-  padding: 15px;
   flex-direction: column;
+  padding: 15px;
 `
 
 const HomePageSurahGridFooterContainer = styled.div`
@@ -376,44 +383,19 @@ const HomePageSurahTransliteratedText = styled.div`
   font-weight: 500;
 `
 
-const StyledBookmarksIcon = styled( BookmarksIcon )`
-  fill: ${ DEFAULT_TEXT_COLOR };
-
-  &.active {
-    fill: ${ BLUE_COLOR };
-  }
-`
-
-const StyledBookmarkAddIcon = styled( BookmarkAddIcon )`
-  fill: ${ DEFAULT_TEXT_COLOR };
-`
-
-const StyledBookmarkRemoveIcon = styled( BookmarkRemoveIcon )`
-  fill: ${ BLUE_COLOR };
-`
-
-const StyledClearIcon = styled( ClearIcon )`
-  fill: ${ DEFAULT_TEXT_COLOR };
-`
-
-const StyledGridIcon = styled( GridIcon )`
-  fill: ${ DEFAULT_TEXT_COLOR };
-`
-
-const StyledListIcon = styled( ListIcon )`
-  fill: ${ DEFAULT_TEXT_COLOR };
-`
-const StyledRefreshIcon = styled( RefreshIcon )`
-  fill: ${ DEFAULT_TEXT_COLOR };
-
-  &.disable {
-    fill: ${ BORDER_COLOR };
-  }
-`
-
-const StyledSearchIcon = styled( SearchIcon )`
-  fill: ${ DEFAULT_TEXT_COLOR };
-`
+const useStyles = makeStyles( () =>
+  createStyles( {
+    svgIcon: {
+      fill: DEFAULT_TEXT_COLOR,
+    },
+    svgIconActive: {
+      fill: BLUE_COLOR,
+    },
+    svgIconDisabled: {
+      fill: BORDER_COLOR,
+    },
+  } ),
+)
 
 enum ViewType {
   GRID = "grid",
@@ -421,6 +403,7 @@ enum ViewType {
 }
 
 export const HomePage: React.FunctionComponent = () => {
+  const classes = useStyles()
   const MAX_SCROLL_OFFSET = 87
 
   const history = useHistory()
@@ -534,14 +517,14 @@ export const HomePage: React.FunctionComponent = () => {
       <Helmet>
         <title>Browse Surahs | The Noble Quran | { AL_QURAN }</title>
       </Helmet>
-      <HomePageSearchContainer className={ isSearchContainerFixed ? "fixed" : "" }>
+      <HomePageSearchContainer className={ clsx( { "fixed": isSearchContainerFixed } ) }>
         <HomePageSearchInputContainer>
-          <StyledSearchIcon />
+          <SearchIcon className={ classes.svgIcon } />
           <HomePageSearchInput autoComplete="false" onChange={ onSearch } placeholder="Search" type="text" value={ searchText } />
           {
             searchText && (
               <HomePageClearIconContainer onClick={ clearSearch } >
-                <StyledClearIcon />
+                <ClearIcon className={ classes.svgIcon } />
               </HomePageClearIconContainer>
             )
           }
@@ -551,10 +534,10 @@ export const HomePage: React.FunctionComponent = () => {
             isMobileDevice
             ? (
               <IconButton>
-                <StyledBookmarksIcon className={ displayMyBookmarks ?  "active" :  "" }/>
+                <BookmarksIcon className={ clsx( { [ classes.svgIconActive ]: displayMyBookmarks }, classes.svgIcon ) } />
               </IconButton>
             ) : (
-              <HomePageMyBookmarksButton className={ displayMyBookmarks ?  "active" :  "" }>My Bookmarks</HomePageMyBookmarksButton>
+              <HomePageMyBookmarksButton className={ clsx( { "active": displayMyBookmarks } ) }>My Bookmarks</HomePageMyBookmarksButton>
             )
           }
         </HomePageMyBookmarksContainer>
@@ -564,7 +547,7 @@ export const HomePage: React.FunctionComponent = () => {
           onMouseOut={ () => closePopover( "reset" ) }
           onMouseOver={ ( event ) => openPopover( "reset", event ) }
         >
-          <StyledRefreshIcon className={ ! displayMyBookmarks && ! searchText ?  "disable" :  "" } />
+          <RefreshIcon className={ clsx( { [ classes.svgIconDisabled ]: ! displayMyBookmarks && ! searchText }, classes.svgIcon ) } />
           <QPopper
             anchorEl={ popoverMap[ "reset" ] }
             open={ Boolean( popoverMap[ "reset" ] ) }
@@ -575,18 +558,18 @@ export const HomePage: React.FunctionComponent = () => {
       <HomePageMainContainer>
         <HomePageContentContainer>
           <HomePageContentOptionsContainer>
-            <HomePageContentOptionContainer>
+            <div>
               <HomePageContentViewOptionsContainer>
                 <HomePageContentViewOptionContainer onClick={ () => setSelectedViewType( ViewType.GRID ) } className={ selectViewType === ViewType.GRID ? "active" : "" }>
-                  <StyledGridIcon className="view-option-icon" />
+                  <GridIcon className={ clsx( classes.svgIcon, "view-option-icon" ) } />
                   <HomePageContentViewOptionContainerLabel className="view-option-label">Grid</HomePageContentViewOptionContainerLabel>
                 </HomePageContentViewOptionContainer>
                 <HomePageContentViewOptionContainer onClick={ () => setSelectedViewType( ViewType.LIST ) } className={ selectViewType === ViewType.LIST ? "active" : "" }>
-                  <StyledListIcon className="view-option-icon" />
+                  <ListIcon className={ clsx( classes.svgIcon, "view-option-icon" ) } />
                   <HomePageContentViewOptionContainerLabel className="view-option-label">List</HomePageContentViewOptionContainerLabel>
                 </HomePageContentViewOptionContainer>
               </HomePageContentViewOptionsContainer>
-            </HomePageContentOptionContainer>
+            </div>
             <HomePageDisplayNumberContainer>
               { surahs.length } of 114 surahs
             </HomePageDisplayNumberContainer>
@@ -632,9 +615,9 @@ export const HomePage: React.FunctionComponent = () => {
                                     {
                                       myBookmarks.includes( surah.id )
                                       ? (
-                                        <StyledBookmarkRemoveIcon />
+                                        <BookmarkRemoveIcon className={ classes.svgIconActive } />
                                       ) : (
-                                        <StyledBookmarkAddIcon />
+                                        <BookmarkAddIcon className={ classes.svgIcon } />
                                       )
                                     }
                                   </HomePageSurahBookmarkContainer>
@@ -661,9 +644,9 @@ export const HomePage: React.FunctionComponent = () => {
                                   {
                                     myBookmarks.includes( surah.id )
                                     ? (
-                                      <StyledBookmarkRemoveIcon />
+                                      <BookmarkRemoveIcon className={ classes.svgIconActive } />
                                     ) : (
-                                      <StyledBookmarkAddIcon />
+                                      <BookmarkAddIcon className={ classes.svgIcon } />
                                     )
                                   }
                                 </HomePageSurahBookmarkContainer>

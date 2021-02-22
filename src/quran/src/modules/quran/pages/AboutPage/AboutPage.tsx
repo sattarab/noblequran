@@ -32,7 +32,7 @@ export const AboutPage: React.FunctionComponent = () => {
       </Helmet>
       <AboutPageBody>
         <AboutPageIntro>
-          The Quran, also romanized Qur&apos;an or Koran is the central religious text of Islam revealed to prophet Muhammad (P.B.U.H) by God through the archangel Gabriel. It is regarded as the finest work in classical Arabic literature. It is organized in 114 chapters (surahs), which consist of verses (ayahs).
+          <strong>The Quran</strong>, also romanized <strong>Qur&apos;an</strong> or <strong>Koran</strong> is the central religious text of Islam revealed to <strong>Prophet Muhammad (P.B.U.H)</strong> by God through the archangel Gabriel. It is regarded as the finest work in classical Arabic literature. It is organized in 114 chapters (surahs), which consist of verses (ayahs).
         </AboutPageIntro>
       </AboutPageBody>
     </AboutPageContainer>

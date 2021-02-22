@@ -4,7 +4,8 @@ import Checkbox from "@material-ui/core/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
 import IconButton from "@material-ui/core/IconButton"
 import MenuItem from "@material-ui/core/MenuItem"
-import { withStyles } from "@material-ui/core/styles"
+import { createStyles, makeStyles, withStyles } from "@material-ui/core/styles"
+import clsx from "clsx"
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { Helmet } from "react-helmet"
 import InfiniteScroll from "react-infinite-scroll-component"
@@ -27,19 +28,19 @@ import { SelectedAyahs, useQuranState } from "../../components/QuranContext"
 import { AL_QURAN, MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER } from "../../constants/common"
 import { getSurahs, getSurahAyahs, getTranslatorsGroupedByLanguage } from "../../services/surah"
 
+const DEFAULT_TRANSLATION = "en.sahih"
 const MAX_SCROLL_OFFSET = 205
 
-const StyledArrowBackIcon = styled( ArrowBackIcon )`
-  fill: ${ DARK_TEXT_COLOR };
-`
-
-const StyledArrowDownIcon = styled( ArrowDownIcon )`
-  fill: ${ BLUE_COLOR };
-`
-
-const StyledArrowUpIcon = styled( ArrowUpIcon )`
-  fill: ${ BLUE_COLOR };
-`
+const useStyles = makeStyles( () =>
+  createStyles( {
+    svgIcon: {
+      fill: DARK_TEXT_COLOR,
+    },
+    svgIconActive: {
+      fill: BLUE_COLOR,
+    },
+  } ),
+)
 
 const StyledBackdrop = withStyles( {
   root: {
@@ -422,8 +423,7 @@ const SurahPageTranslatorsSearchInputResetContainer = styled.div`
 `
 
 export const SurahPage: React.FunctionComponent = () => {
-  const DEFAULT_TRANSLATION = "en.sahih"
-
+  const classes = useStyles()
   const history = useHistory()
   const location = useLocation()
   const { isMobileDevice, isSurahNamesFontLoaded, selectedAyahs, setSelectedAyahs, surahs } = useQuranState()
@@ -753,12 +753,12 @@ export const SurahPage: React.FunctionComponent = () => {
                 <QLoader />
               </StyledBackdrop>
               <SurahPageMainContainer>
-                <SurahPageMainContainerHeader className={ isSurahTitleFixed ? "fixed" : "" }>
+                <SurahPageMainContainerHeader className={ clsx( { "fixed" : isSurahTitleFixed } ) }>
                   <SurahPageMainContainerTitleContainer>
                     {
                       isSurahTitleFixed && (
                         <SurahPageMainContainerHeaderBackIconContainer onClick={ () => history.push( "/" ) }>
-                          <StyledArrowBackIcon />
+                          <ArrowBackIcon className={ classes.svgIcon } />
                           <SurahPageMainContainerHeaderBackText>Back</SurahPageMainContainerHeaderBackText>
                         </SurahPageMainContainerHeaderBackIconContainer>
                       )
@@ -772,16 +772,16 @@ export const SurahPage: React.FunctionComponent = () => {
                       <SurahPageMainContainerSettingsButton
                         aria-controls="translators-menu"
                         aria-haspopup="true"
-                        className={ selectedTranslations.length > 1 || displayTranslatorsMenu ? "active" : "" }
+                        className={ clsx( { "active": selectedTranslations.length > 1 || displayTranslatorsMenu } ) }
                         onClick={ onClickTranslatorsHandler }
                       >
                         { getTranslationsButtonText() }
                         {
                           displayTranslatorsMenu
                           ? (
-                            <StyledArrowUpIcon />
+                            <ArrowUpIcon className={ classes.svgIconActive } />
                           ) : (
-                            <StyledArrowDownIcon />
+                            <ArrowDownIcon className={ classes.svgIcon } />
                           )
                         }
                       </SurahPageMainContainerSettingsButton>
@@ -796,7 +796,7 @@ export const SurahPage: React.FunctionComponent = () => {
                                     disabled={ selectedTranslations.includes( DEFAULT_TRANSLATION ) && selectedTranslations.length === 1 && ! searchText }
                                     onClick={ () => resetFilters() }
                                   >
-                                  <StyledRefreshIcon className={ selectedTranslations.includes( DEFAULT_TRANSLATION ) && selectedTranslations.length === 1 && ! searchText ?  "disable" :  "" } />
+                                  <StyledRefreshIcon className={ clsx( { "disable": selectedTranslations.includes( DEFAULT_TRANSLATION ) && selectedTranslations.length === 1 && ! searchText } ) } />
                                 </SurahPageTranslatorsSearchInputResetButton>
                               </SurahPageTranslatorsSearchInputResetContainer>
                             </SurahPageTranslatorsSearchInputContainer>
@@ -845,16 +845,16 @@ export const SurahPage: React.FunctionComponent = () => {
                       <SurahPageMainContainerSettingsButton
                         aria-controls="verse-menu"
                         aria-haspopup="true"
-                        className={ displayVerseMenu ? "active" : "" }
+                        className={ clsx( { "active": displayVerseMenu } ) }
                         onClick={ onClickSelectVerseHandler }
                       >
                         Verse
                         {
                           displayVerseMenu
                           ? (
-                            <StyledArrowUpIcon />
+                            <ArrowUpIcon className={ classes.svgIconActive } />
                           ) : (
-                            <StyledArrowDownIcon />
+                            <ArrowDownIcon className={ classes.svgIcon } />
                           )
                         }
                       </SurahPageMainContainerSettingsButton>
