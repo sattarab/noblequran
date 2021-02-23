@@ -191,6 +191,7 @@ const HomePageSearchContainer = styled.div`
     border: none;
     border-bottom: 1px solid ${ BORDER_COLOR };
     border-radius: 0;
+    box-shadow: 0px 1px 2px 0px rgba( 60, 64, 67, 0.3 ), 0px 2px 6px 2px rgba( 60, 64, 67, 0.15 );
     height: calc( ${ HEADER_HEIGHT } - 1px );
     left: 0;
     margin: 0;

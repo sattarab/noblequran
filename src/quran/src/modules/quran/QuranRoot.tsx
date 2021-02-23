@@ -1,11 +1,15 @@
+import Accordion from "@material-ui/core/Accordion"
+import AccordionDetails from "@material-ui/core/AccordionDetails"
+import AccordionSummary from "@material-ui/core/AccordionSummary"
 import Drawer from "@material-ui/core/Drawer"
+import IconButton from "@material-ui/core/IconButton"
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles"
 import clsx from "clsx"
 import React, { useCallback } from "react"
 import { Route, Switch } from "react-router-dom"
 import styled from "styled-components"
 
-import { ClearIcon, KeyboardArrowDownIcon, KeyboardArrowUpIcon } from "../../components/Icon"
+import { ClearIcon, KeyboardArrowDownIcon, RemoveIcon } from "../../components/Icon"
 import { BLUE_COLOR, BORDER_COLOR, DARKER_TEXT_COLOR, DEFAULT_TEXT_COLOR, HEADER_HEIGHT } from "../../components/Styles"
 import { QHeader } from "./components/Header"
 import { QuranContextProvider, useQuranState } from "./components/QuranContext"
@@ -22,11 +26,14 @@ const QuranContainerWrapper = styled.div`
 
 const RightDrawerBodyReviewContainer = styled.div`
   border-bottom: 1px solid ${ BORDER_COLOR };
+  max-height: 50%;
+  overflow-y: scroll;
   padding: 15px 15px;
 `
 
 const RightDrawerBodyReviewTitle = styled.div`
-  font-size: 14px;
+  color: ${ DARKER_TEXT_COLOR };
+  font-size: 15px;
   font-weight: 500;
   letter-spacing: 0.25px;
 `
@@ -60,24 +67,23 @@ const RightDrawerPlaceholderText = styled.div`
   width: 100%;
 `
 
-const RightDrawerSurahContainer = styled.div`
+const RightDrawerSurahContainer = styled( Accordion )`
   border: 1px solid ${ BORDER_COLOR };
-  border-radius: 5px;
-  padding: 10px 15px;
 
   & + & {
     margin-top: 10px;
   }
 `
 
-const RightDrawerSurahTitle = styled.div`
+const RightDrawerSurahTitle = styled.h2`
   color: ${ BLUE_COLOR };
   flex: 1;
   font-size: 16px;
   font-weight: 500;
+  margin: 0;
 `
 
-const RightDrawerSurahTitleContainer = styled.div`
+const RightDrawerSurahTitleContainer = styled( AccordionSummary )`
   align-items: center;
   cursor: pointer;
   display: flex;
@@ -95,7 +101,9 @@ const RightDrawerSurahVerseText = styled.div`
   padding: 12px 0;
 `
 
-const RightDrawerSurahVersesContainer = styled.div`
+const RightDrawerSurahVersesContainer = styled( AccordionDetails )`
+  display: flex;
+  flex-direction: column;
 `
 
 const RightDrawerSurahsContainer = styled.div`
@@ -104,6 +112,12 @@ const RightDrawerSurahsContainer = styled.div`
 
 const useStyles = makeStyles( ( theme: Theme ) =>
   createStyles( {
+    accordion: {
+      boxShadow: "none",
+      "&:before": {
+        background: "none",
+      },
+    },
     header: {
       transition: theme.transitions.create( [ "margin", "width" ], {
         easing: theme.transitions.easing.sharp,
@@ -140,10 +154,10 @@ const useStyles = makeStyles( ( theme: Theme ) =>
     },
     drawer: {
       flexShrink: 0,
-      width: RIGHT_DRAWER_WIDTH,
     },
     drawerPaper: {
       background: "#ffffff",
+      boxShadow: "0px 1px 2px 0px rgba( 60, 64, 67, 0.3 ), 0px 2px 6px 2px rgba( 60, 64, 67, 0.15 )",
       width: RIGHT_DRAWER_WIDTH,
     },
   } ),
@@ -151,16 +165,11 @@ const useStyles = makeStyles( ( theme: Theme ) =>
 
 export const QuranContainer: React.FunctionComponent = () => {
   const classes = useStyles()
-  const { displaySurahVersesMap, isMobileDevice, isRightDrawerOpen, selectedAyahs, setDisplaySurahVersesMap, setIsRightDrawerOpen, surahs } = useQuranState()
+  const { isMobileDevice, isRightDrawerOpen, selectedAyahs, setIsRightDrawerOpen, surahs } = useQuranState()
 
   const closeRightDrawer = useCallback( () => {
     setIsRightDrawerOpen( false )
   }, [] )
-
-  const toggleSurah = useCallback( ( surahId: string, open: boolean ) => {
-    const updatedDisplaySurahVersesMap = { ...displaySurahVersesMap, [ surahId ]: open }
-    setDisplaySurahVersesMap( updatedDisplaySurahVersesMap )
-  }, [ displaySurahVersesMap ] )
 
   return (
     <QuranContainerWrapper>
@@ -192,43 +201,32 @@ export const QuranContainer: React.FunctionComponent = () => {
         {
           Object.keys( selectedAyahs ).length
           ?  (
-            <div>
-              <RightDrawerBodyReviewContainer>
-                <RightDrawerBodyReviewTitle>Review</RightDrawerBodyReviewTitle>
-                <RightDrawerSurahsContainer>
-                  {
-                    Object.keys( selectedAyahs ).map( ( surahId ) => (
-                      <RightDrawerSurahContainer key={ surahId }>
-                        <RightDrawerSurahTitleContainer onClick={ () => toggleSurah( surahId, ! displaySurahVersesMap[ surahId ] )}>
-                          <RightDrawerSurahTitle>{ surahs[ surahId ].transliterations[ 0 ].text }</RightDrawerSurahTitle>
-                          {
-                            displaySurahVersesMap[ surahId ]
-                            ? (
-                              <KeyboardArrowUpIcon className={ clsx( classes.clickableSvgIcon ) }/>
-                            ) : (
-                              <KeyboardArrowDownIcon className={ clsx( classes.clickableSvgIcon ) }/>
-                            )
-                          }
-                        </RightDrawerSurahTitleContainer>
+            <RightDrawerBodyReviewContainer>
+              <RightDrawerBodyReviewTitle>Review</RightDrawerBodyReviewTitle>
+              <RightDrawerSurahsContainer>
+                {
+                  Object.keys( selectedAyahs ).map( ( surahId ) => (
+                    <RightDrawerSurahContainer className={ classes.accordion } key={ surahId }>
+                      <RightDrawerSurahTitleContainer expandIcon={ <KeyboardArrowDownIcon className={ classes.clickableSvgIcon } /> }>
+                        <RightDrawerSurahTitle>{ surahs[ surahId ].transliterations[ 0 ].text }</RightDrawerSurahTitle>
+                      </RightDrawerSurahTitleContainer>
+                      <RightDrawerSurahVersesContainer>
                         {
-                          displaySurahVersesMap[ surahId ] && (
-                            <RightDrawerSurahVersesContainer>
-                              {
-                                selectedAyahs[ surahId ].map( ( ayahNumberInSurah ) => (
-                                  <RightDrawerSurahVerseContainer key={ `${ surahId }:${ ayahNumberInSurah }` }>
-                                    <RightDrawerSurahVerseText>Verse { ayahNumberInSurah }</RightDrawerSurahVerseText>
-                                  </RightDrawerSurahVerseContainer>
-                                ) )
-                              }
-                            </RightDrawerSurahVersesContainer>
-                          )
+                          selectedAyahs[ surahId ].map( ( ayahNumberInSurah ) => (
+                            <RightDrawerSurahVerseContainer key={ `${ surahId }:${ ayahNumberInSurah }` }>
+                              <RightDrawerSurahVerseText>Verse { ayahNumberInSurah }</RightDrawerSurahVerseText>
+                              <IconButton>
+                                <RemoveIcon className={ classes.clickableSvgIcon } />
+                              </IconButton>
+                            </RightDrawerSurahVerseContainer>
+                          ) )
                         }
-                      </RightDrawerSurahContainer>
-                    ) )
-                  }
-                </RightDrawerSurahsContainer>
-              </RightDrawerBodyReviewContainer>
-            </div>
+                      </RightDrawerSurahVersesContainer>
+                    </RightDrawerSurahContainer>
+                  ) )
+                }
+              </RightDrawerSurahsContainer>
+            </RightDrawerBodyReviewContainer>
           ) : (
             <RightDrawerPlaceholderContainer>
               <RightDrawerPlaceholderText>You haven&apos;t selected any verse yet.<br />Select a verse to get started.</RightDrawerPlaceholderText>

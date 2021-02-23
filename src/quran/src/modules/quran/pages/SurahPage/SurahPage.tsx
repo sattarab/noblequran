@@ -249,6 +249,7 @@ const SurahPageMainContainerHeader = styled.div`
     border: none;
     border-bottom: 1px solid ${ BORDER_COLOR };
     border-radius: 0;
+    box-shadow: 0px 1px 2px 0px rgba( 60, 64, 67, 0.3 ), 0px 2px 6px 2px rgba( 60, 64, 67, 0.15 );
     left: 0;
     margin: 0;
     padding-bottom: 5px;
@@ -258,6 +259,10 @@ const SurahPageMainContainerHeader = styled.div`
     top: 0;
     width: 100%;
     z-index: 100;
+
+    &--with-right-drawer {
+      width: calc( 100% - 320px );
+    }
   }
 `
 
@@ -341,7 +346,7 @@ const SurahPageSettingsButtonMenu = styled.div`
   background: #ffffff;
   border: 1px solid ${ BORDER_COLOR };
   border-radius: 8px;
-  box-shadow: 0 2px 4px -1px rgb( 0 0 0 / 20% ), 0 4px 5px 0 rgb( 0 0 0 / 14% ), 0 1px 10px 0 rgb( 0 0 0 / 12% );
+  box-shadow: 0 2px 4px -1px rgba( 0, 0, 0, 0.2 ), 0 4px 5px 0 rgba( 0, 0, 0, 0.14 ), 0 1px 10px 0 rgb( 0, 0, 0, 0.12 );
   max-height: 400px;
   overflow-y: scroll;
   padding: 5px 10px 0 10px;
@@ -431,7 +436,7 @@ export const SurahPage: React.FunctionComponent = () => {
   const classes = useStyles()
   const history = useHistory()
   const location = useLocation()
-  const { isMobileDevice, isSurahNamesFontLoaded, selectedAyahs, setSelectedAyahs, surahs } = useQuranState()
+  const { isMobileDevice, isRightDrawerOpen, isSurahNamesFontLoaded, selectedAyahs, setSelectedAyahs, surahs } = useQuranState()
   const translatorsMenuRef = useRef( null )
   const versesMenuRef = useRef( null )
 
@@ -760,7 +765,7 @@ export const SurahPage: React.FunctionComponent = () => {
                 <QLoader />
               </StyledBackdrop>
               <SurahPageMainContainer>
-                <SurahPageMainContainerHeader className={ clsx( { "fixed" : isSurahTitleFixed } ) }>
+                <SurahPageMainContainerHeader className={ clsx( { "fixed" : isSurahTitleFixed }, { "fixed--with-right-drawer": ! isMobileDevice && isSurahTitleFixed && isRightDrawerOpen } ) }>
                   <SurahPageMainContainerTitleContainer>
                     {
                       isSurahTitleFixed && (
