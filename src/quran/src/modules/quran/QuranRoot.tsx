@@ -3,9 +3,10 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles"
 import clsx from "clsx"
 import React, { useCallback } from "react"
 import { Route, Switch } from "react-router-dom"
+import styled from "styled-components"
 
 import { ClearIcon } from "../../components/Icon"
-import { BORDER_COLOR, DEFAULT_TEXT_COLOR, HEADER_HEIGHT } from "../../components/Styles"
+import { BORDER_COLOR, DARKER_TEXT_COLOR, DEFAULT_TEXT_COLOR, HEADER_HEIGHT } from "../../components/Styles"
 import { QHeader } from "./components/Header"
 import { QuranContextProvider, useQuranState } from "./components/QuranContext"
 import { AboutPage } from "./pages/AboutPage/AboutPage"
@@ -14,12 +15,56 @@ import { SurahPage } from "./pages/SurahPage/SurahPage"
 
 const RIGHT_DRAWER_WIDTH = 320
 
+const QuranContainerWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const RightDrawerBodyContainer = styled.div`
+`
+
+const RightDrawerHeaderContainer = styled.div`
+  align-items: center;
+  border-bottom: 1px solid ${ BORDER_COLOR };
+  display: flex;
+  height: calc( ${ HEADER_HEIGHT } - 1px );
+  padding: 0 15px;
+`
+
+const RightDrawerHeaderTitle = styled.div`
+  color: ${ DARKER_TEXT_COLOR };
+  flex: 1;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+`
+
+const RightDrawerPlaceholderContainer = styled.div`
+  align-items: center;
+  display: flex;
+  height: calc( 100% - ${ HEADER_HEIGHT } );
+  padding: 0 15px;
+`
+
+const RightDrawerPlaceholderText = styled.div`
+  color: ${ DARKER_TEXT_COLOR };
+  font-weight: 500;
+  text-align: center;
+  width: 100%;
+`
+
+const RightDrawerBodyReviewContainer = styled.div`
+  border-bottom: 1px solid ${ BORDER_COLOR };
+  padding: 15px 15px 0;
+`
+
+const RightDrawerBodyReviewTitle = styled.div`
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.25px;
+`
+
 const useStyles = makeStyles( ( theme: Theme ) =>
   createStyles( {
-    root: {
-      display: "flex",
-      flexDirection: "column",
-    },
     header: {
       transition: theme.transitions.create( [ "margin", "width" ], {
         easing: theme.transitions.easing.sharp,
@@ -34,6 +79,10 @@ const useStyles = makeStyles( ( theme: Theme ) =>
       } ),
       marginRight: RIGHT_DRAWER_WIDTH,
       width: `calc( 100% - ${ RIGHT_DRAWER_WIDTH }px )`,
+    },
+    clickableSvgIcon: {
+      cursor: "pointer",
+      fill: DEFAULT_TEXT_COLOR,
     },
     content: {
       flexGrow: 1,
@@ -54,23 +103,8 @@ const useStyles = makeStyles( ( theme: Theme ) =>
       flexShrink: 0,
       width: RIGHT_DRAWER_WIDTH,
     },
-    drawerCloseIcon: {
-      cursor: "pointer",
-      fill: DEFAULT_TEXT_COLOR,
-    },
-    drawerHeaderContainer: {
-      alignItems: "center",
-      borderBottom: `1px solid ${ BORDER_COLOR }`,
-      display: "flex",
-      fontWeight: 500,
-      height: `calc( ${ HEADER_HEIGHT } - 1px )`,
-      padding: "0 15px",
-    },
-    drawerHeaderTitle: {
-      flex: 1,
-      fontWeight: 500,
-    },
     drawerPaper: {
+      background: "#ffffff",
       width: RIGHT_DRAWER_WIDTH,
     },
   } ),
@@ -78,19 +112,19 @@ const useStyles = makeStyles( ( theme: Theme ) =>
 
 export const QuranContainer: React.FunctionComponent = () => {
   const classes = useStyles()
-  const { isMobileDevice, isRightDrawerOpen, setIsRightDrawerOpen } = useQuranState()
+  const { isMobileDevice, isRightDrawerOpen, selectedAyahs, setIsRightDrawerOpen } = useQuranState()
 
   const closeRightDrawer = useCallback( () => {
     setIsRightDrawerOpen( false )
   }, [] )
 
   return (
-    <div className={ classes.root }>
+    <QuranContainerWrapper>
       <QHeader className={ clsx( classes.header, {
-        [classes.headerShift]: isRightDrawerOpen && ! isMobileDevice,
+        [ classes.headerShift ]: isRightDrawerOpen && ! isMobileDevice,
       } ) } />
       <main className={ clsx( classes.content, {
-        [classes.contentShift]: isRightDrawerOpen && ! isMobileDevice,
+        [ classes.contentShift ]: isRightDrawerOpen && ! isMobileDevice,
       } ) }>
         <Switch>
           <Route exact path="/" component={ HomePage } />
@@ -105,14 +139,28 @@ export const QuranContainer: React.FunctionComponent = () => {
           paper: classes.drawerPaper,
         } }
         open={ isRightDrawerOpen }
-        variant="persistent"
+        variant={ "persistent" }
       >
-        <div className={ classes.drawerHeaderContainer }>
-          <div className={ classes.drawerHeaderTitle }>Selected Verses</div>
-          <ClearIcon className={ classes.drawerCloseIcon } onClick={ closeRightDrawer } />
-        </div>
+        <RightDrawerHeaderContainer>
+          <RightDrawerHeaderTitle>Selected Verses</RightDrawerHeaderTitle>
+          <ClearIcon className={ classes.clickableSvgIcon } onClick={ closeRightDrawer } />
+        </RightDrawerHeaderContainer>
+        {
+          Object.keys( selectedAyahs ).length
+          ?  (
+            <RightDrawerBodyContainer>
+              <RightDrawerBodyReviewContainer>
+                <RightDrawerBodyReviewTitle>Review</RightDrawerBodyReviewTitle>
+              </RightDrawerBodyReviewContainer>
+            </RightDrawerBodyContainer>
+          ) : (
+            <RightDrawerPlaceholderContainer>
+              <RightDrawerPlaceholderText>You haven&apos;t selected any verse yet.<br />Select a verse to get started.</RightDrawerPlaceholderText>
+            </RightDrawerPlaceholderContainer>
+          )
+        }
       </Drawer>
-    </div>
+    </QuranContainerWrapper>
   )
 }
 

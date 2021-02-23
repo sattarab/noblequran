@@ -1,17 +1,16 @@
 import { withStyles } from "@material-ui/core"
 import Button from "@material-ui/core/Button"
 import Drawer from "@material-ui/core/Drawer"
-import IconButton from "@material-ui/core/IconButton"
 import PropTypes from "prop-types"
 import React, { memo, useCallback, useState } from "react"
 import { Link, useHistory, useLocation } from "react-router-dom"
 import styled from "styled-components"
 
-import { AddTaskIcon, MenuIcon } from "../../../components/Icon"
+import { MenuIcon } from "../../../components/Icon"
 import { BLUE_COLOR, BLUE_COLOR_WITH_OPACITY, BORDER_COLOR, DARK_BLUE_COLOR, DEFAULT_TEXT_COLOR, HEADER_HEIGHT, WHITE_SMOKE_COLOR } from "../../../components/Styles"
 import { LARGE_SCREEN_MEDIA_QUERY } from "../../../helpers/responsive"
-import { QPopper } from "./Popper"
 import { useQuranState } from "./QuranContext"
+import { QRightDrawerButton } from "./RightDrawerButton"
 
 const StyledButton = withStyles( {
   root: {
@@ -41,25 +40,8 @@ const StyledMenuIcon = styled( MenuIcon )`
   margin-right: 15px;
 `
 
-const StyledTaskIcon = styled( AddTaskIcon )`
-  fill: ${ DEFAULT_TEXT_COLOR };
-`
-
 const HeaderActionIconContainer = styled.div`
-  align-items: center;
-  display: flex;
   margin-left: 30px;
-  position: relative;
-`
-
-const HeaderActionIconIndicator = styled.div`
-  border-radius: 50%;
-  background: #d93025;
-  height: 6px;
-  position: absolute;
-  right: 4px;
-  top: 10px;
-  width: 6px;
 `
 
 const HeaderContainer = styled.div`
@@ -177,23 +159,10 @@ const QHeaderFunction: React.FunctionComponent<QHeaderProps> = ( { className } )
   const history = useHistory()
   const location = useLocation()
   const [ isLeftDrawerOpen, setIsLeftDrawerOpen ] = useState<boolean>( false )
-  const { isMobileDevice, isRightDrawerOpen, selectedAyahs, setIsRightDrawerOpen } = useQuranState()
-  const [ popoverMap, setPopoverMap ] = useState<{ [ key: string ]: Element | null }>( {} )
-
-  const closePopover = ( key: string ) => {
-    setPopoverMap(  { ...popoverMap, ...{ [ key ]: null } } )
-  }
-
-  const openPopover = ( key: string, event: React.MouseEvent<HTMLSpanElement> ) => {
-    setPopoverMap(  { ...popoverMap, ...{ [ key ]: event.currentTarget } } )
-  }
+  const { isMobileDevice } = useQuranState()
 
   const toggleLeftMenu = useCallback( ( open: boolean ) => {
     setIsLeftDrawerOpen( open )
-  }, [] )
-
-  const toggleRightMenu = useCallback( ( open: boolean ) => {
-    setIsRightDrawerOpen( open )
   }, [] )
 
   return (
@@ -220,27 +189,7 @@ const QHeaderFunction: React.FunctionComponent<QHeaderProps> = ( { className } )
           )
         }
         <HeaderActionIconContainer>
-          <IconButton
-            onClick={ () => toggleRightMenu( ! isRightDrawerOpen ) }
-            onMouseOut={ () => closePopover( "selectedAyahs" ) }
-            onMouseOver={ ( event ) => openPopover( "selectedAyahs", event ) }
-          >
-            <StyledTaskIcon />
-          </IconButton>
-          {
-            ( ! isMobileDevice || ! isRightDrawerOpen ) && (
-              <QPopper
-                anchorEl={ popoverMap[ "selectedAyahs" ] }
-                open={ Boolean( popoverMap[ "selectedAyahs" ] ) }
-                text="View your select ayahs"
-              />
-            )
-          }
-          {
-            Object.keys( selectedAyahs ).length !== 0 && (
-              <HeaderActionIconIndicator />
-            )
-          }
+          <QRightDrawerButton />
         </HeaderActionIconContainer>
       </HeaderContainer>
       <Drawer onClose={ () => toggleLeftMenu( false ) } open={ isLeftDrawerOpen } >

@@ -29,7 +29,7 @@ import { AL_QURAN, MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER } from "../../constan
 import { getSurahs, getSurahAyahs, getTranslatorsGroupedByLanguage } from "../../services/surah"
 
 const DEFAULT_TRANSLATION = "en.sahih"
-const MAX_SCROLL_OFFSET = 205
+const MAX_SCROLL_OFFSET = 279
 
 const useStyles = makeStyles( () =>
   createStyles( {
@@ -229,6 +229,10 @@ const SurahPageMainContainerHeaderBackText = styled.div`
 const SurahPageMainContainerBody = styled.div`
   display: flex;
   flex-direction: column;
+
+  &.fixed {
+    margin-top: ${ MAX_SCROLL_OFFSET }px;
+  }
 `
 
 const SurahPageMainContainerHeader = styled.div`
@@ -247,6 +251,7 @@ const SurahPageMainContainerHeader = styled.div`
     border-radius: 0;
     left: 0;
     margin: 0;
+    padding-bottom: 5px;
     padding-left: 15px;
     padding-right: 15px;
     position: fixed;
@@ -709,14 +714,16 @@ export const SurahPage: React.FunctionComponent = () => {
       ...selectedAyahs,
     }
 
-    if( updatedSelectedAyahs[ ayah.id ] ) {
-      delete updatedSelectedAyahs[ ayah.id ]
+    const index = updatedSelectedAyahs[ ayah.surah_id ]?.findIndex( ( ayah_ids ) => ayah_ids.includes( `${ ayah.number_in_surah }` ) ) || -1
+
+    if( index !== -1 ) {
+      updatedSelectedAyahs[ ayah.surah_id ].splice( index, 1 )
     } else {
-      updatedSelectedAyahs[ ayah.id ] = {
-        id: ayah.id,
-        number_in_surah: ayah.number_in_surah,
-        text: ayah.text,
+      if( ! updatedSelectedAyahs[ ayah.surah_id ] ) {
+        updatedSelectedAyahs[ ayah.surah_id ] = []
       }
+      updatedSelectedAyahs[ ayah.surah_id ].push( `${ ayah.number_in_surah }` )
+      updatedSelectedAyahs[ ayah.surah_id ].sort()
     }
 
     setSelectedAyahs( updatedSelectedAyahs )
@@ -872,7 +879,7 @@ export const SurahPage: React.FunctionComponent = () => {
                     </SurahPageMainContainerSettingsButtonContainer>
                   </SurahPageMainContainerSettingsContainer>
                 </SurahPageMainContainerHeader>
-                <SurahPageMainContainerBody>
+                <SurahPageMainContainerBody className={ clsx( { "fixed" : isSurahTitleFixed } ) }>
                   <SurahPageMainContainerAyahsContainer
                     dataLength={ ayahs.length }
                     next={ loadAyahs }
@@ -919,7 +926,7 @@ export const SurahPage: React.FunctionComponent = () => {
                           <SurahPageMainContainerAyahActionsContainer>
                             <SurahPageMainContainerAyahActionSelect onClick={ () => toggleAyahSelection( ayah ) }>
                               {
-                                selectedAyahs[ ayah.id ]
+                                selectedAyahs[ ayah.surah_id ]?.includes( `${ ayah.number_in_surah }` )
                                 ? (
                                   <span>&#8211; Remove this verse</span>
                                 ) : (

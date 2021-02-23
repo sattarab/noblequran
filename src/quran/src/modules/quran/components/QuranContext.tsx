@@ -4,11 +4,10 @@ import { useEffectOnce, useMedia } from "react-use"
 
 import { isGreaterThanMediumScreen, MOBILE_SCREEN_MEDIA_QUERY } from "../../../helpers/responsive"
 import { getObjectFromLocalStorage } from "../../../helpers/utility"
-import { Ayah } from "../../../types/ayah"
 import { Surah } from "../../../types/surah"
 import { getSurahs } from "../services/surah"
 
-export type SelectedAyahModel = Pick<Ayah, "id" | "number_in_surah" | "text">
+export type SelectedAyahModel = string[]
 export interface SelectedAyahs {
   [ id: string ]: SelectedAyahModel
 }

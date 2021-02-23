@@ -19,11 +19,12 @@ import {
   HEADER_HEIGHT,
   WHITE_SMOKE_COLOR,
 } from "../../../../components/Styles"
-import { LARGE_SCREEN_MEDIA_QUERY, MEDIUM_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
+import { LARGE_SCREEN_MEDIA_QUERY, MEDIUM_SCREEN_MEDIA_QUERY, SMALL_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
 import { escapeRegex, getObjectFromLocalStorage, setObjectInLocalStorage } from "../../../../helpers/utility"
 import { Surah } from "../../../../types/surah"
 import { QPopper } from "../../components/Popper"
 import { useQuranState } from "../../components/QuranContext"
+import { QRightDrawerButton } from "../../components/RightDrawerButton"
 import { AL_QURAN, MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER } from "../../constants/common"
 import { getSurahs } from "../../services/surah"
 
@@ -166,12 +167,15 @@ const HomePageNoSurahsPlaceholderText = styled.div`
   margin-top: 64px;
 `
 
-const HomePageRefreshButtonIconContainer = withStyles( {
+const HomePageIconButton = withStyles( {
   root: {
     margin: "0 5px",
   },
 } )( IconButton )
 
+const HomePageRightDrawerButtonContainer = styled.div`
+  padding-right: 15px;
+`
 
 const HomePageSearchContainer = styled.div`
   align-items: center;
@@ -187,13 +191,17 @@ const HomePageSearchContainer = styled.div`
     border: none;
     border-bottom: 1px solid ${ BORDER_COLOR };
     border-radius: 0;
-    height: ${ HEADER_HEIGHT };
+    height: calc( ${ HEADER_HEIGHT } - 1px );
     left: 0;
     margin: 0;
     position: fixed;
     top: 0;
     width: 100%;
-    z-index: 100;
+    z-index: 1000;
+
+    &--with-right-drawer {
+      width: calc( 100% - 320px );
+    }
   }
 `
 
@@ -247,12 +255,16 @@ const HomePageSurahGridContainer = styled.div`
   height: 338px;
   padding: 15px;
 
-  @media ${ MEDIUM_SCREEN_MEDIA_QUERY } {
+  @media ${ SMALL_SCREEN_MEDIA_QUERY } {
     flex: 0 1 50%;
   }
 
-  @media ${ LARGE_SCREEN_MEDIA_QUERY } {
+  @media ${ MEDIUM_SCREEN_MEDIA_QUERY } {
     flex: 0 1 33.33%;
+  }
+
+  @media ${ LARGE_SCREEN_MEDIA_QUERY } {
+    flex: 0 1 25%;
   }
 `
 
@@ -407,7 +419,7 @@ export const HomePage: React.FunctionComponent = () => {
   const MAX_SCROLL_OFFSET = 87
 
   const history = useHistory()
-  const { isMobileDevice, isSurahNamesFontLoaded } = useQuranState()
+  const { isMobileDevice, isRightDrawerOpen,  isSurahNamesFontLoaded } = useQuranState()
   const [ isSearchContainerFixed, setIsSearchContainerFixed ] = useState<boolean>( false )
   const [ displayMyBookmarks, setMyDisplayBookmarks ] = useState<boolean>( false )
   const [ myBookmarks, setMyBookmarks ] = useState<string[]>( getObjectFromLocalStorage( "surahBookmarks" ) || [] )
@@ -517,7 +529,7 @@ export const HomePage: React.FunctionComponent = () => {
       <Helmet>
         <title>Browse Surahs | The Noble Quran | { AL_QURAN }</title>
       </Helmet>
-      <HomePageSearchContainer className={ clsx( { "fixed": isSearchContainerFixed } ) }>
+      <HomePageSearchContainer className={ clsx( { "fixed": isSearchContainerFixed, "fixed--with-right-drawer": ! isMobileDevice && isSearchContainerFixed && isRightDrawerOpen } ) }>
         <HomePageSearchInputContainer>
           <SearchIcon className={ classes.svgIcon } />
           <HomePageSearchInput autoComplete="false" onChange={ onSearch } placeholder="Search" type="text" value={ searchText } />
@@ -541,19 +553,30 @@ export const HomePage: React.FunctionComponent = () => {
             )
           }
         </HomePageMyBookmarksContainer>
-        <HomePageRefreshButtonIconContainer
+        <HomePageIconButton
           disabled={ ! displayMyBookmarks && ! searchText }
           onClick={ () => resetFilters() }
           onMouseOut={ () => closePopover( "reset" ) }
           onMouseOver={ ( event ) => openPopover( "reset", event ) }
         >
           <RefreshIcon className={ clsx( { [ classes.svgIconDisabled ]: ! displayMyBookmarks && ! searchText }, classes.svgIcon ) } />
-          <QPopper
-            anchorEl={ popoverMap[ "reset" ] }
-            open={ Boolean( popoverMap[ "reset" ] ) }
-            text="Reset"
-          />
-        </HomePageRefreshButtonIconContainer>
+          {
+            ( displayMyBookmarks || searchText ) && (
+              <QPopper
+                anchorEl={ popoverMap[ "reset" ] }
+                open={ Boolean( popoverMap[ "reset" ] ) }
+                text="Reset"
+              />
+            )
+          }
+        </HomePageIconButton>
+        {
+          isSearchContainerFixed && (
+            <HomePageRightDrawerButtonContainer>
+              <QRightDrawerButton />
+            </HomePageRightDrawerButtonContainer>
+          )
+        }
       </HomePageSearchContainer>
       <HomePageMainContainer>
         <HomePageContentContainer>
