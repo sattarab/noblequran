@@ -5,8 +5,8 @@ import React, { useCallback } from "react"
 import { Route, Switch } from "react-router-dom"
 import styled from "styled-components"
 
-import { ClearIcon } from "../../components/Icon"
-import { BORDER_COLOR, DARKER_TEXT_COLOR, DEFAULT_TEXT_COLOR, HEADER_HEIGHT } from "../../components/Styles"
+import { ClearIcon, KeyboardArrowDownIcon, KeyboardArrowUpIcon } from "../../components/Icon"
+import { BLUE_COLOR, BORDER_COLOR, DARKER_TEXT_COLOR, DEFAULT_TEXT_COLOR, HEADER_HEIGHT } from "../../components/Styles"
 import { QHeader } from "./components/Header"
 import { QuranContextProvider, useQuranState } from "./components/QuranContext"
 import { AboutPage } from "./pages/AboutPage/AboutPage"
@@ -20,7 +20,15 @@ const QuranContainerWrapper = styled.div`
   flex-direction: column;
 `
 
-const RightDrawerBodyContainer = styled.div`
+const RightDrawerBodyReviewContainer = styled.div`
+  border-bottom: 1px solid ${ BORDER_COLOR };
+  padding: 15px 15px;
+`
+
+const RightDrawerBodyReviewTitle = styled.div`
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.25px;
 `
 
 const RightDrawerHeaderContainer = styled.div`
@@ -52,15 +60,46 @@ const RightDrawerPlaceholderText = styled.div`
   width: 100%;
 `
 
-const RightDrawerBodyReviewContainer = styled.div`
-  border-bottom: 1px solid ${ BORDER_COLOR };
-  padding: 15px 15px 0;
+const RightDrawerSurahContainer = styled.div`
+  border: 1px solid ${ BORDER_COLOR };
+  border-radius: 5px;
+  padding: 10px 15px;
+
+  & + & {
+    margin-top: 10px;
+  }
 `
 
-const RightDrawerBodyReviewTitle = styled.div`
-  font-size: 14px;
+const RightDrawerSurahTitle = styled.div`
+  color: ${ BLUE_COLOR };
+  flex: 1;
+  font-size: 16px;
   font-weight: 500;
-  letter-spacing: 0.25px;
+`
+
+const RightDrawerSurahTitleContainer = styled.div`
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+`
+
+const RightDrawerSurahVerseContainer = styled.div`
+  align-items: center;
+  display: flex;
+`
+
+const RightDrawerSurahVerseText = styled.div`
+  color: ${ DARKER_TEXT_COLOR };
+  flex: 1;
+  font-size: 14px;
+  padding: 12px 0;
+`
+
+const RightDrawerSurahVersesContainer = styled.div`
+`
+
+const RightDrawerSurahsContainer = styled.div`
+  margin-top: 25px;
 `
 
 const useStyles = makeStyles( ( theme: Theme ) =>
@@ -112,11 +151,16 @@ const useStyles = makeStyles( ( theme: Theme ) =>
 
 export const QuranContainer: React.FunctionComponent = () => {
   const classes = useStyles()
-  const { isMobileDevice, isRightDrawerOpen, selectedAyahs, setIsRightDrawerOpen } = useQuranState()
+  const { displaySurahVersesMap, isMobileDevice, isRightDrawerOpen, selectedAyahs, setDisplaySurahVersesMap, setIsRightDrawerOpen, surahs } = useQuranState()
 
   const closeRightDrawer = useCallback( () => {
     setIsRightDrawerOpen( false )
   }, [] )
+
+  const toggleSurah = useCallback( ( surahId: string, open: boolean ) => {
+    const updatedDisplaySurahVersesMap = { ...displaySurahVersesMap, [ surahId ]: open }
+    setDisplaySurahVersesMap( updatedDisplaySurahVersesMap )
+  }, [ displaySurahVersesMap ] )
 
   return (
     <QuranContainerWrapper>
@@ -148,11 +192,43 @@ export const QuranContainer: React.FunctionComponent = () => {
         {
           Object.keys( selectedAyahs ).length
           ?  (
-            <RightDrawerBodyContainer>
+            <div>
               <RightDrawerBodyReviewContainer>
                 <RightDrawerBodyReviewTitle>Review</RightDrawerBodyReviewTitle>
+                <RightDrawerSurahsContainer>
+                  {
+                    Object.keys( selectedAyahs ).map( ( surahId ) => (
+                      <RightDrawerSurahContainer key={ surahId }>
+                        <RightDrawerSurahTitleContainer onClick={ () => toggleSurah( surahId, ! displaySurahVersesMap[ surahId ] )}>
+                          <RightDrawerSurahTitle>{ surahs[ surahId ].transliterations[ 0 ].text }</RightDrawerSurahTitle>
+                          {
+                            displaySurahVersesMap[ surahId ]
+                            ? (
+                              <KeyboardArrowUpIcon className={ clsx( classes.clickableSvgIcon ) }/>
+                            ) : (
+                              <KeyboardArrowDownIcon className={ clsx( classes.clickableSvgIcon ) }/>
+                            )
+                          }
+                        </RightDrawerSurahTitleContainer>
+                        {
+                          displaySurahVersesMap[ surahId ] && (
+                            <RightDrawerSurahVersesContainer>
+                              {
+                                selectedAyahs[ surahId ].map( ( ayahNumberInSurah ) => (
+                                  <RightDrawerSurahVerseContainer key={ `${ surahId }:${ ayahNumberInSurah }` }>
+                                    <RightDrawerSurahVerseText>Verse { ayahNumberInSurah }</RightDrawerSurahVerseText>
+                                  </RightDrawerSurahVerseContainer>
+                                ) )
+                              }
+                            </RightDrawerSurahVersesContainer>
+                          )
+                        }
+                      </RightDrawerSurahContainer>
+                    ) )
+                  }
+                </RightDrawerSurahsContainer>
               </RightDrawerBodyReviewContainer>
-            </RightDrawerBodyContainer>
+            </div>
           ) : (
             <RightDrawerPlaceholderContainer>
               <RightDrawerPlaceholderText>You haven&apos;t selected any verse yet.<br />Select a verse to get started.</RightDrawerPlaceholderText>

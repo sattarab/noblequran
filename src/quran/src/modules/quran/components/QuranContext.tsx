@@ -6,6 +6,9 @@ import { isGreaterThanMediumScreen, MOBILE_SCREEN_MEDIA_QUERY } from "../../../h
 import { getObjectFromLocalStorage } from "../../../helpers/utility"
 import { Surah } from "../../../types/surah"
 import { getSurahs } from "../services/surah"
+export interface DisplaySurahVersesMap {
+  [ surahId: string ]: boolean
+}
 
 export type SelectedAyahModel = string[]
 export interface SelectedAyahs {
@@ -13,12 +16,14 @@ export interface SelectedAyahs {
 }
 
 interface QuranContextType {
+  displaySurahVersesMap: DisplaySurahVersesMap
   isMobileDevice: boolean
   isRightDrawerOpen: boolean
   isSurahNamesFontLoaded: boolean
   selectedAyahs: SelectedAyahs
   surahs: { [ id: string ]: Surah }
 
+  setDisplaySurahVersesMap( displaySurahVersesMap: DisplaySurahVersesMap ): void
   setIsRightDrawerOpen( isRightDrawerOpen: boolean ): void
   setIsSurahNamesFontLoaded( isSurahNamesFontLoaded: boolean ): void
   setSelectedAyahs( selectedAyahs: SelectedAyahs ): void
@@ -29,6 +34,7 @@ export const QuranContext = createContext<QuranContextType | null>( null )
 
 export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildren<Record<string, JSX.Element>>> = ( props ) => {
   const isMobileDevice = useMedia( MOBILE_SCREEN_MEDIA_QUERY, ! isGreaterThanMediumScreen() )
+  const [ displaySurahVersesMap, setDisplaySurahVersesMap ] = useState<DisplaySurahVersesMap>( {} )
   const [ isRightDrawerOpen, setIsRightDrawerOpen ] = useState<boolean>( false )
   const [ isSurahNamesFontLoaded, setIsSurahNamesFontLoaded ] = useState<boolean>( false )
   const [ selectedAyahs, setSelectedAyahs ] = useState<{ [ id: string ]: SelectedAyahModel }>( getObjectFromLocalStorage( "selectedAyahs" ) || {} )
@@ -46,12 +52,14 @@ export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildr
   } )
 
   const contextValue: QuranContextType = {
+    displaySurahVersesMap,
     isMobileDevice,
     isRightDrawerOpen,
     isSurahNamesFontLoaded,
     selectedAyahs,
     surahs,
 
+    setDisplaySurahVersesMap,
     setIsRightDrawerOpen,
     setIsSurahNamesFontLoaded,
     setSelectedAyahs,
