@@ -1,13 +1,14 @@
 import { Injectable, NotFoundException } from "@nestjs/common"
 import { pick } from "lodash"
 
-import { PaginationOptions } from "../../common/helpers/pagination.helper"
+import type { PaginationOptions, PaginationResults } from "../../common/helpers/pagination.helper"
 import { AyahsRepository } from "../repositories/ayahs.repository"
 import { JuzsRepository } from "../repositories/juzs.repository"
-import { Juz } from "../types/juz.type"
+import type { Ayah } from "../types/ayah.type"
+import type { Juz } from "../types/juz.type"
 
 export interface JuzGetOptions {
-  embed_ayahs?: boolean
+  embedAyahs?: boolean
 }
 
 export interface JuzGetAyahOptions extends PaginationOptions {
@@ -29,22 +30,22 @@ export class JuzService {
       throw new NotFoundException()
     }
 
-    if( options.embed_ayahs ) {
+    if( options.embedAyahs ) {
       juz.ayahs = await this.ayahsRepository.findByJuz( id )
     }
 
     return juz
   }
 
-  async getAyahs( id: string, options: JuzGetAyahOptions ) {
+  async getAyahs( id: string, options: JuzGetAyahOptions ): Promise<PaginationResults<Ayah>> {
     const juz = await this.juzsRepository.findOneById( id )
 
     if( ! juz ) {
       throw new NotFoundException()
     }
 
-    const pagination_options: PaginationOptions = pick( options, "page", "per_page" )
-    return this.ayahsRepository.findPaginatedByJuz( id, pagination_options )
+    const paginationOptions: PaginationOptions = pick( options, "page", "perPage" )
+    return this.ayahsRepository.findPaginatedByJuz( id, paginationOptions )
   }
 
   query(): Promise<Juz[]> {

@@ -4,7 +4,7 @@ export interface Pagination {
   next_page?: number | null
   page: number
   page_start?: number
-  page_end?: number
-  per_page: number
+  pageEnd?: number
+  perPage: number
   prev_page?: number | null
 }

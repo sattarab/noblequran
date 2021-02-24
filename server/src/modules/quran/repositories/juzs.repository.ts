@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common"
-import { omit } from "lodash"
-import { Collection, Db } from "mongodb"
+import type { Collection } from "mongodb"
+import { Db } from "mongodb"
 
 import { MongoDbException } from "../../common/helpers/error.helper"
 import { parseIntId } from "../../common/helpers/utils.helper"
 import { InjectDb } from "../../mongo/mongo.decorators"
-import { Juz } from "../types/juz.type"
+import type { Juz } from "../types/juz.type"
 
 interface JuzDoc {
   _id: number
@@ -13,7 +13,7 @@ interface JuzDoc {
   verses: Array<{
     end: number
     start: number
-    surah_id: number
+    surahId: number
   }>
 }
 
@@ -25,34 +25,34 @@ export class JuzsRepository {
     this.collection = this.db.collection<JuzDoc>( "juzs" )
   }
 
-  private fromDocument = ( juz_doc: JuzDoc ): Juz => {
+  private fromDocument = ( juzDoc: JuzDoc ): Juz => {
     return {
-      ...omit( juz_doc, "_id" ),
-      id: `${ juz_doc._id }`,
-      verses: juz_doc.verses.map( ( verse_doc ) => {
+      id: `${ juzDoc._id }`,
+      number: juzDoc.number,
+      verses: juzDoc.verses.map( ( verse_doc ) => {
         return {
           end: verse_doc.end,
           start: verse_doc.start,
-          surah_id: `${ verse_doc.surah_id }`,
+          surahId: `${ verse_doc.surahId }`,
         }
       } ),
     } as Juz
   }
 
-  find() {
+  find(): Promise<Juz[]> {
     return this.collection.find().sort( [ [ "number", 1 ] ] ).toArray()
       .catch( ( err ) => { throw new MongoDbException( err ) } )
-      .then( ( juz_docs ) => juz_docs.map( this.fromDocument ) )
+      .then( ( juzDocs ) => juzDocs.map( this.fromDocument ) )
   }
 
-  async findOneById( id: string ) {
-    const juz_doc = await this.collection.findOne( { _id: parseIntId( id ) } )
+  async findOneById( id: string ): Promise<Juz> {
+    const juzDoc = await this.collection.findOne( { _id: parseIntId( id ) } )
       .catch( ( err ) => { throw new MongoDbException( err ) } )
 
-    if( ! juz_doc ) {
+    if( ! juzDoc ) {
       return null
     }
 
-    return this.fromDocument( juz_doc )
+    return this.fromDocument( juzDoc )
   }
 }

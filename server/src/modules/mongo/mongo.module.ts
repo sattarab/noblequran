@@ -1,4 +1,5 @@
-import { DynamicModule, Global, Logger, Module, OnModuleDestroy, Provider } from "@nestjs/common"
+import type { DynamicModule, OnModuleDestroy, Provider } from "@nestjs/common"
+import { Global, Logger, Module } from "@nestjs/common"
 import { ConfigModule, ConfigService } from "@nestjs/config"
 import { ModuleRef } from "@nestjs/core"
 import { MongoClient } from "mongodb"

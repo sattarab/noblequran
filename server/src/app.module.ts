@@ -1,4 +1,5 @@
-import { MiddlewareConsumer, Module } from "@nestjs/common"
+import type { MiddlewareConsumer } from "@nestjs/common"
+import { Module } from "@nestjs/common"
 import { ConfigModule } from "@nestjs/config"
 
 import configuration from "./modules/common/config"
@@ -14,7 +15,7 @@ import { QuranModule } from "./modules/quran/quran.module"
   ],
 } )
 export class AppModule {
-  configure( consumer: MiddlewareConsumer ) {
+  configure( consumer: MiddlewareConsumer ): void {
     consumer
       .apply( ServiceMiddleware )
       .forRoutes( "*" )

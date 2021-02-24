@@ -7,6 +7,6 @@ export interface Juz {
   verses: Array<{
     end: number
     start: number
-    surah_id: string
+    surahId: string
   }>
 }

@@ -5,9 +5,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الفاتحة",
     "number": 1,
-    "number_of_ayahs": 7,
-    "has_bismillah": false,
-    "query_indexes": [
+    "numberOfAyahs": 7,
+    "hasBismillah": false,
+    "queryIndexes": [
       "1",
       "the opener",
       "opener",
@@ -41,9 +41,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "البقرة",
     "number": 2,
-    "number_of_ayahs": 286,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 286,
+    "hasBismillah": true,
+    "queryIndexes": [
       "2",
       "the cow",
       "cow",
@@ -78,9 +78,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "آل عمران",
     "number": 3,
-    "number_of_ayahs": 200,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 200,
+    "hasBismillah": true,
+    "queryIndexes": [
       "3",
       "family of imran",
       "of imran",
@@ -119,9 +119,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "النساء",
     "number": 4,
-    "number_of_ayahs": 176,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 176,
+    "hasBismillah": true,
+    "queryIndexes": [
       "4",
       "the women",
       "women",
@@ -156,9 +156,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "المائدة",
     "number": 5,
-    "number_of_ayahs": 120,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 120,
+    "hasBismillah": true,
+    "queryIndexes": [
       "5",
       "the table spread",
       "table spread",
@@ -195,9 +195,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الأنعام",
     "number": 6,
-    "number_of_ayahs": 165,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 165,
+    "hasBismillah": true,
+    "queryIndexes": [
       "6",
       "the cattle",
       "cattle",
@@ -231,9 +231,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الأعراف",
     "number": 7,
-    "number_of_ayahs": 206,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 206,
+    "hasBismillah": true,
+    "queryIndexes": [
       "7",
       "the heights",
       "heights",
@@ -267,9 +267,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الأنفال",
     "number": 8,
-    "number_of_ayahs": 75,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 75,
+    "hasBismillah": true,
+    "queryIndexes": [
       "8",
       "the spoils of war",
       "spoils of war",
@@ -308,9 +308,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "التوبة",
     "number": 9,
-    "number_of_ayahs": 129,
-    "has_bismillah": false,
-    "query_indexes": [
+    "numberOfAyahs": 129,
+    "hasBismillah": false,
+    "queryIndexes": [
       "9",
       "the repentance",
       "repentance",
@@ -345,9 +345,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "يونس",
     "number": 10,
-    "number_of_ayahs": 109,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 109,
+    "hasBismillah": true,
+    "queryIndexes": [
       "10",
       "jonah",
       "يونس",
@@ -377,9 +377,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "هود",
     "number": 11,
-    "number_of_ayahs": 123,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 123,
+    "hasBismillah": true,
+    "queryIndexes": [
       "11",
       "hud",
       "هود",
@@ -409,9 +409,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "يوسف",
     "number": 12,
-    "number_of_ayahs": 111,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 111,
+    "hasBismillah": true,
+    "queryIndexes": [
       "12",
       "joseph",
       "يوسف",
@@ -441,9 +441,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الرعد",
     "number": 13,
-    "number_of_ayahs": 43,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 43,
+    "hasBismillah": true,
+    "queryIndexes": [
       "13",
       "the thunder",
       "thunder",
@@ -478,9 +478,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "ابراهيم",
     "number": 14,
-    "number_of_ayahs": 52,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 52,
+    "hasBismillah": true,
+    "queryIndexes": [
       "14",
       "abrahim",
       "ابراهيم",
@@ -510,9 +510,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الحجر",
     "number": 15,
-    "number_of_ayahs": 99,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 99,
+    "hasBismillah": true,
+    "queryIndexes": [
       "15",
       "the rocky tract",
       "rocky tract",
@@ -548,9 +548,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "النحل",
     "number": 16,
-    "number_of_ayahs": 128,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 128,
+    "hasBismillah": true,
+    "queryIndexes": [
       "16",
       "the bee",
       "bee",
@@ -584,9 +584,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الإسراء",
     "number": 17,
-    "number_of_ayahs": 111,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 111,
+    "hasBismillah": true,
+    "queryIndexes": [
       "17",
       "the night journey",
       "night journey",
@@ -622,9 +622,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الكهف",
     "number": 18,
-    "number_of_ayahs": 110,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 110,
+    "hasBismillah": true,
+    "queryIndexes": [
       "18",
       "the cave",
       "cave",
@@ -658,9 +658,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "مريم",
     "number": 19,
-    "number_of_ayahs": 98,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 98,
+    "hasBismillah": true,
+    "queryIndexes": [
       "19",
       "mary",
       "مريم",
@@ -690,9 +690,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "طه",
     "number": 20,
-    "number_of_ayahs": 135,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 135,
+    "hasBismillah": true,
+    "queryIndexes": [
       "20",
       "ta ha",
       "ha",
@@ -724,9 +724,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الأنبياء",
     "number": 21,
-    "number_of_ayahs": 112,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 112,
+    "hasBismillah": true,
+    "queryIndexes": [
       "21",
       "the prophets",
       "prophets",
@@ -760,9 +760,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الحج",
     "number": 22,
-    "number_of_ayahs": 78,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 78,
+    "hasBismillah": true,
+    "queryIndexes": [
       "22",
       "the pilgrimage",
       "pilgrimage",
@@ -797,9 +797,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "المؤمنون",
     "number": 23,
-    "number_of_ayahs": 118,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 118,
+    "hasBismillah": true,
+    "queryIndexes": [
       "23",
       "the believers",
       "believers",
@@ -833,9 +833,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "النور",
     "number": 24,
-    "number_of_ayahs": 64,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 64,
+    "hasBismillah": true,
+    "queryIndexes": [
       "24",
       "the light",
       "light",
@@ -870,9 +870,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الفرقان",
     "number": 25,
-    "number_of_ayahs": 77,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 77,
+    "hasBismillah": true,
+    "queryIndexes": [
       "25",
       "the criterian",
       "criterian",
@@ -906,9 +906,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الشعراء",
     "number": 26,
-    "number_of_ayahs": 227,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 227,
+    "hasBismillah": true,
+    "queryIndexes": [
       "26",
       "the poets",
       "poets",
@@ -942,9 +942,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "النمل",
     "number": 27,
-    "number_of_ayahs": 93,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 93,
+    "hasBismillah": true,
+    "queryIndexes": [
       "27",
       "the ant",
       "ant",
@@ -978,9 +978,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "القصص",
     "number": 28,
-    "number_of_ayahs": 88,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 88,
+    "hasBismillah": true,
+    "queryIndexes": [
       "28",
       "the stories",
       "stories",
@@ -1014,9 +1014,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "العنكبوت",
     "number": 29,
-    "number_of_ayahs": 69,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 69,
+    "hasBismillah": true,
+    "queryIndexes": [
       "29",
       "the spider",
       "spider",
@@ -1050,9 +1050,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الروم",
     "number": 30,
-    "number_of_ayahs": 60,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 60,
+    "hasBismillah": true,
+    "queryIndexes": [
       "30",
       "the romans",
       "romans",
@@ -1086,9 +1086,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "لقمان",
     "number": 31,
-    "number_of_ayahs": 34,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 34,
+    "hasBismillah": true,
+    "queryIndexes": [
       "31",
       "luqman",
       "لقمان",
@@ -1118,9 +1118,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "السجدة",
     "number": 32,
-    "number_of_ayahs": 30,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 30,
+    "hasBismillah": true,
+    "queryIndexes": [
       "32",
       "the prostration",
       "prostration",
@@ -1154,9 +1154,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الأحزاب",
     "number": 33,
-    "number_of_ayahs": 73,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 73,
+    "hasBismillah": true,
+    "queryIndexes": [
       "33",
       "the combined forces",
       "combined forces",
@@ -1193,9 +1193,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "سبإ",
     "number": 34,
-    "number_of_ayahs": 54,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 54,
+    "hasBismillah": true,
+    "queryIndexes": [
       "34",
       "sheba",
       "سبإ",
@@ -1225,9 +1225,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "فاطر",
     "number": 35,
-    "number_of_ayahs": 45,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 45,
+    "hasBismillah": true,
+    "queryIndexes": [
       "35",
       "originator",
       "فاطر",
@@ -1257,9 +1257,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "يس",
     "number": 36,
-    "number_of_ayahs": 83,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 83,
+    "hasBismillah": true,
+    "queryIndexes": [
       "36",
       "ya sin",
       "yasin",
@@ -1292,9 +1292,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الصافات",
     "number": 37,
-    "number_of_ayahs": 182,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 182,
+    "hasBismillah": true,
+    "queryIndexes": [
       "37",
       "those who set the ranks",
       "who set the ranks",
@@ -1334,9 +1334,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "ص",
     "number": 38,
-    "number_of_ayahs": 88,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 88,
+    "hasBismillah": true,
+    "queryIndexes": [
       "38",
       "the letter \"saad\"",
       "letter \"saad\"",
@@ -1370,9 +1370,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الزمر",
     "number": 39,
-    "number_of_ayahs": 75,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 75,
+    "hasBismillah": true,
+    "queryIndexes": [
       "39",
       "the troops",
       "troops",
@@ -1406,9 +1406,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "غافر",
     "number": 40,
-    "number_of_ayahs": 85,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 85,
+    "hasBismillah": true,
+    "queryIndexes": [
       "40",
       "the forgiver",
       "forgiver",
@@ -1440,9 +1440,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "فصلت",
     "number": 41,
-    "number_of_ayahs": 54,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 54,
+    "hasBismillah": true,
+    "queryIndexes": [
       "41",
       "explained in detail",
       "in detail",
@@ -1476,9 +1476,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الشورى",
     "number": 42,
-    "number_of_ayahs": 53,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 53,
+    "hasBismillah": true,
+    "queryIndexes": [
       "42",
       "the consultation",
       "consultation",
@@ -1512,9 +1512,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الزخرف",
     "number": 43,
-    "number_of_ayahs": 89,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 89,
+    "hasBismillah": true,
+    "queryIndexes": [
       "43",
       "the ornaments of gold",
       "ornaments of gold",
@@ -1552,9 +1552,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الدخان",
     "number": 44,
-    "number_of_ayahs": 59,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 59,
+    "hasBismillah": true,
+    "queryIndexes": [
       "44",
       "the smoke",
       "smoke",
@@ -1588,9 +1588,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الجاثية",
     "number": 45,
-    "number_of_ayahs": 37,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 37,
+    "hasBismillah": true,
+    "queryIndexes": [
       "45",
       "the crouching",
       "crouching",
@@ -1624,9 +1624,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الأحقاف",
     "number": 46,
-    "number_of_ayahs": 35,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 35,
+    "hasBismillah": true,
+    "queryIndexes": [
       "46",
       "the wind curved sandhills",
       "wind curved sandhills",
@@ -1664,9 +1664,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "محمد",
     "number": 47,
-    "number_of_ayahs": 38,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 38,
+    "hasBismillah": true,
+    "queryIndexes": [
       "47",
       "muhammad",
       "محمد",
@@ -1697,9 +1697,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الفتح",
     "number": 48,
-    "number_of_ayahs": 29,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 29,
+    "hasBismillah": true,
+    "queryIndexes": [
       "48",
       "the victory",
       "victory",
@@ -1734,9 +1734,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الحجرات",
     "number": 49,
-    "number_of_ayahs": 18,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 18,
+    "hasBismillah": true,
+    "queryIndexes": [
       "49",
       "the rooms",
       "rooms",
@@ -1771,9 +1771,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "ق",
     "number": 50,
-    "number_of_ayahs": 45,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 45,
+    "hasBismillah": true,
+    "queryIndexes": [
       "50",
       "the letter \"qaf\"",
       "letter \"qaf\"",
@@ -1807,9 +1807,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الذاريات",
     "number": 51,
-    "number_of_ayahs": 60,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 60,
+    "hasBismillah": true,
+    "queryIndexes": [
       "51",
       "the winnowing winds",
       "winnowing winds",
@@ -1845,9 +1845,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الطور",
     "number": 52,
-    "number_of_ayahs": 49,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 49,
+    "hasBismillah": true,
+    "queryIndexes": [
       "52",
       "the mount",
       "mount",
@@ -1881,9 +1881,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "النجم",
     "number": 53,
-    "number_of_ayahs": 62,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 62,
+    "hasBismillah": true,
+    "queryIndexes": [
       "53",
       "the star",
       "star",
@@ -1917,9 +1917,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "القمر",
     "number": 54,
-    "number_of_ayahs": 55,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 55,
+    "hasBismillah": true,
+    "queryIndexes": [
       "54",
       "the moon",
       "moon",
@@ -1953,9 +1953,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الرحمن",
     "number": 55,
-    "number_of_ayahs": 78,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 78,
+    "hasBismillah": true,
+    "queryIndexes": [
       "55",
       "the beneficent",
       "beneficent",
@@ -1990,9 +1990,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الواقعة",
     "number": 56,
-    "number_of_ayahs": 96,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 96,
+    "hasBismillah": true,
+    "queryIndexes": [
       "56",
       "the inevitable",
       "inevitable",
@@ -2026,9 +2026,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الحديد",
     "number": 57,
-    "number_of_ayahs": 29,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 29,
+    "hasBismillah": true,
+    "queryIndexes": [
       "57",
       "the iron",
       "iron",
@@ -2063,9 +2063,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "المجادلة",
     "number": 58,
-    "number_of_ayahs": 22,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 22,
+    "hasBismillah": true,
+    "queryIndexes": [
       "58",
       "the pleading woman",
       "pleading woman",
@@ -2102,9 +2102,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الحشر",
     "number": 59,
-    "number_of_ayahs": 24,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 24,
+    "hasBismillah": true,
+    "queryIndexes": [
       "59",
       "the exile",
       "exile",
@@ -2139,9 +2139,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الممتحنة",
     "number": 60,
-    "number_of_ayahs": 13,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 13,
+    "hasBismillah": true,
+    "queryIndexes": [
       "60",
       "she that is to be examined",
       "that is to be examined",
@@ -2184,9 +2184,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الصف",
     "number": 61,
-    "number_of_ayahs": 14,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 14,
+    "hasBismillah": true,
+    "queryIndexes": [
       "61",
       "the ranks",
       "ranks",
@@ -2221,9 +2221,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الجمعة",
     "number": 62,
-    "number_of_ayahs": 11,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 11,
+    "hasBismillah": true,
+    "queryIndexes": [
       "62",
       "the congregation, friday",
       "congregation, friday",
@@ -2260,9 +2260,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "المنافقون",
     "number": 63,
-    "number_of_ayahs": 11,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 11,
+    "hasBismillah": true,
+    "queryIndexes": [
       "63",
       "the hypocrites",
       "hypocrites",
@@ -2297,9 +2297,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "التغابن",
     "number": 64,
-    "number_of_ayahs": 18,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 18,
+    "hasBismillah": true,
+    "queryIndexes": [
       "64",
       "the mutual disillusion",
       "mutual disillusion",
@@ -2336,9 +2336,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الطلاق",
     "number": 65,
-    "number_of_ayahs": 12,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 12,
+    "hasBismillah": true,
+    "queryIndexes": [
       "65",
       "the divorce",
       "divorce",
@@ -2373,9 +2373,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "التحريم",
     "number": 66,
-    "number_of_ayahs": 12,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 12,
+    "hasBismillah": true,
+    "queryIndexes": [
       "66",
       "the prohibtiion",
       "prohibtiion",
@@ -2410,9 +2410,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الملك",
     "number": 67,
-    "number_of_ayahs": 30,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 30,
+    "hasBismillah": true,
+    "queryIndexes": [
       "67",
       "the sovereignty",
       "sovereignty",
@@ -2446,9 +2446,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "القلم",
     "number": 68,
-    "number_of_ayahs": 52,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 52,
+    "hasBismillah": true,
+    "queryIndexes": [
       "68",
       "the pen",
       "pen",
@@ -2482,9 +2482,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الحاقة",
     "number": 69,
-    "number_of_ayahs": 52,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 52,
+    "hasBismillah": true,
+    "queryIndexes": [
       "69",
       "the reality",
       "reality",
@@ -2518,9 +2518,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "المعارج",
     "number": 70,
-    "number_of_ayahs": 44,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 44,
+    "hasBismillah": true,
+    "queryIndexes": [
       "70",
       "the ascending stairways",
       "ascending stairways",
@@ -2556,9 +2556,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "نوح",
     "number": 71,
-    "number_of_ayahs": 28,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 28,
+    "hasBismillah": true,
+    "queryIndexes": [
       "71",
       "noah",
       "نوح",
@@ -2588,9 +2588,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الجن",
     "number": 72,
-    "number_of_ayahs": 28,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 28,
+    "hasBismillah": true,
+    "queryIndexes": [
       "72",
       "the jinn",
       "jinn",
@@ -2624,9 +2624,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "المزمل",
     "number": 73,
-    "number_of_ayahs": 20,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 20,
+    "hasBismillah": true,
+    "queryIndexes": [
       "73",
       "the enshrouded one",
       "enshrouded one",
@@ -2662,9 +2662,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "المدثر",
     "number": 74,
-    "number_of_ayahs": 56,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 56,
+    "hasBismillah": true,
+    "queryIndexes": [
       "74",
       "the cloaked one",
       "cloaked one",
@@ -2700,9 +2700,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "القيامة",
     "number": 75,
-    "number_of_ayahs": 40,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 40,
+    "hasBismillah": true,
+    "queryIndexes": [
       "75",
       "the resurrection",
       "resurrection",
@@ -2736,9 +2736,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الانسان",
     "number": 76,
-    "number_of_ayahs": 31,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 31,
+    "hasBismillah": true,
+    "queryIndexes": [
       "76",
       "the man",
       "man",
@@ -2773,9 +2773,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "المرسلات",
     "number": 77,
-    "number_of_ayahs": 50,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 50,
+    "hasBismillah": true,
+    "queryIndexes": [
       "77",
       "the emissaries",
       "emissaries",
@@ -2809,9 +2809,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "النبإ",
     "number": 78,
-    "number_of_ayahs": 40,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 40,
+    "hasBismillah": true,
+    "queryIndexes": [
       "78",
       "the tidings",
       "tidings",
@@ -2845,9 +2845,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "النازعات",
     "number": 79,
-    "number_of_ayahs": 46,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 46,
+    "hasBismillah": true,
+    "queryIndexes": [
       "79",
       "those who drag forth",
       "who drag forth",
@@ -2885,9 +2885,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "عبس",
     "number": 80,
-    "number_of_ayahs": 42,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 42,
+    "hasBismillah": true,
+    "queryIndexes": [
       "80",
       "he frowned",
       "frowned",
@@ -2919,9 +2919,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "التكوير",
     "number": 81,
-    "number_of_ayahs": 29,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 29,
+    "hasBismillah": true,
+    "queryIndexes": [
       "81",
       "the overthrowing",
       "overthrowing",
@@ -2955,9 +2955,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الإنفطار",
     "number": 82,
-    "number_of_ayahs": 19,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 19,
+    "hasBismillah": true,
+    "queryIndexes": [
       "82",
       "the cleaving",
       "cleaving",
@@ -2991,9 +2991,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "المطففين",
     "number": 83,
-    "number_of_ayahs": 36,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 36,
+    "hasBismillah": true,
+    "queryIndexes": [
       "83",
       "the defrauding",
       "defrauding",
@@ -3027,9 +3027,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الإنشقاق",
     "number": 84,
-    "number_of_ayahs": 25,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 25,
+    "hasBismillah": true,
+    "queryIndexes": [
       "84",
       "the sundering",
       "sundering",
@@ -3063,9 +3063,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "البروج",
     "number": 85,
-    "number_of_ayahs": 22,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 22,
+    "hasBismillah": true,
+    "queryIndexes": [
       "85",
       "the mansions of the stars",
       "mansions of the stars",
@@ -3104,9 +3104,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الطارق",
     "number": 86,
-    "number_of_ayahs": 17,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 17,
+    "hasBismillah": true,
+    "queryIndexes": [
       "86",
       "the nightcommer",
       "nightcommer",
@@ -3140,9 +3140,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الأعلى",
     "number": 87,
-    "number_of_ayahs": 19,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 19,
+    "hasBismillah": true,
+    "queryIndexes": [
       "87",
       "the most high",
       "most high",
@@ -3178,9 +3178,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الغاشية",
     "number": 88,
-    "number_of_ayahs": 26,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 26,
+    "hasBismillah": true,
+    "queryIndexes": [
       "88",
       "the overwhelming",
       "overwhelming",
@@ -3214,9 +3214,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الفجر",
     "number": 89,
-    "number_of_ayahs": 30,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 30,
+    "hasBismillah": true,
+    "queryIndexes": [
       "89",
       "the dawn",
       "dawn",
@@ -3250,9 +3250,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "البلد",
     "number": 90,
-    "number_of_ayahs": 20,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 20,
+    "hasBismillah": true,
+    "queryIndexes": [
       "90",
       "the city",
       "city",
@@ -3286,9 +3286,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الشمس",
     "number": 91,
-    "number_of_ayahs": 15,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 15,
+    "hasBismillah": true,
+    "queryIndexes": [
       "91",
       "the sun",
       "sun",
@@ -3322,9 +3322,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الليل",
     "number": 92,
-    "number_of_ayahs": 21,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 21,
+    "hasBismillah": true,
+    "queryIndexes": [
       "92",
       "the night",
       "night",
@@ -3358,9 +3358,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الضحى",
     "number": 93,
-    "number_of_ayahs": 11,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 11,
+    "hasBismillah": true,
+    "queryIndexes": [
       "93",
       "the morning hours",
       "morning hours",
@@ -3396,9 +3396,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الشرح",
     "number": 94,
-    "number_of_ayahs": 8,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 8,
+    "hasBismillah": true,
+    "queryIndexes": [
       "94",
       "the relief",
       "relief",
@@ -3432,9 +3432,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "التين",
     "number": 95,
-    "number_of_ayahs": 8,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 8,
+    "hasBismillah": true,
+    "queryIndexes": [
       "95",
       "the fig",
       "fig",
@@ -3468,9 +3468,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "العلق",
     "number": 96,
-    "number_of_ayahs": 19,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 19,
+    "hasBismillah": true,
+    "queryIndexes": [
       "96",
       "the clot",
       "clot",
@@ -3504,9 +3504,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "القدر",
     "number": 97,
-    "number_of_ayahs": 5,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 5,
+    "hasBismillah": true,
+    "queryIndexes": [
       "97",
       "the power",
       "power",
@@ -3540,9 +3540,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "البينة",
     "number": 98,
-    "number_of_ayahs": 8,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 8,
+    "hasBismillah": true,
+    "queryIndexes": [
       "98",
       "the clear proof",
       "clear proof",
@@ -3579,9 +3579,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الزلزلة",
     "number": 99,
-    "number_of_ayahs": 8,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 8,
+    "hasBismillah": true,
+    "queryIndexes": [
       "99",
       "the earthquake",
       "earthquake",
@@ -3616,9 +3616,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "العاديات",
     "number": 100,
-    "number_of_ayahs": 11,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 11,
+    "hasBismillah": true,
+    "queryIndexes": [
       "100",
       "the courser",
       "courser",
@@ -3652,9 +3652,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "القارعة",
     "number": 101,
-    "number_of_ayahs": 11,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 11,
+    "hasBismillah": true,
+    "queryIndexes": [
       "101",
       "the calamity",
       "calamity",
@@ -3688,9 +3688,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "التكاثر",
     "number": 102,
-    "number_of_ayahs": 8,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 8,
+    "hasBismillah": true,
+    "queryIndexes": [
       "102",
       "the rivalry in world increase",
       "rivalry in world increase",
@@ -3730,9 +3730,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "العصر",
     "number": 103,
-    "number_of_ayahs": 3,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 3,
+    "hasBismillah": true,
+    "queryIndexes": [
       "103",
       "the declining day",
       "declining day",
@@ -3768,9 +3768,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الهمزة",
     "number": 104,
-    "number_of_ayahs": 9,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 9,
+    "hasBismillah": true,
+    "queryIndexes": [
       "104",
       "the traducer",
       "traducer",
@@ -3804,9 +3804,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الفيل",
     "number": 105,
-    "number_of_ayahs": 5,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 5,
+    "hasBismillah": true,
+    "queryIndexes": [
       "105",
       "the elephant",
       "elephant",
@@ -3840,9 +3840,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "قريش",
     "number": 106,
-    "number_of_ayahs": 4,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 4,
+    "hasBismillah": true,
+    "queryIndexes": [
       "106",
       "quraysh",
       "قريش",
@@ -3872,9 +3872,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الماعون",
     "number": 107,
-    "number_of_ayahs": 7,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 7,
+    "hasBismillah": true,
+    "queryIndexes": [
       "107",
       "the small kindesses",
       "small kindesses",
@@ -3910,9 +3910,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الكوثر",
     "number": 108,
-    "number_of_ayahs": 3,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 3,
+    "hasBismillah": true,
+    "queryIndexes": [
       "108",
       "the abundance",
       "abundance",
@@ -3946,9 +3946,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الكافرون",
     "number": 109,
-    "number_of_ayahs": 6,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 6,
+    "hasBismillah": true,
+    "queryIndexes": [
       "109",
       "the disbelievers",
       "disbelievers",
@@ -3982,9 +3982,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "النصر",
     "number": 110,
-    "number_of_ayahs": 3,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 3,
+    "hasBismillah": true,
+    "queryIndexes": [
       "110",
       "the divine support",
       "divine support",
@@ -4021,9 +4021,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "المسد",
     "number": 111,
-    "number_of_ayahs": 5,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 5,
+    "hasBismillah": true,
+    "queryIndexes": [
       "111",
       "the palm fiber",
       "palm fiber",
@@ -4059,9 +4059,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الإخلاص",
     "number": 112,
-    "number_of_ayahs": 4,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 4,
+    "hasBismillah": true,
+    "queryIndexes": [
       "112",
       "the sincerity",
       "sincerity",
@@ -4095,9 +4095,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الفلق",
     "number": 113,
-    "number_of_ayahs": 5,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 5,
+    "hasBismillah": true,
+    "queryIndexes": [
       "113",
       "the daybreak",
       "daybreak",
@@ -4131,9 +4131,9 @@ export const SURAHS: Surah[] = [
   {
     "name": "الناس",
     "number": 114,
-    "number_of_ayahs": 6,
-    "has_bismillah": true,
-    "query_indexes": [
+    "numberOfAyahs": 6,
+    "hasBismillah": true,
+    "queryIndexes": [
       "114",
       "the mankind",
       "mankind",

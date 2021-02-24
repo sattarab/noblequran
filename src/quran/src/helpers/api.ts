@@ -1,7 +1,6 @@
 import * as Sentry from "@sentry/browser"
 import axios from "axios"
 
-
 import { config, ConfigEnv } from "./config"
 import { HttpError } from "./error"
 interface HttpRequestData {
@@ -33,7 +32,7 @@ const DEFAULT_ERROR_MESSAGE = "Unknown error"
 const axiosInstance = axios.create()
 axiosInstance.defaults.headers.common[ "Accept" ] = "application/json"
 
-export async function sendHttpRequest<T>( options: HttpRequestOption ) {
+export async function sendHttpRequest<T>( options: HttpRequestOption ): Promise<T> {
   const axiosOptions = {
     ...options,
   }

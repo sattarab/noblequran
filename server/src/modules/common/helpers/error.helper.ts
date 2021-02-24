@@ -2,7 +2,7 @@ import { HttpException, Injectable } from "@nestjs/common"
 import { ConfigService } from "@nestjs/config"
 import * as Sentry from "@sentry/node"
 import { throttle } from "lodash"
-import { MongoError } from "mongodb"
+import type { MongoError } from "mongodb"
 
 import { ConfigEnv } from "../config"
 
@@ -40,7 +40,7 @@ export class ErrorService {
     Sentry.captureException( error )
   } )
 
-  handleError( error: HttpException ) {
+  handleError( error: HttpException ): void {
     this.logError( error )
   }
 }

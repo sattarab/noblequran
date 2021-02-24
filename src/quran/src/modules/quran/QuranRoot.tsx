@@ -3,7 +3,8 @@ import AccordionDetails from "@material-ui/core/AccordionDetails"
 import AccordionSummary from "@material-ui/core/AccordionSummary"
 import Drawer from "@material-ui/core/Drawer"
 import IconButton from "@material-ui/core/IconButton"
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles"
+import type { Theme } from "@material-ui/core/styles"
+import { createStyles, makeStyles } from "@material-ui/core/styles"
 import clsx from "clsx"
 import React, { useCallback } from "react"
 import { Route, Switch } from "react-router-dom"
@@ -200,38 +201,38 @@ export const QuranContainer: React.FunctionComponent = () => {
         </RightDrawerHeaderContainer>
         {
           Object.keys( selectedAyahs ).length
-          ?  (
-            <RightDrawerBodyReviewContainer>
-              <RightDrawerBodyReviewTitle>Review</RightDrawerBodyReviewTitle>
-              <RightDrawerSurahsContainer>
-                {
-                  Object.keys( selectedAyahs ).map( ( surahId ) => (
-                    <RightDrawerSurahContainer className={ classes.accordion } key={ surahId }>
-                      <RightDrawerSurahTitleContainer expandIcon={ <KeyboardArrowDownIcon className={ classes.clickableSvgIcon } /> }>
-                        <RightDrawerSurahTitle>{ surahs[ surahId ].transliterations[ 0 ].text }</RightDrawerSurahTitle>
-                      </RightDrawerSurahTitleContainer>
-                      <RightDrawerSurahVersesContainer>
-                        {
-                          selectedAyahs[ surahId ].map( ( ayahNumberInSurah ) => (
-                            <RightDrawerSurahVerseContainer key={ `${ surahId }:${ ayahNumberInSurah }` }>
-                              <RightDrawerSurahVerseText>Verse { ayahNumberInSurah }</RightDrawerSurahVerseText>
-                              <IconButton>
-                                <RemoveIcon className={ classes.clickableSvgIcon } />
-                              </IconButton>
-                            </RightDrawerSurahVerseContainer>
-                          ) )
-                        }
-                      </RightDrawerSurahVersesContainer>
-                    </RightDrawerSurahContainer>
-                  ) )
-                }
-              </RightDrawerSurahsContainer>
-            </RightDrawerBodyReviewContainer>
-          ) : (
-            <RightDrawerPlaceholderContainer>
-              <RightDrawerPlaceholderText>You haven&apos;t selected any verse yet.<br />Select a verse to get started.</RightDrawerPlaceholderText>
-            </RightDrawerPlaceholderContainer>
-          )
+            ? (
+              <RightDrawerBodyReviewContainer>
+                <RightDrawerBodyReviewTitle>Review</RightDrawerBodyReviewTitle>
+                <RightDrawerSurahsContainer>
+                  {
+                    Object.keys( selectedAyahs ).map( ( surahId ) => (
+                      <RightDrawerSurahContainer className={ classes.accordion } key={ surahId }>
+                        <RightDrawerSurahTitleContainer expandIcon={ <KeyboardArrowDownIcon className={ classes.clickableSvgIcon } /> }>
+                          <RightDrawerSurahTitle>{ surahs[ surahId ].transliterations[ 0 ].text }</RightDrawerSurahTitle>
+                        </RightDrawerSurahTitleContainer>
+                        <RightDrawerSurahVersesContainer>
+                          {
+                            selectedAyahs[ surahId ].map( ( ayahNumberInSurah ) => (
+                              <RightDrawerSurahVerseContainer key={ `${ surahId }:${ ayahNumberInSurah }` }>
+                                <RightDrawerSurahVerseText>Verse { ayahNumberInSurah }</RightDrawerSurahVerseText>
+                                <IconButton>
+                                  <RemoveIcon className={ classes.clickableSvgIcon } />
+                                </IconButton>
+                              </RightDrawerSurahVerseContainer>
+                            ) )
+                          }
+                        </RightDrawerSurahVersesContainer>
+                      </RightDrawerSurahContainer>
+                    ) )
+                  }
+                </RightDrawerSurahsContainer>
+              </RightDrawerBodyReviewContainer>
+            ) : (
+              <RightDrawerPlaceholderContainer>
+                <RightDrawerPlaceholderText>You haven&apos;t selected any verse yet.<br />Select a verse to get started.</RightDrawerPlaceholderText>
+              </RightDrawerPlaceholderContainer>
+            )
         }
       </Drawer>
     </QuranContainerWrapper>

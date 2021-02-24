@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common"
-import { omit } from "lodash"
-import { Db, FilterQuery } from "mongodb"
+import type { FilterQuery } from "mongodb"
+import { Db } from "mongodb"
 
 import { MongoDbException } from "../../common/helpers/error.helper"
 import { parseIntId } from "../../common/helpers/utils.helper"
 import { InjectDb } from "../../mongo/mongo.decorators"
-import { Translation } from "../types/translation.type"
+import type { Translation } from "../types/translation.type"
 
 interface TranslationDoc {
   _id: number
@@ -13,10 +13,10 @@ interface TranslationDoc {
   juz: number
   manzil: number
   number: number
-  number_in_surah: number
+  numberInSurah: number
   page: number
   ruku: number
-  surah_id: number
+  surahId: number
   text: string
 }
 
@@ -25,27 +25,34 @@ export class TranslationsRepository {
   constructor( @InjectDb() private readonly db: Db ) {
   }
 
-  private fromDocument = ( translation_doc: TranslationDoc ): Translation => {
+  private fromDocument = ( translationDoc: TranslationDoc ): Translation => {
     return {
-      ...omit( translation_doc, "_id" ),
-      id: `${ translation_doc._id }`,
-      surah_id: `${ translation_doc.surah_id }`,
+      id: `${ translationDoc._id }`,
+      hizb: translationDoc.hizb,
+      juz: translationDoc.juz,
+      manzil: translationDoc.manzil,
+      number: translationDoc.number,
+      numberInSurah: translationDoc.numberInSurah,
+      page: translationDoc.page,
+      ruku: translationDoc.ruku,
+      text: translationDoc.text,
+      surahId: `${ translationDoc.surahId }`,
     } as Translation
   }
 
-  find( name ) {
-    return this.db.collection( `translations.${ name }` ).find().sort( [ [ "number", 1 ] ] ).toArray()
+  find( translatorId: string ): Promise<Translation[]> {
+    return this.db.collection( `translations.${ translatorId }` ).find().sort( [ [ "number", 1 ] ] ).toArray()
       .catch( ( err ) => { throw new MongoDbException( err ) } )
-      .then( ( translation_docs ) => translation_docs.map( this.fromDocument ) )
+      .then( ( translationDocs ) => translationDocs.map( this.fromDocument ) )
   }
 
-  findByAyahIds( name: string, ayah_ids: string[] ): Promise<Translation[]> {
-    const translations_query: FilterQuery<TranslationDoc> = {
-      _id: { $in: ayah_ids.map( parseIntId ) },
+  findByAyahIds( name: string, ayahIds: string[] ): Promise<Translation[]> {
+    const translationsQuery: FilterQuery<TranslationDoc> = {
+      _id: { $in: ayahIds.map( parseIntId ) },
     }
 
-    return this.db.collection( `translations.${ name }` ).find( translations_query ).sort( [ [ "number", 1 ] ] ).toArray()
+    return this.db.collection( `translations.${ name }` ).find( translationsQuery ).sort( [ [ "number", 1 ] ] ).toArray()
       .catch( ( err ) => { throw new MongoDbException( err ) } )
-      .then( ( translation_docs ) => translation_docs.map( this.fromDocument ) )
+      .then( ( translationDocs ) => translationDocs.map( this.fromDocument ) )
   }
 }

@@ -1,6 +1,6 @@
 const ESCAPE_REGEX = /([.*+?^=!:${}()|\[\]\/\\])/g
 
-export function getLanguageLabel( code: string ) {
+export function getLanguageLabel( code: string ): string {
   switch( code ) {
     case "az": {
       return "Azerbaijani"
@@ -170,22 +170,24 @@ export function getLanguageLabel( code: string ) {
   return "Other"
 }
 
-export function escapeRegex( string: string ){
+export function escapeRegex( string: string ): string {
   return string.replace( ESCAPE_REGEX, "\\$1" )
 }
 
-export function getObjectFromLocalStorage<T>( key: string ) {
+export function getObjectFromLocalStorage<T>( key: string ): T | null {
   try {
     return localStorage.getItem( key ) != null ? JSON.parse( localStorage.getItem( key ) as string ) as T : null
   } catch( exception ) {
     console.error( "Problem storing in localStorage", exception )
   }
+
+  return null
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function groupBy( array: any[], key: string ) {
+export function groupBy<T extends Record<string, any>>( array: T[], key: string ): { [ key: string ]: T[] } {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return array.reduce( ( group:{ [ key: string ]: any[] }, value ) => {
+  return array.reduce( ( group: { [ key: string ]: T[] }, value ) => {
     const groupKey = value[ key ] as string
     if( ! group[ groupKey ] ) {
       group[ groupKey ] = []
@@ -195,7 +197,7 @@ export function groupBy( array: any[], key: string ) {
   }, {} )
 }
 
-export function setObjectInLocalStorage<T>( key: string, object: T ) {
+export function setObjectInLocalStorage<T>( key: string, object: T ): void {
   try {
     localStorage.setItem( key, JSON.stringify( object ) )
   } catch( exception ) {

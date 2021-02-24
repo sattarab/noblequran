@@ -13,7 +13,7 @@ module.exports = {
     }
   },
   plugins: [
-    "eslint-plugin-import",
+    "eslint-plugin-simple-import-sort",
     "eslint-plugin-react",
     "@typescript-eslint/eslint-plugin"
   ],
@@ -43,21 +43,70 @@ module.exports = {
     },
   ],
   rules: {
-    "@typescript-eslint/interface-name-prefix": "off",
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    "array-bracket-spacing": ["error", "always"],
-    "comma-dangle": ["error", "always-multiline"],
-    "object-curly-spacing": ["error", "always"],
-    "quotes": ["error", "double"],
-    "semi": ["error", "never"],
-    "import/order": ["error", {
-      "groups": ["external", "builtin", "internal", "parent", "sibling", "index", "object"],
-      "alphabetize": {
-        "order": "asc",
-        "caseInsensitive": true
-      }
+    "@typescript-eslint/ban-types": [ "warn", {
+      "types": {
+        "{}": "Don't use `{}` as a type. `{}` actually means \"any non-nullish value\". Use the type EmptyObject instead.",
+      },
     } ],
-    "space-in-parens": ["error", "always"],
+    "@typescript-eslint/consistent-type-imports": [ "warn", { "prefer": "type-imports" } ],
+    "@typescript-eslint/no-extra-non-null-assertion": [ "warn" ],
+    "@typescript-eslint/member-delimiter-style": [ "warn", {
+      "multiline": { "delimiter": "none" },
+      "singleline": { "delimiter": "comma", "requireLast": false },
+    } ],
+    "@typescript-eslint/no-empty-interface": [ "warn" ],
+    "@typescript-eslint/no-explicit-any": [ "warn" ],
+    "@typescript-eslint/no-shadow": [ "warn" ],
+    "@typescript-eslint/no-unused-vars": [ "warn" ],
+    "@typescript-eslint/prefer-optional-chain": [ "warn" ],
+    "@typescript-eslint/type-annotation-spacing": [ "warn" ],
+    "array-bracket-spacing": [ "warn", "always" ],
+    "comma-spacing": [ "warn", { "before": false, "after": true } ],
+    "computed-property-spacing": [ "warn", "always" ],
+    "eslint-comments/no-unlimited-disable": "off",
+    "generator-star-spacing": [ "warn", { "before": true, "after": false } ],
+    "indent": [ "warn", 2, {
+      "SwitchCase": 1,
+    } ],
+    "key-spacing": [ "warn" ],
+    "keyword-spacing": [ "warn", {
+      "overrides": {
+        "if": { "after": false },
+        "catch": { "after": false },
+        "for": { "after": false },
+        "switch": { "after": false },
+        "while": { "after": false },
+      },
+    } ],
+    "no-case-declarations": "warn",
+    "no-multi-spaces": "warn",
+    "no-multiple-empty-lines": "warn",
+    "no-shadow": "off",
+    "no-undef": "off",
+    "no-unexpected-multiline": "warn",
+    "no-unsafe-finally": "warn",
+    "no-whitespace-before-property": "warn",
+    "object-curly-spacing": [ "warn", "always" ],
+    "operator-linebreak": [ "warn", "before" ],
+    "prefer-const": "warn",
+    "prettier/prettier": "off",
+    "quotes": [ "warn", "double" ],
+    "react/jsx-curly-spacing": [ "warn", { "when": "always", "children": true } ],
+    "semi": [ "warn", "never" ],
+    "simple-import-sort/exports": "warn",
+    "simple-import-sort/imports": "warn",
+    "space-in-parens": [ "warn", "always", { "exceptions": [ "empty" ] } ],
+    "space-unary-ops": [
+      "warn",
+      {
+        "words": true,
+        "nonwords": false,
+        "overrides": {
+          "!": true,
+        },
+      },
+    ],
+    "template-curly-spacing": [ "warn", "always" ],
+    "yield-star-spacing": [ "warn", "after" ],
   },
 };

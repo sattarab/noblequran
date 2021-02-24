@@ -5,31 +5,33 @@ import * as path from "path"
 import { AppModule } from "./app.module"
 
 async function bootstrap() {
-  let ssl_folder_path: string
+  let sslFolderPath: string
 
-  if( ! __dirname.startsWith( "/var/www/noblequra/app" ) ) {
-    ssl_folder_path = path.resolve( __dirname, "../../ops/haproxy/ssl" )
+  if( ! __dirname.startsWith( "/var/www/noblequran/app" ) ) {
+    sslFolderPath = path.resolve( __dirname, "../../ops/haproxy/ssl" )
+  } else {
+    sslFolderPath = "/var/www/noblequran/ssl"
   }
 
-  console.log( "ssl_folder_path", ssl_folder_path )
+  const sslKeyPath = path.resolve( sslFolderPath, "localhost.pem" )
+  const sslCertPath = path.resolve( sslFolderPath, "localhost.crt" )
 
-  const ssl_key_path = path.resolve( ssl_folder_path, "localhost.pem" )
-  const ssl_cert_path = path.resolve( ssl_folder_path, "localhost.crt" )
-
-  if( ! fs.existsSync( ssl_key_path ) ) {
+  if( ! fs.existsSync( sslKeyPath ) ) {
     throw new Error( "SSL key not found" )
   }
 
-  if( ! fs.existsSync( ssl_cert_path ) ) {
+  if( ! fs.existsSync( sslCertPath ) ) {
     throw new Error( "SSL key not found" )
   }
 
   const app = await NestFactory.create( AppModule, {
     httpsOptions: {
-      cert: fs.readFileSync( ssl_cert_path ),
-      key: fs.readFileSync( ssl_key_path ),
+      cert: fs.readFileSync( sslCertPath ),
+      key: fs.readFileSync( sslKeyPath ),
     },
   } )
+
   await app.listen( 4443 )
 }
+
 bootstrap()

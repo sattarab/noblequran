@@ -9,10 +9,10 @@ export interface Ayah {
   id: string
   juz: number
   number: number
-  number_in_surah: number
+  numberInSurah: number
   manzil: number
   page: number
-  surah_id: string
+  surahId: string
   text: {
     indopak: string
     mushaf: string

@@ -32,7 +32,7 @@ export class HttpError extends ErrorBase {
   }
 }
 
-export const logError = ( error: Error, options?: ErrorOptions ) => {
+export const logError = ( error: Error, options?: ErrorOptions ): void => {
   Sentry.withScope( ( scope ) => {
     if( options?.extras ) {
       scope.setExtras( options.extras )

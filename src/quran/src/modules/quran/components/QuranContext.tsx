@@ -4,7 +4,7 @@ import { useEffectOnce, useMedia } from "react-use"
 
 import { isGreaterThanMediumScreen, MOBILE_SCREEN_MEDIA_QUERY } from "../../../helpers/responsive"
 import { getObjectFromLocalStorage } from "../../../helpers/utility"
-import { Surah } from "../../../types/surah"
+import type { Surah } from "../../../types/surah"
 import { getSurahs } from "../services/surah"
 export interface DisplaySurahVersesMap {
   [ surahId: string ]: boolean

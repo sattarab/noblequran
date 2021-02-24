@@ -3,9 +3,9 @@ export interface Translation {
   id: string
   juz: number
   number: number
-  number_in_surah: number
+  numberInSurah: number
   manzil: number
   page: number
-  surah_id: string
+  surahId: string
   text: string
 }

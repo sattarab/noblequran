@@ -1,8 +1,11 @@
 import { Controller, Get, Param, Query } from "@nestjs/common"
 
+import type { PaginationResults } from "../../common/helpers/pagination.helper"
 import { getPaginationOptions } from "../../common/helpers/pagination.helper"
-import { JuzGetAyahOptions, JuzGetOptions, JuzService } from "../services/juz.service"
-import { Juz } from "../types/juz.type"
+import type { JuzGetAyahOptions, JuzGetOptions } from "../services/juz.service"
+import { JuzService } from "../services/juz.service"
+import type { Ayah } from "../types/ayah.type"
+import type { Juz } from "../types/juz.type"
 
 @Controller( "juzs" )
 export class JuzController {
@@ -14,11 +17,11 @@ export class JuzController {
 
     if( query.embed ) {
       if( query.embed.includes( "ayahs" ) ) {
-        options.embed_ayahs = true
+        options.embedAyahs = true
       }
 
       if( query.embed.includes( "translations" ) ) {
-        options.embed_ayahs = true
+        options.embedAyahs = true
       }
     }
 
@@ -32,11 +35,11 @@ export class JuzController {
     },
     @Query() query: {
       page?: string
-      per_page?: string
+      perPage?: string
       translations?: string
       transliterations?: string
     }
-  ) {
+  ): Promise<PaginationResults<Ayah>> {
     const options: JuzGetAyahOptions = getPaginationOptions( query )
 
     if( query.translations ) {

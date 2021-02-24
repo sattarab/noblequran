@@ -1,19 +1,19 @@
 import { Injectable } from "@nestjs/common"
-import { omit } from "lodash"
-import { Collection, Db } from "mongodb"
+import type { Collection } from "mongodb"
+import { Db } from "mongodb"
 
 import { MongoDbException } from "../../common/helpers/error.helper"
 import { parseIntId } from "../../common/helpers/utils.helper"
 import { InjectDb } from "../../mongo/mongo.decorators"
-import { Surah } from "../types/surah.type"
+import type { Surah } from "../types/surah.type"
 
 interface SurahDoc {
   _id: number
-  has_bismillah: boolean
+  hasBismillah: boolean
   name: string
   number: number
-  number_of_ayahs: number
-  query_indexes: string[]
+  numberOfAyahs: number
+  queryIndexes: string[]
   revelation: {
     order: number
     place: string
@@ -36,27 +36,33 @@ export class SurahsRepository {
     this.collection = this.db.collection<SurahDoc>( "surahs" )
   }
 
-  private fromDocument = ( surah_doc: SurahDoc ): Surah => {
+  private fromDocument = ( surahDoc: SurahDoc ): Surah => {
     return {
-      ...omit( surah_doc, "_id" ),
-      id: `${ surah_doc._id }`,
+      id: `${ surahDoc._id }`,
+      hasBismillah: surahDoc.hasBismillah,
+      name: surahDoc.name,
+      number: surahDoc.number,
+      numberOfAyahs: surahDoc.numberOfAyahs,
+      revelation: surahDoc.revelation,
+      translations: surahDoc.translations,
+      transliterations: surahDoc.transliterations,
     } as Surah
   }
 
-  find() {
+  find(): Promise<Surah[]> {
     return this.collection.find().sort( [ [ "number", 1 ] ] ).toArray()
       .catch( ( err ) => { throw new MongoDbException( err ) } )
-      .then( ( surah_docs ) => surah_docs.map( this.fromDocument ) )
+      .then( ( surahDocs ) => surahDocs.map( this.fromDocument ) )
   }
 
-  async findOneById( id: string ) {
-    const surah_doc = await this.collection.findOne( { _id: parseIntId( id ) } )
+  async findOneById( id: string ): Promise<Surah> {
+    const surahDoc = await this.collection.findOne( { _id: parseIntId( id ) } )
       .catch( ( err ) => { throw new MongoDbException( err ) } )
 
-    if( ! surah_doc ) {
+    if( ! surahDoc ) {
       return null
     }
 
-    return this.fromDocument( surah_doc )
+    return this.fromDocument( surahDoc )
   }
 }

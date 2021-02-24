@@ -1,8 +1,7 @@
 import { Injectable } from "@nestjs/common"
-import { groupBy } from "lodash"
 
 import { TranslatorsRepository } from "../repositories/translators.repository"
-import { Translator } from "../types/translator.type"
+import type { Translator } from "../types/translator.type"
 
 @Injectable()
 export class TranslatorService {

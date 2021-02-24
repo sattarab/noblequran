@@ -3,11 +3,11 @@ import { Ayah } from "./ayah.type"
 export interface Surah {
   id: string
   ayahs?: Ayah[]
-  has_bismillah: boolean
+  hasBismillah: boolean
   name: string
   number: number
-  number_of_ayahs: number
-  query_indexes: string[]
+  numberOfAyahs: number
+  queryIndexes: string[]
   revelation: {
     place: string
     order: number

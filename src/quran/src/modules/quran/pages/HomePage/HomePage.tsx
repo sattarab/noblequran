@@ -8,20 +8,20 @@ import { useHistory } from "react-router-dom"
 import { useEffectOnce } from "react-use"
 import styled from "styled-components"
 
-import { BookmarksIcon, BookmarkAddIcon, BookmarkRemoveIcon, ClearIcon, GridIcon, ListIcon, RefreshIcon, SearchIcon } from "../../../../components/Icon"
+import { BookmarkAddIcon, BookmarkRemoveIcon, BookmarksIcon, ClearIcon, GridIcon, ListIcon, RefreshIcon, SearchIcon } from "../../../../components/Icon"
 import {
   BLUE_COLOR,
   BLUE_COLOR_WITH_OPACITY,
   BORDER_COLOR,
-  DARKER_TEXT_COLOR,
   DARK_TEXT_COLOR,
+  DARKER_TEXT_COLOR,
   DEFAULT_TEXT_COLOR,
   HEADER_HEIGHT,
   WHITE_SMOKE_COLOR,
 } from "../../../../components/Styles"
 import { LARGE_SCREEN_MEDIA_QUERY, MEDIUM_SCREEN_MEDIA_QUERY, SMALL_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
 import { escapeRegex, getObjectFromLocalStorage, setObjectInLocalStorage } from "../../../../helpers/utility"
-import { Surah } from "../../../../types/surah"
+import type { Surah } from "../../../../types/surah"
 import { QPopper } from "../../components/Popper"
 import { useQuranState } from "../../components/QuranContext"
 import { QRightDrawerButton } from "../../components/RightDrawerButton"
@@ -420,7 +420,7 @@ export const HomePage: React.FunctionComponent = () => {
   const MAX_SCROLL_OFFSET = 87
 
   const history = useHistory()
-  const { isMobileDevice, isRightDrawerOpen,  isSurahNamesFontLoaded } = useQuranState()
+  const { isMobileDevice, isRightDrawerOpen, isSurahNamesFontLoaded } = useQuranState()
   const [ isSearchContainerFixed, setIsSearchContainerFixed ] = useState<boolean>( false )
   const [ displayMyBookmarks, setMyDisplayBookmarks ] = useState<boolean>( false )
   const [ myBookmarks, setMyBookmarks ] = useState<string[]>( getObjectFromLocalStorage( "surahBookmarks" ) || [] )
@@ -465,7 +465,7 @@ export const HomePage: React.FunctionComponent = () => {
 
     for( const surah of getSurahs() ) {
       if( regex ) {
-        for( const queryIndex of surah.query_indexes ) {
+        for( const queryIndex of surah.queryIndexes ) {
           if( regex.test( queryIndex )
               && ( ! displayMyBookmarks || myBookmarks.includes( surah.id ) )
           ) {
@@ -487,7 +487,7 @@ export const HomePage: React.FunctionComponent = () => {
   }, [] )
 
   const closePopover = ( key: string ) => {
-    setPopoverMap(  { ...popoverMap, ...{ [ key ]: null } } )
+    setPopoverMap( { ...popoverMap, ...{ [ key ]: null } } )
   }
 
   const getRevelationTypeText = useCallback( ( type: string ) => {
@@ -508,7 +508,7 @@ export const HomePage: React.FunctionComponent = () => {
   }, [] )
 
   const openPopover = ( key: string, event: React.MouseEvent<HTMLSpanElement> ) => {
-    setPopoverMap(  { ...popoverMap, ...{ [ key ]: event.currentTarget } } )
+    setPopoverMap( { ...popoverMap, ...{ [ key ]: event.currentTarget } } )
   }
 
   const readSurah = useCallback( ( surah: Surah ) => {
@@ -545,13 +545,13 @@ export const HomePage: React.FunctionComponent = () => {
         <HomePageMyBookmarksContainer onClick={ toggleDisplayMyBookmarks }>
           {
             isMobileDevice
-            ? (
-              <IconButton>
-                <BookmarksIcon className={ clsx( { [ classes.svgIconActive ]: displayMyBookmarks }, classes.svgIcon ) } />
-              </IconButton>
-            ) : (
-              <HomePageMyBookmarksButton className={ clsx( { "active": displayMyBookmarks } ) }>My Bookmarks</HomePageMyBookmarksButton>
-            )
+              ? (
+                <IconButton>
+                  <BookmarksIcon className={ clsx( { [ classes.svgIconActive ]: displayMyBookmarks }, classes.svgIcon ) } />
+                </IconButton>
+              ) : (
+                <HomePageMyBookmarksButton className={ clsx( { "active": displayMyBookmarks } ) }>My Bookmarks</HomePageMyBookmarksButton>
+              )
           }
         </HomePageMyBookmarksContainer>
         <HomePageIconButton
@@ -601,88 +601,88 @@ export const HomePage: React.FunctionComponent = () => {
           <HomePageSurahsContentContainer>
             {
               surahs.length === 0
-              ? (
-                <HomePageNoSurahsPlaceholderContainer>
-                  <HomePageNoSurahsPlaceholderText>Sorry, we couldn&apos;t find any matches for this search.</HomePageNoSurahsPlaceholderText>
-                  <HomePageNoSurahsSmallPlaceholderText>Try another search, or:</HomePageNoSurahsSmallPlaceholderText>
-                  <HomePageNoSurahsSmallPlaceholderListText>
-                    <li>&#8226;&nbsp;Search by number</li>
-                    <li>&#8226;&nbsp;Perhaps you can try searching by surah type</li>
-                  </HomePageNoSurahsSmallPlaceholderListText>
-                  <HomePageNoSurahsClearFilterLink onClick={ resetFilters }>Clear your filters and try again.</HomePageNoSurahsClearFilterLink>
-                </HomePageNoSurahsPlaceholderContainer>
-              ) : (
-                <div>
-                  {
-                    selectViewType === ViewType.GRID
-                    ? (
-                      <HomePageSurahsGridContainer>
-                        {
-                          surahs.map( ( surah ) => (
-                            <HomePageSurahGridContainer
-                              aria-label={ surah.transliterations[ 0 ].text }
-                              onClick={ () => readSurah( surah ) } key={ surah.id }
-                            >
-                              <HomePageSurahGridInnerContainer>
-                                <HomePageSurahGridTitleContainer>
-                                  <HomePageSurahGridTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } style={ { visibility: isSurahNamesFontLoaded ? "visible" : "hidden" } } />
-                                  <HomePageSurahGridTranslatedTextContainer>
+                ? (
+                  <HomePageNoSurahsPlaceholderContainer>
+                    <HomePageNoSurahsPlaceholderText>Sorry, we couldn&apos;t find any matches for this search.</HomePageNoSurahsPlaceholderText>
+                    <HomePageNoSurahsSmallPlaceholderText>Try another search, or:</HomePageNoSurahsSmallPlaceholderText>
+                    <HomePageNoSurahsSmallPlaceholderListText>
+                      <li>&#8226;&nbsp;Search by number</li>
+                      <li>&#8226;&nbsp;Perhaps you can try searching by surah type</li>
+                    </HomePageNoSurahsSmallPlaceholderListText>
+                    <HomePageNoSurahsClearFilterLink onClick={ resetFilters }>Clear your filters and try again.</HomePageNoSurahsClearFilterLink>
+                  </HomePageNoSurahsPlaceholderContainer>
+                ) : (
+                  <div>
+                    {
+                      selectViewType === ViewType.GRID
+                        ? (
+                          <HomePageSurahsGridContainer>
+                            {
+                              surahs.map( ( surah ) => (
+                                <HomePageSurahGridContainer
+                                  aria-label={ surah.transliterations[ 0 ].text }
+                                  onClick={ () => readSurah( surah ) } key={ surah.id }
+                                >
+                                  <HomePageSurahGridInnerContainer>
+                                    <HomePageSurahGridTitleContainer>
+                                      <HomePageSurahGridTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } style={ { visibility: isSurahNamesFontLoaded ? "visible" : "hidden" } } />
+                                      <HomePageSurahGridTranslatedTextContainer>
+                                        <HomePageSurahTranslatedText>{ surah.translations[ 0 ].text }</HomePageSurahTranslatedText>
+                                      </HomePageSurahGridTranslatedTextContainer>
+                                    </HomePageSurahGridTitleContainer>
+                                    <HomePageSurahGridDetailsContainer>
+                                      <HomePageSurahTransliteratedText>{ surah.number } &#8226; { surah.transliterations[ 0 ].text }</HomePageSurahTransliteratedText>
+                                      <HomePageSurahDetailsText>{ surah.numberOfAyahs } verses &#8226; { getRevelationTypeText( surah.revelation.place ) }</HomePageSurahDetailsText>
+                                    </HomePageSurahGridDetailsContainer>
+                                    <HomePageSurahGridFooterContainer>
+                                      <HomePageSurahBookmarkContainer onClick={ ( event ) => toggleBookmarkSurah( event, surah.id ) }>
+                                        {
+                                          myBookmarks.includes( surah.id )
+                                            ? (
+                                              <BookmarkRemoveIcon className={ classes.svgIconActive } />
+                                            ) : (
+                                              <BookmarkAddIcon className={ classes.svgIcon } />
+                                            )
+                                        }
+                                      </HomePageSurahBookmarkContainer>
+                                      <HomePageSurahGridReadSurahButton>Read</HomePageSurahGridReadSurahButton>
+                                    </HomePageSurahGridFooterContainer>
+                                  </HomePageSurahGridInnerContainer>
+                                </HomePageSurahGridContainer>
+                              ) )
+                            }
+                          </HomePageSurahsGridContainer>
+                        ) : (
+                          <HomePageSurahsListContainer>
+                            {
+                              surahs.map( ( surah ) => (
+                                <HomePageSurahListContainer aria-label={ surah.transliterations[ 0 ].text } onClick={ () => readSurah( surah ) } key={ surah.id }>
+                                  <HomePageSurahListTitleContainer>
                                     <HomePageSurahTranslatedText>{ surah.translations[ 0 ].text }</HomePageSurahTranslatedText>
-                                  </HomePageSurahGridTranslatedTextContainer>
-                                </HomePageSurahGridTitleContainer>
-                                <HomePageSurahGridDetailsContainer>
-                                  <HomePageSurahTransliteratedText>{ surah.number } &#8226; { surah.transliterations[ 0 ].text }</HomePageSurahTransliteratedText>
-                                  <HomePageSurahDetailsText>{ surah.number_of_ayahs } verses &#8226; { getRevelationTypeText( surah.revelation.place ) }</HomePageSurahDetailsText>
-                                </HomePageSurahGridDetailsContainer>
-                                <HomePageSurahGridFooterContainer>
-                                  <HomePageSurahBookmarkContainer onClick={ ( event ) => toggleBookmarkSurah( event, surah.id ) }>
-                                    {
-                                      myBookmarks.includes( surah.id )
-                                      ? (
-                                        <BookmarkRemoveIcon className={ classes.svgIconActive } />
-                                      ) : (
-                                        <BookmarkAddIcon className={ classes.svgIcon } />
-                                      )
-                                    }
-                                  </HomePageSurahBookmarkContainer>
-                                  <HomePageSurahGridReadSurahButton>Read</HomePageSurahGridReadSurahButton>
-                                </HomePageSurahGridFooterContainer>
-                              </HomePageSurahGridInnerContainer>
-                            </HomePageSurahGridContainer>
-                          ) )
-                        }
-                      </HomePageSurahsGridContainer>
-                    ) : (
-                      <HomePageSurahsListContainer>
-                        {
-                          surahs.map( ( surah ) => (
-                            <HomePageSurahListContainer aria-label={ surah.transliterations[ 0 ].text } onClick={ () => readSurah( surah ) } key={ surah.id }>
-                              <HomePageSurahListTitleContainer>
-                                <HomePageSurahTranslatedText>{ surah.translations[ 0 ].text }</HomePageSurahTranslatedText>
-                                <HomePageSurahListTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } style={ { visibility: isSurahNamesFontLoaded ? "visible" : "hidden" } } />
-                              </HomePageSurahListTitleContainer>
-                              <HomePageSurahListDetailsContainer>
-                                <HomePageSurahTransliteratedText>{ surah.number } &#8226; { surah.transliterations[ 0 ].text }</HomePageSurahTransliteratedText>
-                                <HomePageSurahListDetailsText>{ surah.number_of_ayahs } verses &#8226; { getRevelationTypeText( surah.revelation.place ) }</HomePageSurahListDetailsText>
-                                <HomePageSurahBookmarkContainer onClick={ ( event ) => toggleBookmarkSurah( event, surah.id ) }>
-                                  {
-                                    myBookmarks.includes( surah.id )
-                                    ? (
-                                      <BookmarkRemoveIcon className={ classes.svgIconActive } />
-                                    ) : (
-                                      <BookmarkAddIcon className={ classes.svgIcon } />
-                                    )
-                                  }
-                                </HomePageSurahBookmarkContainer>
-                              </HomePageSurahListDetailsContainer>
-                            </HomePageSurahListContainer>
-                          ) )
-                        }
-                      </HomePageSurahsListContainer>
-                    )
-                  }
-                </div>
-              )
+                                    <HomePageSurahListTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } style={ { visibility: isSurahNamesFontLoaded ? "visible" : "hidden" } } />
+                                  </HomePageSurahListTitleContainer>
+                                  <HomePageSurahListDetailsContainer>
+                                    <HomePageSurahTransliteratedText>{ surah.number } &#8226; { surah.transliterations[ 0 ].text }</HomePageSurahTransliteratedText>
+                                    <HomePageSurahListDetailsText>{ surah.numberOfAyahs } verses &#8226; { getRevelationTypeText( surah.revelation.place ) }</HomePageSurahListDetailsText>
+                                    <HomePageSurahBookmarkContainer onClick={ ( event ) => toggleBookmarkSurah( event, surah.id ) }>
+                                      {
+                                        myBookmarks.includes( surah.id )
+                                          ? (
+                                            <BookmarkRemoveIcon className={ classes.svgIconActive } />
+                                          ) : (
+                                            <BookmarkAddIcon className={ classes.svgIcon } />
+                                          )
+                                      }
+                                    </HomePageSurahBookmarkContainer>
+                                  </HomePageSurahListDetailsContainer>
+                                </HomePageSurahListContainer>
+                              ) )
+                            }
+                          </HomePageSurahsListContainer>
+                        )
+                    }
+                  </div>
+                )
             }
           </HomePageSurahsContentContainer>
         </HomePageContentContainer>

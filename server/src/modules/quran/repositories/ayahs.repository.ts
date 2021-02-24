@@ -1,12 +1,13 @@
 import { Injectable } from "@nestjs/common"
-import { omit } from "lodash"
-import { Collection, Db, FilterQuery } from "mongodb"
+import type { Collection, FilterQuery } from "mongodb"
+import { Db } from "mongodb"
 
 import { MongoDbException } from "../../common/helpers/error.helper"
-import { getPaginationResults, PaginationOptions, PaginationResults } from "../../common/helpers/pagination.helper"
+import type { PaginationOptions, PaginationResults } from "../../common/helpers/pagination.helper"
+import { getPaginationResults } from "../../common/helpers/pagination.helper"
 import { parseIntId } from "../../common/helpers/utils.helper"
 import { InjectDb } from "../../mongo/mongo.decorators"
-import { Ayah, WordType } from "../types/ayah.type"
+import type { Ayah, WordType } from "../types/ayah.type"
 
 interface AyahDoc {
   _id: number
@@ -14,10 +15,10 @@ interface AyahDoc {
   juz: number
   manzil: number
   number: number
-  number_in_surah: number
+  numberInSurah: number
   page: number
   ruku: number
-  surah_id: number
+  surahId: number
   text: {
     indopak: string
     mushaf: string
@@ -26,7 +27,6 @@ interface AyahDoc {
   }
   words: Array<{
     _id: number
-    type: WordType
     text: {
       indopak: string
       mushaf: string
@@ -36,6 +36,7 @@ interface AyahDoc {
       language: string
       text: string
     }>
+    type: WordType
   }>
 }
 
@@ -47,45 +48,54 @@ export class AyahsRepository {
     this.collection = this.db.collection<AyahDoc>( "ayahs" )
   }
 
-  private fromDocument = ( ayah_doc: AyahDoc ): Ayah => {
+  private fromDocument = ( ayahDoc: AyahDoc ): Ayah => {
     return {
-      ...omit( ayah_doc, "_id", "surah_id" ),
-      id: `${ ayah_doc._id }`,
-      surah_id: `${ ayah_doc.surah_id }`,
-      words: ayah_doc.words.map( ( word_doc ) => ( {
+      id: `${ ayahDoc._id }`,
+      hizb: ayahDoc.hizb,
+      juz: ayahDoc.juz,
+      manzil: ayahDoc.manzil,
+      number: ayahDoc.number,
+      numberInSurah: ayahDoc.numberInSurah,
+      page: ayahDoc.page,
+      ruku: ayahDoc.ruku,
+      text: ayahDoc.text,
+      surahId: `${ ayahDoc.surahId }`,
+      words: ayahDoc.words.map( ( word_doc ) => ( {
         id: `${ word_doc._id }`,
-        ...omit( word_doc, "_id" ),
+        text: word_doc.text,
+        translations: word_doc.translations,
+        type: word_doc.type,
       } ) ),
     } as Ayah
   }
 
-  find() {
+  find(): Promise<Ayah[]> {
     return this.collection.find().sort( [ [ "number", 1 ] ] ).toArray()
       .catch( ( err ) => { throw new MongoDbException( err ) } )
-      .then( ( ayah_docs ) => ayah_docs.map( this.fromDocument ) )
+      .then( ( ayahDocs ) => ayahDocs.map( this.fromDocument ) )
   }
 
-  findByJuz( juz: string ) {
-    return this.collection.find( { juz: parseIntId( juz ) } ).sort( [ [ "number", 1 ] ] ).toArray()
+  findByJuz( juzId: string ): Promise<Ayah[]> {
+    return this.collection.find( { juzId: parseIntId( juzId ) } ).sort( [ [ "number", 1 ] ] ).toArray()
       .catch( ( err ) => { throw new MongoDbException( err ) } )
-      .then( ( ayah_docs ) => ayah_docs.map( this.fromDocument ) )
+      .then( ( ayahDocs ) => ayahDocs.map( this.fromDocument ) )
   }
 
-  findBySurahId( surah_id: string ) {
-    return this.collection.find( { surah_id: parseIntId( surah_id ) } ).sort( [ [ "number", 1 ] ] ).toArray()
+  findBySurahId( surahId: string ): Promise<Ayah[]> {
+    return this.collection.find( { surahId: parseIntId( surahId ) } ).sort( [ [ "number", 1 ] ] ).toArray()
       .catch( ( err ) => { throw new MongoDbException( err ) } )
-      .then( ( ayah_docs ) => ayah_docs.map( this.fromDocument ) )
+      .then( ( ayahDocs ) => ayahDocs.map( this.fromDocument ) )
   }
 
-  async findOneById( id: string ) {
-    const ayah_doc = await this.collection.findOne( { _id: parseIntId( id ) } )
+  async findOneById( id: string ): Promise<Ayah> {
+    const ayahDoc = await this.collection.findOne( { _id: parseIntId( id ) } )
       .catch( ( err ) => { throw new MongoDbException( err ) } )
 
-    if( ! ayah_doc ) {
+    if( ! ayahDoc ) {
       return null
     }
 
-    return this.fromDocument( ayah_doc )
+    return this.fromDocument( ayahDoc )
   }
 
   findPaginatedByJuz( juz: string, options: PaginationOptions ): Promise<PaginationResults<Ayah>> {
@@ -97,9 +107,9 @@ export class AyahsRepository {
       .catch( ( err ) => { throw new MongoDbException( err ) } )
   }
 
-  findPaginatedBySurahId( surah_id: string, options: PaginationOptions ): Promise<PaginationResults<Ayah>> {
+  findPaginatedBySurahId( surahId: string, options: PaginationOptions ): Promise<PaginationResults<Ayah>> {
     const query: FilterQuery<AyahDoc> = {
-      surah_id: parseIntId( surah_id ),
+      surahId: parseIntId( surahId ),
     }
     options.sort = [ [ "number", 1 ] ]
     return getPaginationResults( this.collection, query, options, this.fromDocument )
