@@ -35,6 +35,7 @@ module.exports = {
     "@typescript-eslint/prefer-optional-chain": [ "warn" ],
     "@typescript-eslint/type-annotation-spacing": [ "warn" ],
     "array-bracket-spacing": [ "warn", "always" ],
+    "camelcase": [ "error" ],
     "comma-spacing": [ "warn", { "before": false, "after": true } ],
     "computed-property-spacing": [ "warn", "always" ],
     "eslint-comments/no-unlimited-disable": "off",

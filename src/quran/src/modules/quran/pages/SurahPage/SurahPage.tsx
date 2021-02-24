@@ -492,7 +492,7 @@ export const SurahPage: React.FunctionComponent = () => {
       .then( ( response ) => {
         const { items } = response
         setAyahs( [ ...items ] )
-        setPagination( { ...response.pagination } )
+        setPagination( { ...pagination, ...response.pagination } )
       } )
       .catch( ( error ) => {
         setDisplayError( true )
@@ -644,12 +644,12 @@ export const SurahPage: React.FunctionComponent = () => {
   }
 
   const loadAyahs = useCallback( () => {
-    if( ayahs.length === selectedSurah.numberOfAyahs || ! pagination?.next_page ) {
+    if( ayahs.length === selectedSurah.numberOfAyahs || ! pagination?.nextPage ) {
       setHasMore( false )
       return
     }
 
-    getSurahAyahs( selectedSurah.id, { page: pagination.next_page, perPage: pagination.perPage, translations: selectedTranslations } )
+    getSurahAyahs( selectedSurah.id, { page: pagination.nextPage, perPage: pagination.perPage, translations: selectedTranslations } )
       .then( ( response ) => {
         const { items } = response
         const updatedAyahs: Ayah[] = [ ...ayahs ]

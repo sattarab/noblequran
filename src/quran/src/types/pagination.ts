@@ -1,10 +1,10 @@
 export interface Pagination {
   count: number
-  last_page?: number
-  next_page?: number | null
+  lastPage?: number
+  nextPage?: number | null
   page: number
-  page_start?: number
+  pageStart?: number
   pageEnd?: number
   perPage: number
-  prev_page?: number | null
+  prevPage?: number | null
 }

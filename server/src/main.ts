@@ -3,11 +3,14 @@ import * as fs from "fs"
 import * as path from "path"
 
 import { AppModule } from "./app.module"
+import getConfig, { ConfigEnv } from "./modules/common/config"
 
 async function bootstrap() {
+  const config = getConfig()
+
   let sslFolderPath: string
 
-  if( ! __dirname.startsWith( "/var/www/noblequran/app" ) ) {
+  if( config.env === ConfigEnv.DEV && ! __dirname.startsWith( "/var/www/noblequran/app" ) ) {
     sslFolderPath = path.resolve( __dirname, "../../ops/haproxy/ssl" )
   } else {
     sslFolderPath = "/var/www/noblequran/ssl"
