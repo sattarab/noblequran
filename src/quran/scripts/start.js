@@ -41,7 +41,7 @@ const useYarn = fs.existsSync( paths.yarnLockFile )
 const isInteractive = process.stdout.isTTY
 
 // Warn and crash if required files are missing
-if( !checkRequiredFiles( [ paths.appHtml, paths.appIndexJs ] ) ) {
+if( ! checkRequiredFiles( [ paths.appHtml, paths.appIndexJs ] ) ) {
   process.exit( 1 )
 }
 
@@ -52,16 +52,16 @@ const HOST = process.env.HOST || "0.0.0.0"
 if( process.env.HOST ) {
   console.log(
     chalk.cyan(
-      `Attempting to bind to HOST environment variable: ${chalk.yellow(
+      `Attempting to bind to HOST environment variable: ${ chalk.yellow(
         chalk.bold( process.env.HOST ),
-      )}`,
+      ) }`,
     ),
   )
   console.log(
     "If this was unintentional, check that you haven't mistakenly set it in your shell.",
   )
   console.log(
-    `Learn more here: ${chalk.yellow( "https://cra.link/advanced-config" )}`,
+    `Learn more here: ${ chalk.yellow( "https://cra.link/advanced-config" ) }`,
   )
   console.log()
 }
@@ -79,6 +79,7 @@ checkBrowsers( paths.appPath, isInteractive )
       // We have not found a port.
       return
     }
+
 
     const config = configFactory( "development" )
     const protocol = process.env.HTTPS === "true" ? "https" : "http"
@@ -134,7 +135,7 @@ checkBrowsers( paths.appPath, isInteractive )
       if( env.raw.FAST_REFRESH && semver.lt( react.version, "16.10.0" ) ) {
         console.log(
           chalk.yellow(
-            `Fast Refresh requires React 16.10 or higher. You are using React ${react.version}.`,
+            `Fast Refresh requires React 16.10 or higher. You are using React ${ react.version }.`,
           ),
         )
       }
@@ -159,7 +160,7 @@ checkBrowsers( paths.appPath, isInteractive )
     }
   } )
   .catch( err => {
-    if( err && err.message ) {
+    if( err?.message ) {
       console.log( err.message )
     }
     process.exit( 1 )

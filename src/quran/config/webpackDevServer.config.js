@@ -33,7 +33,7 @@ module.exports = function ( proxy, allowedHost ) {
     // specified the `proxy` setting. Finally, we let you override it if you
     // really know what you're doing with a special environment variable.
     disableHostCheck:
-      !proxy || process.env.DANGEROUSLY_DISABLE_HOST_CHECK === "true",
+      ! proxy || process.env.DANGEROUSLY_DISABLE_HOST_CHECK === "true",
     // Enable gzip compression of generated files.
     compress: true,
     // Silence WebpackDevServer's own logs since they're generally not useful.
@@ -110,7 +110,7 @@ module.exports = function ( proxy, allowedHost ) {
       // This lets us open files from the runtime error overlay.
       app.use( errorOverlayMiddleware() )
 
-      if ( fs.existsSync( paths.proxySetup ) ) {
+      if( fs.existsSync( paths.proxySetup ) ) {
         // This registers user provided middleware for proxy reasons
         require( paths.proxySetup )( app )
       }

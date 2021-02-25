@@ -28,8 +28,7 @@ const path = require( "path" )
 const paths = require( "../config/paths" )
 const configFactory = require( "../config/webpack.config" )
 
-const measureFileSizesBeforeBuild =
-  FileSizeReporter.measureFileSizesBeforeBuild
+const measureFileSizesBeforeBuild = FileSizeReporter.measureFileSizesBeforeBuild
 const printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild
 const useYarn = fs.existsSync( paths.yarnLockFile )
 
@@ -40,7 +39,7 @@ const WARN_AFTER_CHUNK_GZIP_SIZE = 1024 * 1024
 const isInteractive = process.stdout.isTTY
 
 // Warn and crash if required files are missing
-if( !checkRequiredFiles( [ paths.appHtml, paths.appIndexJs ] ) ) {
+if( ! checkRequiredFiles( [ paths.appHtml, paths.appIndexJs ] ) ) {
   process.exit( 1 )
 }
 
@@ -73,14 +72,14 @@ checkBrowsers( paths.appPath, isInteractive )
         console.log( chalk.yellow( "Compiled with warnings.\n" ) )
         console.log( warnings.join( "\n\n" ) )
         console.log(
-          "\nSearch for the " +
-            chalk.underline( chalk.yellow( "keywords" ) ) +
-            " to learn more about each warning.",
+          "\nSearch for the "
+            + chalk.underline( chalk.yellow( "keywords" ) )
+            + " to learn more about each warning.",
         )
         console.log(
-          "To ignore, add " +
-            chalk.cyan( "// eslint-disable-next-line" ) +
-            " to the line before.\n",
+          "To ignore, add "
+            + chalk.cyan( "// eslint-disable-next-line" )
+            + " to the line before.\n",
         )
       } else {
         console.log( chalk.green( "Compiled successfully.\n" ) )
@@ -125,7 +124,7 @@ checkBrowsers( paths.appPath, isInteractive )
     },
   )
   .catch( err => {
-    if( err && err.message ) {
+    if( err?.message ) {
       console.log( err.message )
     }
     process.exit( 1 )
@@ -139,8 +138,9 @@ function build( previousFileSizes ) {
   return new Promise( ( resolve, reject ) => {
     compiler.run( ( err, stats ) => {
       let messages
+      console.log( "err", err )
       if( err ) {
-        if( !err.message ) {
+        if( ! err.message ) {
           return reject( err )
         }
 
@@ -148,9 +148,9 @@ function build( previousFileSizes ) {
 
         // Add additional information for postcss errors
         if( Object.prototype.hasOwnProperty.call( err, "postcssNode" ) ) {
-          errMessage +=
-            "\nCompileError: Begins at CSS selector " +
-            err["postcssNode"].selector
+          errMessage
+            += "\nCompileError: Begins at CSS selector "
+            + err[ "postcssNode" ].selector
         }
 
         messages = formatWebpackMessages( {
@@ -158,9 +158,11 @@ function build( previousFileSizes ) {
           warnings: [],
         } )
       } else {
-        messages = formatWebpackMessages(
-          stats.toJson( { all: false, warnings: true, errors: true } ),
-        )
+        const rawMessages = stats.toJson( { moduleTrace: false }, true )
+        messages = formatWebpackMessages( {
+          errors: rawMessages.errors.map( ( e ) => e.message ),
+          warnings: rawMessages.warnings.map( ( e ) => e.message ),
+        } )
       }
       if( messages.errors.length ) {
         // Only keep the first error. Others are often indicative
@@ -171,15 +173,17 @@ function build( previousFileSizes ) {
         return reject( new Error( messages.errors.join( "\n\n" ) ) )
       }
       if(
-        process.env.CI &&
-        ( typeof process.env.CI !== "string" ||
-          process.env.CI.toLowerCase() !== "false" ) &&
-        messages.warnings.length
+        process.env.CI
+        && (
+          typeof process.env.CI !== "string"
+          || process.env.CI.toLowerCase() !== "false"
+        )
+        && messages.warnings.length
       ) {
         console.log(
           chalk.yellow(
-            "\nTreating warnings as errors because process.env.CI = true.\n" +
-              "Most CI servers set it automatically.\n",
+            "\nTreating warnings as errors because process.env.CI = true.\n"
+              + "Most CI servers set it automatically.\n",
           ),
         )
         return reject( new Error( messages.warnings.join( "\n\n" ) ) )

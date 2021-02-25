@@ -26,7 +26,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  ignorePatterns: [".eslintrc.js"],
+  ignorePatterns: [ ".eslintrc.js" ],
   overrides: [
     {
       files: "**/**/*.js",
@@ -61,7 +61,7 @@ module.exports = {
     "@typescript-eslint/prefer-optional-chain": [ "warn" ],
     "@typescript-eslint/type-annotation-spacing": [ "warn" ],
     "array-bracket-spacing": [ "warn", "always" ],
-    "camelcase": [ "error" ],
+    "camelcase": [ "warn" ],
     "comma-spacing": [ "warn", { "before": false, "after": true } ],
     "computed-property-spacing": [ "warn", "always" ],
     "eslint-comments/no-unlimited-disable": "off",
