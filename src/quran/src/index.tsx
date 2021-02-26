@@ -1,10 +1,11 @@
+import "./index.scss"
+
 import * as Sentry from "@sentry/browser"
 import React from "react"
 import ReactDOM from "react-dom"
 
 import App from "./App"
 import { config, ConfigEnv } from "./helpers/config"
-import "./index.scss"
 import reportWebVitals from "./reportWebVitals"
 
 Sentry.init( {
