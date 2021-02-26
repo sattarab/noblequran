@@ -34,7 +34,7 @@
     "case-sensitive-paths-webpack-plugin": "2.4.0",
     "clsx": "1.1.1",
     "core-js": "3.9.0",
-    "css-loader": "4.3.0",
+    "css-loader": "5.1.0",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
     "eslint": "7.20.0",
