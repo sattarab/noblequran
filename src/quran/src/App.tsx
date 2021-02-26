@@ -1,8 +1,9 @@
-import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles"
+import "./App.scss"
+
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles"
 import React from "react"
 import { BrowserRouter as Router } from "react-router-dom"
 
-import "./App.scss"
 import { BASE_FONT_FAMILY, DEFAULT_TEXT_COLOR } from "./components/Styles"
 import { QuranRoot } from "./modules/quran/QuranRoot"
 
@@ -21,7 +22,7 @@ const theme = createMuiTheme( {
   },
 } )
 
-function App() {
+function App(): JSX.Element {
   return (
     <Router>
       <ThemeProvider theme={ theme }>

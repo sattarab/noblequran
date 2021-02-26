@@ -410,10 +410,9 @@ module.exports = function ( webpackEnv ) {
               options: {
                 presets: [
                   [
-                    require.resolve( "@babel/preset-react" ),
-                    {
-                      "corejs": "3.9",
-                      "useBuiltIns": "usage"
+                    require.resolve( "@babel/preset-react" ), {
+                      corejs: "3.9",
+                      useBuiltIns: "usage",
                     }
                   ],
                   [
@@ -422,8 +421,14 @@ module.exports = function ( webpackEnv ) {
                 ],
                 plugins: [
                   [
-                    require.resolve( "babel-plugin-named-asset-import" ),
-                    {
+                    require.resolve( "babel-plugin-styled-components" ), {
+                      minify: true,
+                      pure: true,
+                      transpileTemplateLiterals: true,
+                    }
+                  ],
+                  [
+                    require.resolve( "babel-plugin-named-asset-import" ), {
                       loaderMap: {
                         svg: {
                           ReactComponent:
@@ -635,8 +640,7 @@ module.exports = function ( webpackEnv ) {
       // to restart the development server for webpack to discover it. This plugin
       // makes the discovery automatic so you don't have to restart.
       // See https://github.com/facebook/create-react-app/issues/186
-      isEnvDevelopment
-        && new WatchMissingNodeModulesPlugin( paths.appNodeModules ),
+      isEnvDevelopment && new WatchMissingNodeModulesPlugin( paths.appNodeModules ),
       isEnvProduction
         && new MiniCssExtractPlugin( {
           // Options similar to the same options in webpackOptions.output
@@ -724,7 +728,7 @@ module.exports = function ( webpackEnv ) {
           extensions: [ "js", "mjs", "jsx", "ts", "tsx" ],
           formatter: require.resolve( "react-dev-utils/eslintFormatter" ),
           eslintPath: require.resolve( "eslint" ),
-          emitWarning: isEnvDevelopment && emitErrorsAsWarnings,
+          failOnError: ! ( isEnvDevelopment && emitErrorsAsWarnings ),
           context: paths.appSrc,
           cache: true,
           cacheLocation: path.resolve(
