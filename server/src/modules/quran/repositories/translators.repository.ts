@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common"
-import { omit } from "lodash"
 import type { Collection } from "mongodb"
 import { Db } from "mongodb"
 
@@ -29,6 +28,7 @@ export class TranslatorsRepository {
     return {
       id: `${ translatorDoc._id }`,
       name: translatorDoc.name,
+      language: translatorDoc.language,
       translations: translatorDoc.translations,
     } as Translator
   }

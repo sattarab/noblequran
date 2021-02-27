@@ -14,7 +14,16 @@ import { useClickAway, useEffectOnce } from "react-use"
 import styled from "styled-components"
 
 import { ArrowBackIcon, ArrowDownIcon, ArrowUpIcon, RefreshIcon, SearchIcon } from "../../../../components/Icon"
-import { BLUE_COLOR, BLUE_COLOR_WITH_OPACITY, BORDER_COLOR, DARK_TEXT_COLOR, DEFAULT_TEXT_COLOR, LIGHT_WHITE_SMOKE_COLOR, WHITE_SMOKE_COLOR } from "../../../../components/Styles"
+import {
+  BLUE_COLOR,
+  BLUE_COLOR_WITH_OPACITY,
+  BORDER_COLOR,
+  DARK_TEXT_COLOR,
+  DEFAULT_TEXT_COLOR,
+  LIGHT_WHITE_SMOKE_COLOR,
+  RIGHT_DRAWER_WIDTH,
+  WHITE_SMOKE_COLOR,
+} from "../../../../components/Styles"
 import { logError } from "../../../../helpers/error"
 import { LARGE_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
 import { escapeRegex, getLanguageLabel, getObjectFromLocalStorage, groupBy, setObjectInLocalStorage } from "../../../../helpers/utility"
@@ -26,14 +35,31 @@ import { QLoader } from "../../components/Loader"
 import { QPopper } from "../../components/Popper"
 import type { SelectedAyahs } from "../../components/QuranContext"
 import { useQuranState } from "../../components/QuranContext"
+import { QRightDrawerButton } from "../../components/RightDrawerButton"
 import { AL_QURAN, MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER } from "../../constants/common"
 import { getSurahAyahs, getSurahs, getTranslatorsGroupedByLanguage } from "../../services/surah"
 
 const DEFAULT_TRANSLATION = "en.sahih"
-const MAX_SCROLL_OFFSET = 279
+const MAX_SCROLL_OFFSET = 270
 
-const useStyles = makeStyles( () =>
+const useStyles = makeStyles( ( theme ) =>
   createStyles( {
+    header: {
+      transition: theme.transitions.create( [ "margin", "width" ], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      } ),
+      marginRight: 0,
+      width: "100%",
+    },
+    headerShift: {
+      transition: theme.transitions.create( [ "margin", "width" ], {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      } ),
+      marginRight: RIGHT_DRAWER_WIDTH,
+      width: `calc( 100% - ${ RIGHT_DRAWER_WIDTH } )`,
+    },
     svgIcon: {
       fill: DARK_TEXT_COLOR,
     },
@@ -219,12 +245,21 @@ const SurahPageMainContainerHeaderBackIconContainer = styled.div`
   display: flex;
   left: 15px;
   position: fixed;
-  top: 40px;
+  top: 10px;
 `
 
 const SurahPageMainContainerHeaderBackText = styled.div`
   margin-left: 5px;
   margin-top: 5px;
+`
+
+const SurahPageMainContainerHeaderRightDrawerContainer = styled.div`
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  right: 30px;
+  position: absolute;
+  top: 10px;
 `
 
 const SurahPageMainContainerBody = styled.div`
@@ -252,18 +287,10 @@ const SurahPageMainContainerHeader = styled.div`
     border-radius: 0;
     box-shadow: 0px 1px 2px 0px rgba( 60, 64, 67, 0.3 ), 0px 2px 6px 2px rgba( 60, 64, 67, 0.15 );
     left: 0;
-    margin: 0;
-    padding-bottom: 5px;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding: 15px 0 0;
     position: fixed;
     top: 0;
-    width: 100%;
     z-index: 100;
-
-    &--with-right-drawer {
-      width: calc( 100% - 320px );
-    }
   }
 `
 
@@ -325,12 +352,6 @@ const SurahPageMainContainerTitle = styled.div`
   font-size: 200px;
   margin-top: -80px;
   margin-bottom: -60px;
-
-  &.fixed {
-    font-size: 140px;
-    margin-top: -50px;
-    margin-bottom: -30px;
-  }
 `
 
 const SurahPageMainContainerTranslatedTitle = styled.div`
@@ -554,7 +575,6 @@ export const SurahPage: React.FunctionComponent = () => {
         setGroupedTranslators( updatedGroupedTranslators )
       } )
       .catch( ( error ) => {
-        setDisplayError( true )
         logError( error )
       } )
   } )
@@ -766,7 +786,7 @@ export const SurahPage: React.FunctionComponent = () => {
                     <QLoader />
                   </StyledBackdrop>
                   <SurahPageMainContainer>
-                    <SurahPageMainContainerHeader className={ clsx( { "fixed": isSurahTitleFixed }, { "fixed--with-right-drawer": ! isMobileDevice && isSurahTitleFixed && isRightDrawerOpen } ) }>
+                    <SurahPageMainContainerHeader className={ clsx( classes.header, { "fixed": isSurahTitleFixed }, { [ classes.headerShift ]: ! isMobileDevice && isSurahTitleFixed && isRightDrawerOpen } ) }>
                       <SurahPageMainContainerTitleContainer>
                         {
                           isSurahTitleFixed && (
@@ -776,114 +796,130 @@ export const SurahPage: React.FunctionComponent = () => {
                             </SurahPageMainContainerHeaderBackIconContainer>
                           )
                         }
-                        <SurahPageMainContainerTitle dangerouslySetInnerHTML={ { __html: selectedSurah.unicode } } className={ isSurahTitleFixed ? "fixed" : "" } style={ { visibility: isSurahNamesFontLoaded ? "visible" : "hidden" } } />
+                        {
+                          ! isSurahTitleFixed && (
+                            <SurahPageMainContainerTitle dangerouslySetInnerHTML={ { __html: selectedSurah.unicode } } style={ { visibility: isSurahNamesFontLoaded ? "visible" : "hidden" } } />
+                          )
+                        }
                         <SurahPageMainContainerTransliteratedTitle>{ selectedSurah.transliterations[ 0 ].text }</SurahPageMainContainerTransliteratedTitle>
                         <SurahPageMainContainerTranslatedTitle>{ selectedSurah.translations[ 0 ].text } &#8226; { selectedSurah.numberOfAyahs } verses</SurahPageMainContainerTranslatedTitle>
+                        {
+                          isSurahTitleFixed && (
+                            <SurahPageMainContainerHeaderRightDrawerContainer>
+                              <QRightDrawerButton />
+                            </SurahPageMainContainerHeaderRightDrawerContainer>
+                          )
+                        }
                       </SurahPageMainContainerTitleContainer>
-                      <SurahPageMainContainerSettingsContainer>
-                        <SurahPageMainContainerSettingsButtonContainer ref={ translatorsMenuRef }>
-                          <SurahPageMainContainerSettingsButton
-                            aria-controls="translators-menu"
-                            aria-haspopup="true"
-                            className={ clsx( { "active": selectedTranslations.length > 1 || displayTranslatorsMenu } ) }
-                            onClick={ onClickTranslatorsHandler }
-                          >
-                            { getTranslationsButtonText() }
-                            {
-                              displayTranslatorsMenu
-                                ? (
-                                  <ArrowUpIcon className={ classes.svgIconActive } />
-                                ) : (
-                                  <ArrowDownIcon className={ classes.svgIcon } />
-                                )
-                            }
-                          </SurahPageMainContainerSettingsButton>
-                          {
-                            displayTranslatorsMenu && (
-                              <SurahPageSettingsButtonMenu>
-                                <SurahPageTranslatorsSearchInputContainer>
-                                  <StyledSearchIcon />
-                                  <SurahPageTranslatorsSearchInput autoComplete="false" onChange={ onSearch } placeholder="Search" type="text" value={ searchText }/>
-                                  <SurahPageTranslatorsSearchInputResetContainer>
-                                    <SurahPageTranslatorsSearchInputResetButton
-                                      disabled={ selectedTranslations.includes( DEFAULT_TRANSLATION ) && selectedTranslations.length === 1 && ! searchText }
-                                      onClick={ () => resetFilters() }
-                                    >
-                                      <StyledRefreshIcon className={ clsx( { "disable": selectedTranslations.includes( DEFAULT_TRANSLATION ) && selectedTranslations.length === 1 && ! searchText } ) } />
-                                    </SurahPageTranslatorsSearchInputResetButton>
-                                  </SurahPageTranslatorsSearchInputResetContainer>
-                                </SurahPageTranslatorsSearchInputContainer>
-                                <SurahPageTranslatorsSearchResultsContainer>
-                                  {
-                                    Object.keys( filterGroupedTranslators ).length > 0
-                                      ? (
-                                        Object.entries( filterGroupedTranslators ).map( ( [ language, translators ] ) => (
-                                          <div key={ language }>
-                                            <MenuHeader>{ getLanguageLabel( language ) }</MenuHeader>
-                                            {
-                                              translators.map( ( translator ) => (
-                                                <MenuItem key={ translator.id }>
-                                                  <StyledFormControlLabel
-                                                    control={
-                                                      <Checkbox
-                                                        checked={ selectedTranslations.indexOf( translator.id ) !== -1 }
-                                                        onChange={ () => onTranslationToggle( translator.id ) }
-                                                      />
-                                                    }
-                                                    label={ translator.translations[ 0 ].name }
-                                                  />
-                                                </MenuItem>
-                                              ) )
-                                            }
-                                          </div>
-                                        ) )
-                                      ) : (
-                                        <SurahPageSettingsButtonMenuPlaceholderContainer>
-                                          <SurahPageSettingsButtonMenuPlaceholderText>Sorry, we couldn&apos;t find any matches for this search.</SurahPageSettingsButtonMenuPlaceholderText>
-                                          <SurahPageSettingsButtonMenuSmallPlaceholderText>
-                                            <div>Try another search, or:</div>
-                                            <ul>
-                                              <li>&#8226;&nbsp;Perhaps you can try searching by language</li>
-                                            </ul>
-                                          </SurahPageSettingsButtonMenuSmallPlaceholderText>
-                                        </SurahPageSettingsButtonMenuPlaceholderContainer>
-                                      )
-                                  }
-                                </SurahPageTranslatorsSearchResultsContainer>
-                              </SurahPageSettingsButtonMenu>
-                            )
-                          }
-                        </SurahPageMainContainerSettingsButtonContainer>
-                        <SurahPageMainContainerSettingsButtonContainer ref={ versesMenuRef }>
-                          <SurahPageMainContainerSettingsButton
-                            aria-controls="verse-menu"
-                            aria-haspopup="true"
-                            className={ clsx( { "active": displayVerseMenu } ) }
-                            onClick={ onClickSelectVerseHandler }
-                          >
-                        Verse
-                            {
-                              displayVerseMenu
-                                ? (
-                                  <ArrowUpIcon className={ classes.svgIconActive } />
-                                ) : (
-                                  <ArrowDownIcon className={ classes.svgIcon } />
-                                )
-                            }
-                          </SurahPageMainContainerSettingsButton>
-                          {
-                            displayVerseMenu && (
-                              <SurahPageSettingsButtonVerseMenu>
+                      {
+                        ! isSurahTitleFixed && (
+                          <SurahPageMainContainerSettingsContainer>
+                            <SurahPageMainContainerSettingsButtonContainer ref={ translatorsMenuRef }>
+                              <SurahPageMainContainerSettingsButton
+                                aria-controls="translators-menu"
+                                aria-haspopup="true"
+                                className={ clsx( { "active": selectedTranslations.length > 1 || displayTranslatorsMenu } ) }
+                                onClick={ onClickTranslatorsHandler }
+                              >
+                                { getTranslationsButtonText() }
                                 {
-                                  numberOfAyahsArray.map( ( number ) => (
-                                    <StyledButton fullWidth={ true } key={ number } onClick={ () => goToAyah( number ) }>{ number }</StyledButton>
-                                  ) )
+                                  displayTranslatorsMenu
+                                    ? (
+                                      <ArrowUpIcon className={ classes.svgIconActive } />
+                                    ) : (
+                                      <ArrowDownIcon className={ classes.svgIcon } />
+                                    )
                                 }
-                              </SurahPageSettingsButtonVerseMenu>
-                            )
-                          }
-                        </SurahPageMainContainerSettingsButtonContainer>
-                      </SurahPageMainContainerSettingsContainer>
+                              </SurahPageMainContainerSettingsButton>
+                              {
+                                displayTranslatorsMenu && (
+                                  <SurahPageSettingsButtonMenu>
+                                    <SurahPageTranslatorsSearchInputContainer>
+                                      <StyledSearchIcon />
+                                      <SurahPageTranslatorsSearchInput autoComplete="false" onChange={ onSearch } placeholder="Search" type="text" value={ searchText }/>
+                                      <SurahPageTranslatorsSearchInputResetContainer>
+                                        <SurahPageTranslatorsSearchInputResetButton
+                                          disabled={ selectedTranslations.includes( DEFAULT_TRANSLATION ) && selectedTranslations.length === 1 && ! searchText }
+                                          onClick={ () => resetFilters() }
+                                        >
+                                          <StyledRefreshIcon className={ clsx( { "disable": selectedTranslations.includes( DEFAULT_TRANSLATION ) && selectedTranslations.length === 1 && ! searchText } ) } />
+                                        </SurahPageTranslatorsSearchInputResetButton>
+                                      </SurahPageTranslatorsSearchInputResetContainer>
+                                    </SurahPageTranslatorsSearchInputContainer>
+                                    <SurahPageTranslatorsSearchResultsContainer>
+                                      {
+                                        Object.keys( filterGroupedTranslators ).length > 0
+                                          ? (
+                                            Object.entries( filterGroupedTranslators ).map( ( [ language, translators ] ) => (
+                                              <div key={ language }>
+                                                <MenuHeader>{ getLanguageLabel( language ) }</MenuHeader>
+                                                {
+                                                  translators.map( ( translator ) => (
+                                                    <MenuItem key={ translator.id }>
+                                                      <StyledFormControlLabel
+                                                        control={
+                                                          <Checkbox
+                                                            checked={ selectedTranslations.indexOf( translator.id ) !== -1 }
+                                                            onChange={ () => onTranslationToggle( translator.id ) }
+                                                          />
+                                                        }
+                                                        label={ translator.translations[ 0 ].name }
+                                                      />
+                                                    </MenuItem>
+                                                  ) )
+                                                }
+                                              </div>
+                                            ) )
+                                          ) : (
+                                            <SurahPageSettingsButtonMenuPlaceholderContainer>
+                                              <SurahPageSettingsButtonMenuPlaceholderText>Sorry, we couldn&apos;t find any matches for this search.</SurahPageSettingsButtonMenuPlaceholderText>
+                                              <SurahPageSettingsButtonMenuSmallPlaceholderText>
+                                                <div>Try another search, or:</div>
+                                                <ul>
+                                                  <li>&#8226;&nbsp;Perhaps you can try searching by language</li>
+                                                </ul>
+                                              </SurahPageSettingsButtonMenuSmallPlaceholderText>
+                                            </SurahPageSettingsButtonMenuPlaceholderContainer>
+                                          )
+                                      }
+                                    </SurahPageTranslatorsSearchResultsContainer>
+                                  </SurahPageSettingsButtonMenu>
+                                )
+                              }
+                            </SurahPageMainContainerSettingsButtonContainer>
+                            <SurahPageMainContainerSettingsButtonContainer ref={ versesMenuRef }>
+                              <SurahPageMainContainerSettingsButton
+                                aria-controls="verse-menu"
+                                aria-haspopup="true"
+                                className={ clsx( { "active": displayVerseMenu } ) }
+                                onClick={ onClickSelectVerseHandler }
+                              >
+                            Verse
+                                {
+                                  displayVerseMenu
+                                    ? (
+                                      <ArrowUpIcon className={ classes.svgIconActive } />
+                                    ) : (
+                                      <ArrowDownIcon className={ classes.svgIcon } />
+                                    )
+                                }
+                              </SurahPageMainContainerSettingsButton>
+                              {
+                                displayVerseMenu && (
+                                  <SurahPageSettingsButtonVerseMenu>
+                                    {
+                                      numberOfAyahsArray.map( ( number ) => (
+                                        <StyledButton fullWidth={ true } key={ number } onClick={ () => goToAyah( number ) }>{ number }</StyledButton>
+                                      ) )
+                                    }
+                                  </SurahPageSettingsButtonVerseMenu>
+                                )
+                              }
+                            </SurahPageMainContainerSettingsButtonContainer>
+                          </SurahPageMainContainerSettingsContainer>
+                        )
+                      }
+
                     </SurahPageMainContainerHeader>
                     <SurahPageMainContainerBody className={ clsx( { "fixed": isSurahTitleFixed } ) }>
                       <SurahPageMainContainerAyahsContainer

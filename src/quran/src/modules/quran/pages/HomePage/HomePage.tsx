@@ -202,7 +202,6 @@ const HomePageSearchContainer = styled.div`
 
     &--with-right-drawer {
       width: calc( 100% - 320px );
-    }
   }
 `
 
@@ -396,8 +395,20 @@ const HomePageSurahTransliteratedText = styled.div`
   font-weight: 500;
 `
 
-const useStyles = makeStyles( () =>
+const useStyles = makeStyles( ( theme ) =>
   createStyles( {
+    headerTransition: {
+      transition: theme.transitions.create( [ "margin", "width" ], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      } ),
+    },
+    headerShiftTransition: {
+      transition: theme.transitions.create( [ "margin", "width" ], {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      } ),
+    },
     svgIcon: {
       fill: DEFAULT_TEXT_COLOR,
     },
@@ -530,7 +541,7 @@ export const HomePage: React.FunctionComponent = () => {
       <Helmet>
         <title>Browse Surahs | The Noble Quran | { AL_QURAN }</title>
       </Helmet>
-      <HomePageSearchContainer className={ clsx( { "fixed": isSearchContainerFixed, "fixed--with-right-drawer": ! isMobileDevice && isSearchContainerFixed && isRightDrawerOpen } ) }>
+      <HomePageSearchContainer className={ clsx( classes.headerTransition, { "fixed": isSearchContainerFixed, "fixed--with-right-drawer": ! isMobileDevice && isSearchContainerFixed && isRightDrawerOpen, [ classes.headerShiftTransition ]: ! isMobileDevice && isSearchContainerFixed && isRightDrawerOpen } ) }>
         <HomePageSearchInputContainer>
           <SearchIcon className={ classes.svgIcon } />
           <HomePageSearchInput autoComplete="false" onChange={ onSearch } placeholder="Search" type="text" value={ searchText } />

@@ -125,6 +125,7 @@ const useStyles = makeStyles( ( theme: Theme ) =>
         duration: theme.transitions.duration.leavingScreen,
       } ),
       marginRight: 0,
+      width: "100%",
     },
     headerShift: {
       transition: theme.transitions.create( [ "margin", "width" ], {
