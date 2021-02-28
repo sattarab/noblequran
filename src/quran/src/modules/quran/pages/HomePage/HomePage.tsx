@@ -1,6 +1,6 @@
 import Button from "@material-ui/core/Button"
 import IconButton from "@material-ui/core/IconButton"
-import { createStyles, makeStyles, withStyles } from "@material-ui/core/styles"
+import { withStyles } from "@material-ui/core/styles"
 import clsx from "clsx"
 import React, { useCallback, useEffect, useState } from "react"
 import { Helmet } from "react-helmet"
@@ -184,7 +184,6 @@ const HomePageSearchContainer = styled.div`
   display: flex;
   flex: 1;
   height: 54px;
-  margin: 0 30px 23px 30px;
 
   &.fixed {
     background: #ffffff;
@@ -197,12 +196,14 @@ const HomePageSearchContainer = styled.div`
     margin: 0;
     position: fixed;
     top: 0;
-    width: 100%;
     z-index: 1000;
-
-    &--with-right-drawer {
-      width: calc( 100% - 320px );
   }
+`
+
+const HomePageSearchWrapperContainer = styled.div`
+  box-sizing: border-box;
+  padding: 0 30px 23px 30px;
+  width: 100%;
 `
 
 const HomePageSearchInput = styled.input`
@@ -395,43 +396,16 @@ const HomePageSurahTransliteratedText = styled.div`
   font-weight: 500;
 `
 
-const useStyles = makeStyles( ( theme ) =>
-  createStyles( {
-    headerTransition: {
-      transition: theme.transitions.create( [ "margin", "width" ], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      } ),
-    },
-    headerShiftTransition: {
-      transition: theme.transitions.create( [ "margin", "width" ], {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      } ),
-    },
-    svgIcon: {
-      fill: DEFAULT_TEXT_COLOR,
-    },
-    svgIconActive: {
-      fill: BLUE_COLOR,
-    },
-    svgIconDisabled: {
-      fill: BORDER_COLOR,
-    },
-  } ),
-)
-
 enum ViewType {
   GRID = "grid",
   LIST = "list",
 }
 
 export const HomePage: React.FunctionComponent = () => {
-  const classes = useStyles()
-  const MAX_SCROLL_OFFSET = 87
+  const MAX_SCROLL_OFFSET = 130
 
   const history = useHistory()
-  const { isMobileDevice, isRightDrawerOpen, isSurahNamesFontLoaded } = useQuranState()
+  const { baseClasses, isMobileDevice, isRightDrawerOpen, isSurahNamesFontLoaded } = useQuranState()
   const [ isSearchContainerFixed, setIsSearchContainerFixed ] = useState<boolean>( false )
   const [ displayMyBookmarks, setMyDisplayBookmarks ] = useState<boolean>( false )
   const [ myBookmarks, setMyBookmarks ] = useState<string[]>( getObjectFromLocalStorage( "surahBookmarks" ) || [] )
@@ -541,66 +515,68 @@ export const HomePage: React.FunctionComponent = () => {
       <Helmet>
         <title>Browse Surahs | The Noble Quran | { AL_QURAN }</title>
       </Helmet>
-      <HomePageSearchContainer className={ clsx( classes.headerTransition, { "fixed": isSearchContainerFixed, "fixed--with-right-drawer": ! isMobileDevice && isSearchContainerFixed && isRightDrawerOpen, [ classes.headerShiftTransition ]: ! isMobileDevice && isSearchContainerFixed && isRightDrawerOpen } ) }>
-        <HomePageSearchInputContainer>
-          <SearchIcon className={ classes.svgIcon } />
-          <HomePageSearchInput autoComplete="false" onChange={ onSearch } placeholder="Search" type="text" value={ searchText } />
-          {
-            searchText && (
-              <HomePageClearIconContainer onClick={ clearSearch } >
-                <ClearIcon className={ classes.svgIcon } />
-              </HomePageClearIconContainer>
-            )
-          }
-        </HomePageSearchInputContainer>
-        <HomePageMyBookmarksContainer onClick={ toggleDisplayMyBookmarks }>
-          {
-            isMobileDevice
-              ? (
-                <IconButton>
-                  <BookmarksIcon className={ clsx( { [ classes.svgIconActive ]: displayMyBookmarks }, classes.svgIcon ) } />
-                </IconButton>
-              ) : (
-                <HomePageMyBookmarksButton className={ clsx( { "active": displayMyBookmarks } ) }>My Bookmarks</HomePageMyBookmarksButton>
+      <HomePageSearchWrapperContainer>
+        <HomePageSearchContainer className={ clsx( baseClasses.header, { "fixed": isSearchContainerFixed, [ baseClasses.headerShift ]: ! isMobileDevice && isSearchContainerFixed && isRightDrawerOpen } ) }>
+          <HomePageSearchInputContainer>
+            <SearchIcon className={ baseClasses.svgIcon } />
+            <HomePageSearchInput autoComplete="false" onChange={ onSearch } placeholder="Search" type="text" value={ searchText } />
+            {
+              searchText && (
+                <HomePageClearIconContainer onClick={ clearSearch } >
+                  <ClearIcon className={ baseClasses.svgIcon } />
+                </HomePageClearIconContainer>
               )
-          }
-        </HomePageMyBookmarksContainer>
-        <HomePageIconButton
-          disabled={ ! displayMyBookmarks && ! searchText }
-          onClick={ () => resetFilters() }
-          onMouseOut={ () => closePopover( "reset" ) }
-          onMouseOver={ ( event ) => openPopover( "reset", event ) }
-        >
-          <RefreshIcon className={ clsx( { [ classes.svgIconDisabled ]: ! displayMyBookmarks && ! searchText }, classes.svgIcon ) } />
+            }
+          </HomePageSearchInputContainer>
+          <HomePageMyBookmarksContainer onClick={ toggleDisplayMyBookmarks }>
+            {
+              isMobileDevice
+                ? (
+                  <IconButton>
+                    <BookmarksIcon className={ clsx( baseClasses.svgIcon, { [ baseClasses.svgIconActive ]: displayMyBookmarks } ) } />
+                  </IconButton>
+                ) : (
+                  <HomePageMyBookmarksButton className={ clsx( { "active": displayMyBookmarks } ) }>My Bookmarks</HomePageMyBookmarksButton>
+                )
+            }
+          </HomePageMyBookmarksContainer>
+          <HomePageIconButton
+            disabled={ ! displayMyBookmarks && ! searchText }
+            onClick={ () => resetFilters() }
+            onMouseOut={ () => closePopover( "reset" ) }
+            onMouseOver={ ( event ) => openPopover( "reset", event ) }
+          >
+            <RefreshIcon className={ clsx( baseClasses.svgIcon, { [ baseClasses.svgIconDisabled ]: ! displayMyBookmarks && ! searchText } ) } />
+            {
+              ( displayMyBookmarks || searchText ) && (
+                <QPopper
+                  anchorEl={ popoverMap[ "reset" ] }
+                  open={ Boolean( popoverMap[ "reset" ] ) }
+                  text="Reset"
+                />
+              )
+            }
+          </HomePageIconButton>
           {
-            ( displayMyBookmarks || searchText ) && (
-              <QPopper
-                anchorEl={ popoverMap[ "reset" ] }
-                open={ Boolean( popoverMap[ "reset" ] ) }
-                text="Reset"
-              />
+            isSearchContainerFixed && (
+              <HomePageRightDrawerButtonContainer>
+                <QRightDrawerButton />
+              </HomePageRightDrawerButtonContainer>
             )
           }
-        </HomePageIconButton>
-        {
-          isSearchContainerFixed && (
-            <HomePageRightDrawerButtonContainer>
-              <QRightDrawerButton />
-            </HomePageRightDrawerButtonContainer>
-          )
-        }
-      </HomePageSearchContainer>
+        </HomePageSearchContainer>
+      </HomePageSearchWrapperContainer>
       <HomePageMainContainer>
         <HomePageContentContainer>
           <HomePageContentOptionsContainer>
             <div>
               <HomePageContentViewOptionsContainer>
                 <HomePageContentViewOptionContainer onClick={ () => setSelectedViewType( ViewType.GRID ) } className={ selectViewType === ViewType.GRID ? "active" : "" }>
-                  <GridIcon className={ clsx( classes.svgIcon, "view-option-icon" ) } />
+                  <GridIcon className={ clsx( baseClasses.svgIcon, "view-option-icon" ) } />
                   <HomePageContentViewOptionContainerLabel className="view-option-label">Grid</HomePageContentViewOptionContainerLabel>
                 </HomePageContentViewOptionContainer>
                 <HomePageContentViewOptionContainer onClick={ () => setSelectedViewType( ViewType.LIST ) } className={ selectViewType === ViewType.LIST ? "active" : "" }>
-                  <ListIcon className={ clsx( classes.svgIcon, "view-option-icon" ) } />
+                  <ListIcon className={ clsx( baseClasses.svgIcon, "view-option-icon" ) } />
                   <HomePageContentViewOptionContainerLabel className="view-option-label">List</HomePageContentViewOptionContainerLabel>
                 </HomePageContentViewOptionContainer>
               </HomePageContentViewOptionsContainer>
@@ -650,9 +626,9 @@ export const HomePage: React.FunctionComponent = () => {
                                         {
                                           myBookmarks.includes( surah.id )
                                             ? (
-                                              <BookmarkRemoveIcon className={ classes.svgIconActive } />
+                                              <BookmarkRemoveIcon className={ baseClasses.svgIconActive } />
                                             ) : (
-                                              <BookmarkAddIcon className={ classes.svgIcon } />
+                                              <BookmarkAddIcon className={ baseClasses.svgIcon } />
                                             )
                                         }
                                       </HomePageSurahBookmarkContainer>
@@ -679,9 +655,9 @@ export const HomePage: React.FunctionComponent = () => {
                                       {
                                         myBookmarks.includes( surah.id )
                                           ? (
-                                            <BookmarkRemoveIcon className={ classes.svgIconActive } />
+                                            <BookmarkRemoveIcon className={ baseClasses.svgIconActive } />
                                           ) : (
-                                            <BookmarkAddIcon className={ classes.svgIcon } />
+                                            <BookmarkAddIcon className={ baseClasses.svgIcon } />
                                           )
                                       }
                                     </HomePageSurahBookmarkContainer>

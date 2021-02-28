@@ -1,7 +1,10 @@
+import type { Theme } from "@material-ui/core/styles"
+import { createStyles, makeStyles } from "@material-ui/core/styles"
 import FontFaceObserver from "fontfaceobserver"
 import React, { createContext, useContext, useState } from "react"
 import { useEffectOnce, useMedia } from "react-use"
 
+import { BLUE_COLOR, BORDER_COLOR, DEFAULT_TEXT_COLOR, RIGHT_DRAWER_WIDTH } from "../../../components/Styles"
 import { isGreaterThanMediumScreen, MOBILE_SCREEN_MEDIA_QUERY } from "../../../helpers/responsive"
 import { getObjectFromLocalStorage } from "../../../helpers/utility"
 import type { Surah } from "../../../types/surah"
@@ -16,6 +19,7 @@ export interface SelectedAyahs {
 }
 
 interface QuranContextType {
+  baseClasses: Record<"header" | "headerShift" | "svgIcon" | "svgIconActive" | "svgIconDisabled", string>
   displaySurahVersesMap: DisplaySurahVersesMap
   isMobileDevice: boolean
   isRightDrawerOpen: boolean
@@ -23,6 +27,7 @@ interface QuranContextType {
   selectedAyahs: SelectedAyahs
   surahs: { [ id: string ]: Surah }
 
+  setBaseClasses( classes: Record<string, string> ): void
   setDisplaySurahVersesMap( displaySurahVersesMap: DisplaySurahVersesMap ): void
   setIsRightDrawerOpen( isRightDrawerOpen: boolean ): void
   setIsSurahNamesFontLoaded( isSurahNamesFontLoaded: boolean ): void
@@ -32,8 +37,39 @@ interface QuranContextType {
 export const QuranContext = createContext<QuranContextType | null>( null )
 
 
+const useStyles = makeStyles( ( theme: Theme ) =>
+  createStyles( {
+    header: {
+      transition: theme.transitions.create( [ "margin", "width" ], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      } ),
+      marginRight: 0,
+      width: "100%",
+    },
+    headerShift: {
+      transition: theme.transitions.create( [ "margin", "width" ], {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      } ),
+      marginRight: RIGHT_DRAWER_WIDTH,
+      width: `calc( 100% - ${ RIGHT_DRAWER_WIDTH } )`,
+    },
+    svgIcon: {
+      fill: DEFAULT_TEXT_COLOR,
+    },
+    svgIconActive: {
+      fill: BLUE_COLOR,
+    },
+    svgIconDisabled: {
+      fill: BORDER_COLOR,
+    },
+  } ),
+)
+
 export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildren<Record<string, JSX.Element>>> = ( props ) => {
   const isMobileDevice = useMedia( MOBILE_SCREEN_MEDIA_QUERY, ! isGreaterThanMediumScreen() )
+  const [ baseClasses, setBaseClasses ] = useState<Record<string, string>>( useStyles() )
   const [ displaySurahVersesMap, setDisplaySurahVersesMap ] = useState<DisplaySurahVersesMap>( {} )
   const [ isRightDrawerOpen, setIsRightDrawerOpen ] = useState<boolean>( false )
   const [ isSurahNamesFontLoaded, setIsSurahNamesFontLoaded ] = useState<boolean>( false )
@@ -52,6 +88,7 @@ export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildr
   } )
 
   const contextValue: QuranContextType = {
+    baseClasses,
     displaySurahVersesMap,
     isMobileDevice,
     isRightDrawerOpen,
@@ -59,6 +96,7 @@ export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildr
     selectedAyahs,
     surahs,
 
+    setBaseClasses,
     setDisplaySurahVersesMap,
     setIsRightDrawerOpen,
     setIsSurahNamesFontLoaded,

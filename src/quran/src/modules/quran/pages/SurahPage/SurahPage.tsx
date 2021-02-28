@@ -4,7 +4,7 @@ import Checkbox from "@material-ui/core/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
 import IconButton from "@material-ui/core/IconButton"
 import MenuItem from "@material-ui/core/MenuItem"
-import { createStyles, makeStyles, withStyles } from "@material-ui/core/styles"
+import { withStyles } from "@material-ui/core/styles"
 import clsx from "clsx"
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { Helmet } from "react-helmet"
@@ -21,7 +21,6 @@ import {
   DARK_TEXT_COLOR,
   DEFAULT_TEXT_COLOR,
   LIGHT_WHITE_SMOKE_COLOR,
-  RIGHT_DRAWER_WIDTH,
   WHITE_SMOKE_COLOR,
 } from "../../../../components/Styles"
 import { logError } from "../../../../helpers/error"
@@ -40,34 +39,7 @@ import { AL_QURAN, MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER } from "../../constan
 import { getSurahAyahs, getSurahs, getTranslatorsGroupedByLanguage } from "../../services/surah"
 
 const DEFAULT_TRANSLATION = "en.sahih"
-const MAX_SCROLL_OFFSET = 270
-
-const useStyles = makeStyles( ( theme ) =>
-  createStyles( {
-    header: {
-      transition: theme.transitions.create( [ "margin", "width" ], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      } ),
-      marginRight: 0,
-      width: "100%",
-    },
-    headerShift: {
-      transition: theme.transitions.create( [ "margin", "width" ], {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      } ),
-      marginRight: RIGHT_DRAWER_WIDTH,
-      width: `calc( 100% - ${ RIGHT_DRAWER_WIDTH } )`,
-    },
-    svgIcon: {
-      fill: DARK_TEXT_COLOR,
-    },
-    svgIconActive: {
-      fill: BLUE_COLOR,
-    },
-  } ),
-)
+const MAX_SCROLL_OFFSET = 210
 
 const StyledBackdrop = withStyles( {
   root: {
@@ -287,7 +259,7 @@ const SurahPageMainContainerHeader = styled.div`
     border-radius: 0;
     box-shadow: 0px 1px 2px 0px rgba( 60, 64, 67, 0.3 ), 0px 2px 6px 2px rgba( 60, 64, 67, 0.15 );
     left: 0;
-    padding: 15px 0 0;
+    padding: 15px 0 10px;
     position: fixed;
     top: 0;
     z-index: 100;
@@ -352,6 +324,12 @@ const SurahPageMainContainerTitle = styled.div`
   font-size: 200px;
   margin-top: -80px;
   margin-bottom: -60px;
+
+  &.fixed {
+    font-size: 140px;
+    margin-top: -50px;
+    margin-bottom: -30px;
+  }
 `
 
 const SurahPageMainContainerTranslatedTitle = styled.div`
@@ -455,10 +433,9 @@ const SurahPageTranslatorsSearchInputResetContainer = styled.div`
 `
 
 export const SurahPage: React.FunctionComponent = () => {
-  const classes = useStyles()
   const history = useHistory()
   const location = useLocation()
-  const { isMobileDevice, isRightDrawerOpen, isSurahNamesFontLoaded, selectedAyahs, setSelectedAyahs, surahs } = useQuranState()
+  const { baseClasses, isMobileDevice, isRightDrawerOpen, isSurahNamesFontLoaded, selectedAyahs, setSelectedAyahs, surahs } = useQuranState()
   const translatorsMenuRef = useRef( null )
   const versesMenuRef = useRef( null )
 
@@ -786,21 +763,17 @@ export const SurahPage: React.FunctionComponent = () => {
                     <QLoader />
                   </StyledBackdrop>
                   <SurahPageMainContainer>
-                    <SurahPageMainContainerHeader className={ clsx( classes.header, { "fixed": isSurahTitleFixed }, { [ classes.headerShift ]: ! isMobileDevice && isSurahTitleFixed && isRightDrawerOpen } ) }>
+                    <SurahPageMainContainerHeader className={ clsx( baseClasses.header, { "fixed": isSurahTitleFixed }, { [ baseClasses.headerShift ]: ! isMobileDevice && isSurahTitleFixed && isRightDrawerOpen } ) }>
                       <SurahPageMainContainerTitleContainer>
                         {
                           isSurahTitleFixed && (
                             <SurahPageMainContainerHeaderBackIconContainer onClick={ () => history.push( "/" ) }>
-                              <ArrowBackIcon className={ classes.svgIcon } />
+                              <ArrowBackIcon className={ baseClasses.svgIcon } />
                               <SurahPageMainContainerHeaderBackText>Back</SurahPageMainContainerHeaderBackText>
                             </SurahPageMainContainerHeaderBackIconContainer>
                           )
                         }
-                        {
-                          ! isSurahTitleFixed && (
-                            <SurahPageMainContainerTitle dangerouslySetInnerHTML={ { __html: selectedSurah.unicode } } style={ { visibility: isSurahNamesFontLoaded ? "visible" : "hidden" } } />
-                          )
-                        }
+                        <SurahPageMainContainerTitle dangerouslySetInnerHTML={ { __html: selectedSurah.unicode } } className={ clsx( { "fixed": isSurahTitleFixed } ) } style={ { visibility: isSurahNamesFontLoaded ? "visible" : "hidden" } } />
                         <SurahPageMainContainerTransliteratedTitle>{ selectedSurah.transliterations[ 0 ].text }</SurahPageMainContainerTransliteratedTitle>
                         <SurahPageMainContainerTranslatedTitle>{ selectedSurah.translations[ 0 ].text } &#8226; { selectedSurah.numberOfAyahs } verses</SurahPageMainContainerTranslatedTitle>
                         {
@@ -825,9 +798,9 @@ export const SurahPage: React.FunctionComponent = () => {
                                 {
                                   displayTranslatorsMenu
                                     ? (
-                                      <ArrowUpIcon className={ classes.svgIconActive } />
+                                      <ArrowUpIcon className={ baseClasses.svgIconActive } />
                                     ) : (
-                                      <ArrowDownIcon className={ classes.svgIcon } />
+                                      <ArrowDownIcon className={ baseClasses.svgIcon } />
                                     )
                                 }
                               </SurahPageMainContainerSettingsButton>
@@ -898,9 +871,9 @@ export const SurahPage: React.FunctionComponent = () => {
                                 {
                                   displayVerseMenu
                                     ? (
-                                      <ArrowUpIcon className={ classes.svgIconActive } />
+                                      <ArrowUpIcon className={ baseClasses.svgIconActive } />
                                     ) : (
-                                      <ArrowDownIcon className={ classes.svgIcon } />
+                                      <ArrowDownIcon className={ baseClasses.svgIcon } />
                                     )
                                 }
                               </SurahPageMainContainerSettingsButton>
@@ -990,3 +963,5 @@ export const SurahPage: React.FunctionComponent = () => {
     </div>
   )
 }
+
+SurahPage

@@ -119,22 +119,6 @@ const useStyles = makeStyles( ( theme: Theme ) =>
         background: "none",
       },
     },
-    header: {
-      transition: theme.transitions.create( [ "margin", "width" ], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      } ),
-      marginRight: 0,
-      width: "100%",
-    },
-    headerShift: {
-      transition: theme.transitions.create( [ "margin", "width" ], {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      } ),
-      marginRight: RIGHT_DRAWER_WIDTH,
-      width: `calc( 100% - ${ RIGHT_DRAWER_WIDTH }px )`,
-    },
     clickableSvgIcon: {
       cursor: "pointer",
       fill: DEFAULT_TEXT_COLOR,
@@ -167,7 +151,7 @@ const useStyles = makeStyles( ( theme: Theme ) =>
 
 export const QuranContainer: React.FunctionComponent = () => {
   const classes = useStyles()
-  const { isMobileDevice, isRightDrawerOpen, selectedAyahs, setIsRightDrawerOpen, surahs } = useQuranState()
+  const { baseClasses, isMobileDevice, isRightDrawerOpen, selectedAyahs, setIsRightDrawerOpen, surahs } = useQuranState()
 
   const closeRightDrawer = useCallback( () => {
     setIsRightDrawerOpen( false )
@@ -175,8 +159,8 @@ export const QuranContainer: React.FunctionComponent = () => {
 
   return (
     <QuranContainerWrapper>
-      <QHeader className={ clsx( classes.header, {
-        [ classes.headerShift ]: isRightDrawerOpen && ! isMobileDevice,
+      <QHeader className={ clsx( baseClasses.header, {
+        [ baseClasses.headerShift ]: isRightDrawerOpen && ! isMobileDevice,
       } ) } />
       <main className={ clsx( classes.content, {
         [ classes.contentShift ]: isRightDrawerOpen && ! isMobileDevice,

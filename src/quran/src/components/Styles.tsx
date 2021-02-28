@@ -11,6 +11,9 @@ export const WHITE_SMOKE_COLOR = "#f5f5f5"
 export const LIGHT_WHITE_SMOKE_COLOR = "rgba( 245, 245, 245, 0.7 )"
 export const LIGHTER_WHITE_SMOKE_COLOR = "rgba( 245, 245, 245, 0.2 )"
 
+// Drawer Constants
+export const RIGHT_DRAWER_WIDTH = "320px"
+
 // Font Family
 export const BASE_FONT_FAMILY = "HarmoniaSansPro"
 export const QURAN_KARIM_FONT_FAMILY = "QuranKarim"

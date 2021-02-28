@@ -1,13 +1,15 @@
 diff --git a/node_modules/react-dev-utils/formatWebpackMessages.js b/node_modules/react-dev-utils/formatWebpackMessages.js
-index f459ea9..2710e88 100644
+index f459ea9..b94de6f 100644
 --- a/node_modules/react-dev-utils/formatWebpackMessages.js
 +++ b/node_modules/react-dev-utils/formatWebpackMessages.js
-@@ -15,7 +15,7 @@ function isLikelyASyntaxError(message) {
+@@ -15,6 +15,10 @@ function isLikelyASyntaxError(message) {
  
  // Cleans up webpack error messages.
  function formatMessage(message) {
--  let lines = message.split('\n');
-+  let lines = message.message.split('\n');
++  if( typeof message === "object" && message.hasOwnProperty( "message" ) ) {
++    message = message.message
++  }
++
+   let lines = message.split('\n');
  
    // Strip webpack-added headers off errors/warnings
-   // https://github.com/webpack/webpack/blob/master/lib/ModuleError.js
