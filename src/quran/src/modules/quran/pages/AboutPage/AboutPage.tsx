@@ -6,12 +6,15 @@ import { LARGE_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
 import { AL_QURAN } from "../../constants/common"
 
 const AboutPageBody = styled.div`
-  margin-top: 64px;
+  margin-top: 30px;
+
+  @media ${ LARGE_SCREEN_MEDIA_QUERY } {
+    margin-top: 64px;
+  }
 `
 
-const AboutPageIntro = styled.div`
-  font-size: 16px;
-  line-height: 1.5;
+const AboutPageIntro = styled.p`
+  font: 400 16px/24px "HarmoniaSansPro";
 `
 
 const AboutPageContainer = styled.div`

@@ -1,6 +1,6 @@
 import Popper from "@material-ui/core/Popper"
 import { makeStyles } from "@material-ui/core/styles"
-import React, { memo } from "react"
+import React from "react"
 
 import { DEFAULT_TEXT_COLOR } from "../../../components/Styles"
 
@@ -24,7 +24,7 @@ const useStyles = makeStyles( () => ( {
   },
 } ) )
 
-const QPopperFunction: React.FunctionComponent<QPopperProps> = ( { anchorEl, id, open, text }: QPopperProps ) => {
+export const QPopper: React.FunctionComponent<QPopperProps> = ( { anchorEl, id, open, text }: QPopperProps ) => {
   const classes = useStyles()
 
   return (
@@ -38,5 +38,3 @@ const QPopperFunction: React.FunctionComponent<QPopperProps> = ( { anchorEl, id,
     </Popper>
   )
 }
-
-export const QPopper = memo( QPopperFunction )

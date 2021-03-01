@@ -12,6 +12,7 @@ import styled from "styled-components"
 
 import { ClearIcon, KeyboardArrowDownIcon, RemoveIcon } from "../../components/Icon"
 import { BLUE_COLOR, BORDER_COLOR, DARKER_TEXT_COLOR, DEFAULT_TEXT_COLOR, HEADER_HEIGHT } from "../../components/Styles"
+import { QButton } from "./components/Button"
 import { QHeader } from "./components/Header"
 import { QuranContextProvider, useQuranState } from "./components/QuranContext"
 import { AboutPage } from "./pages/AboutPage/AboutPage"
@@ -25,7 +26,13 @@ const QuranContainerWrapper = styled.div`
   flex-direction: column;
 `
 
-const RightDrawerBodyReviewContainer = styled.div`
+const RightDrawerBodyContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: calc( 100% - ${ HEADER_HEIGHT } );
+`
+
+const RightDrawerBodyReviewContainer = styled.section`
   border-bottom: 1px solid ${ BORDER_COLOR };
   max-height: 50%;
   overflow-y: scroll;
@@ -54,6 +61,20 @@ const RightDrawerHeaderTitle = styled.div`
   letter-spacing: 0.1px;
 `
 
+const RightDrawerOptionsContainer = styled.section`
+  flex: 1;
+  overflow-y: auto;
+  padding: 15px;
+`
+
+const RightDrawerOptionsContainerHeader = styled.h2`
+  font: 500 14px/20px "HarmoniaSansPro";
+`
+
+const RightDrawerOptionsContainerHelpText = styled.p`
+  font-sie
+`
+
 const RightDrawerPlaceholderContainer = styled.div`
   align-items: center;
   display: flex;
@@ -68,6 +89,12 @@ const RightDrawerPlaceholderText = styled.div`
   width: 100%;
 `
 
+const RightDrawerSurahButtonsContainer = styled.section`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`
+
 const RightDrawerSurahContainer = styled( Accordion )`
   border: 1px solid ${ BORDER_COLOR };
 
@@ -79,8 +106,7 @@ const RightDrawerSurahContainer = styled( Accordion )`
 const RightDrawerSurahTitle = styled.h2`
   color: ${ BLUE_COLOR };
   flex: 1;
-  font-size: 16px;
-  font-weight: 500;
+  font: 500 16px/16px "HarmoniaSansPro";
   margin: 0;
 `
 
@@ -187,32 +213,42 @@ export const QuranContainer: React.FunctionComponent = () => {
         {
           Object.keys( selectedAyahs ).length
             ? (
-              <RightDrawerBodyReviewContainer>
-                <RightDrawerBodyReviewTitle>Review</RightDrawerBodyReviewTitle>
-                <RightDrawerSurahsContainer>
-                  {
-                    Object.keys( selectedAyahs ).map( ( surahId ) => (
-                      <RightDrawerSurahContainer className={ classes.accordion } key={ surahId }>
-                        <RightDrawerSurahTitleContainer expandIcon={ <KeyboardArrowDownIcon className={ classes.clickableSvgIcon } /> }>
-                          <RightDrawerSurahTitle>{ surahs[ surahId ].transliterations[ 0 ].text }</RightDrawerSurahTitle>
-                        </RightDrawerSurahTitleContainer>
-                        <RightDrawerSurahVersesContainer>
-                          {
-                            selectedAyahs[ surahId ].map( ( ayahNumberInSurah ) => (
-                              <RightDrawerSurahVerseContainer key={ `${ surahId }:${ ayahNumberInSurah }` }>
-                                <RightDrawerSurahVerseText>Verse { ayahNumberInSurah }</RightDrawerSurahVerseText>
-                                <IconButton>
-                                  <RemoveIcon className={ classes.clickableSvgIcon } />
-                                </IconButton>
-                              </RightDrawerSurahVerseContainer>
-                            ) )
-                          }
-                        </RightDrawerSurahVersesContainer>
-                      </RightDrawerSurahContainer>
-                    ) )
-                  }
-                </RightDrawerSurahsContainer>
-              </RightDrawerBodyReviewContainer>
+              <RightDrawerBodyContainer>
+                <RightDrawerBodyReviewContainer>
+                  <RightDrawerBodyReviewTitle>Review</RightDrawerBodyReviewTitle>
+                  <RightDrawerSurahsContainer>
+                    {
+                      Object.keys( selectedAyahs ).map( ( surahId ) => (
+                        <RightDrawerSurahContainer className={ classes.accordion } key={ surahId }>
+                          <RightDrawerSurahTitleContainer expandIcon={ <KeyboardArrowDownIcon className={ classes.clickableSvgIcon } /> }>
+                            <RightDrawerSurahTitle>{ surahs[ surahId ].transliterations[ 0 ].text }</RightDrawerSurahTitle>
+                          </RightDrawerSurahTitleContainer>
+                          <RightDrawerSurahVersesContainer>
+                            {
+                              selectedAyahs[ surahId ].map( ( ayahNumberInSurah ) => (
+                                <RightDrawerSurahVerseContainer key={ `${ surahId }:${ ayahNumberInSurah }` }>
+                                  <RightDrawerSurahVerseText>Verse { ayahNumberInSurah }</RightDrawerSurahVerseText>
+                                  <IconButton>
+                                    <RemoveIcon className={ classes.clickableSvgIcon } />
+                                  </IconButton>
+                                </RightDrawerSurahVerseContainer>
+                              ) )
+                            }
+                            <RightDrawerSurahButtonsContainer>
+                              <QButton isDisabled={ selectedAyahs[ surahId ].length === surahs[ surahId ].numberOfAyahs } label="Add more verses" />
+                              <QButton label="Remove all" />
+                            </RightDrawerSurahButtonsContainer>
+                          </RightDrawerSurahVersesContainer>
+                        </RightDrawerSurahContainer>
+                      ) )
+                    }
+                  </RightDrawerSurahsContainer>
+                </RightDrawerBodyReviewContainer>
+                <RightDrawerOptionsContainer>
+                  <RightDrawerOptionsContainerHeader>Format</RightDrawerOptionsContainerHeader>
+                  <RightDrawerOptionsContainerHelpText>Select a format you want to download in</RightDrawerOptionsContainerHelpText>
+                </RightDrawerOptionsContainer>
+              </RightDrawerBodyContainer>
             ) : (
               <RightDrawerPlaceholderContainer>
                 <RightDrawerPlaceholderText>You haven&apos;t selected any verse yet.<br />Select a verse to get started.</RightDrawerPlaceholderText>

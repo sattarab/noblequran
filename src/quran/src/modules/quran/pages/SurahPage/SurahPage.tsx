@@ -257,7 +257,7 @@ const SurahPageMainContainerHeader = styled.div`
     border: none;
     border-bottom: 1px solid ${ BORDER_COLOR };
     border-radius: 0;
-    box-shadow: 0px 1px 2px 0px rgba( 60, 64, 67, 0.3 ), 0px 2px 6px 2px rgba( 60, 64, 67, 0.15 );
+    box-shadow: 0px 1px 2px 0px rgb( 60 64 67 / 30% ), 0px 2px 6px 2px rgb( 60 64 67 / 15% );
     left: 0;
     padding: 15px 0 10px;
     position: fixed;
@@ -396,9 +396,7 @@ const SurahPageTranslatorsSearchInput = styled.input`
   &::placeholder,
   &::-webkit-input-placeholder {
     color: ${ DEFAULT_TEXT_COLOR };
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 1.45;
+    font: 500 16px/24px "HarmoniaSansPro";
     opacity: 1;
   }
 `
@@ -712,15 +710,18 @@ export const SurahPage: React.FunctionComponent = () => {
     setSearchText( event.target.value )
   }, [] )
 
-  const toggleAyahSelection = ( ayah: Ayah ) => {
+  const toggleAyahSelection = useCallback( ( ayah: Ayah ) => {
     const updatedSelectedAyahs: SelectedAyahs = {
       ...selectedAyahs,
     }
 
-    const index = updatedSelectedAyahs[ ayah.surahId ]?.findIndex( ( ayahIds ) => ayahIds.includes( `${ ayah.numberInSurah }` ) ) || -1
+    const index = updatedSelectedAyahs[ ayah.surahId ]?.findIndex( ( ayahIds ) => ayahIds.includes( `${ ayah.numberInSurah }` ) )
 
-    if( index !== -1 ) {
+    if( updatedSelectedAyahs[ ayah.surahId ]?.length && index !== -1 ) {
       updatedSelectedAyahs[ ayah.surahId ].splice( index, 1 )
+      if( updatedSelectedAyahs[ ayah.surahId ].length === 0 ) {
+        delete updatedSelectedAyahs[ ayah.surahId ]
+      }
     } else {
       if( ! updatedSelectedAyahs[ ayah.surahId ] ) {
         updatedSelectedAyahs[ ayah.surahId ] = []
@@ -731,7 +732,7 @@ export const SurahPage: React.FunctionComponent = () => {
 
     setSelectedAyahs( updatedSelectedAyahs )
     setObjectInLocalStorage( "selectedAyahs", updatedSelectedAyahs )
-  }
+  }, [ selectedAyahs ] )
 
   const resetFilters = useCallback( () => {
     setSearchText( "" )

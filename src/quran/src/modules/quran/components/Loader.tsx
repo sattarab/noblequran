@@ -1,4 +1,4 @@
-import React, { memo } from "react"
+import React from "react"
 import styled from "styled-components"
 
 import { BLUE_COLOR } from "../../../components/Styles"
@@ -48,7 +48,7 @@ const LoaderFourthDot = styled.div`
   background: ${ BLUE_COLOR };
 `
 
-const QLoaderFunction: React.FunctionComponent = () => {
+export const QLoader: React.FunctionComponent = () => {
   return (
     <LoaderContainer>
       <LoaderFirstDot />
@@ -58,5 +58,3 @@ const QLoaderFunction: React.FunctionComponent = () => {
     </LoaderContainer>
   )
 }
-
-export const QLoader = memo( QLoaderFunction )

@@ -1,8 +1,8 @@
-import { withStyles } from "@material-ui/core"
 import Button from "@material-ui/core/Button"
 import Drawer from "@material-ui/core/Drawer"
+import { withStyles } from "@material-ui/core/styles"
 import PropTypes from "prop-types"
-import React, { memo, useCallback, useState } from "react"
+import React, { useCallback, useState } from "react"
 import { Link, useHistory, useLocation } from "react-router-dom"
 import styled from "styled-components"
 
@@ -155,7 +155,7 @@ export interface QHeaderProps {
   className?: string
 }
 
-const QHeaderFunction: React.FunctionComponent<QHeaderProps> = ( { className } ) => {
+export const QHeader: React.FunctionComponent<QHeaderProps> = ( { className } ) => {
   const history = useHistory()
   const location = useLocation()
   const [ isLeftDrawerOpen, setIsLeftDrawerOpen ] = useState<boolean>( false )
@@ -211,8 +211,6 @@ const QHeaderFunction: React.FunctionComponent<QHeaderProps> = ( { className } )
   )
 }
 
-QHeaderFunction.propTypes = {
+QHeader.propTypes = {
   className: PropTypes.string,
 }
-
-export const QHeader = memo( QHeaderFunction )

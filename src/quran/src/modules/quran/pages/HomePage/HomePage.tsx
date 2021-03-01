@@ -11,17 +11,16 @@ import styled from "styled-components"
 import { BookmarkAddIcon, BookmarkRemoveIcon, BookmarksIcon, ClearIcon, GridIcon, ListIcon, RefreshIcon, SearchIcon } from "../../../../components/Icon"
 import {
   BLUE_COLOR,
-  BLUE_COLOR_WITH_OPACITY,
   BORDER_COLOR,
   DARK_TEXT_COLOR,
   DARKER_TEXT_COLOR,
   DEFAULT_TEXT_COLOR,
   HEADER_HEIGHT,
-  WHITE_SMOKE_COLOR,
 } from "../../../../components/Styles"
 import { LARGE_SCREEN_MEDIA_QUERY, MEDIUM_SCREEN_MEDIA_QUERY, SMALL_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
 import { escapeRegex, getObjectFromLocalStorage, setObjectInLocalStorage } from "../../../../helpers/utility"
 import type { Surah } from "../../../../types/surah"
+import { QButton } from "../../components/Button"
 import { QPopper } from "../../components/Popper"
 import { useQuranState } from "../../components/QuranContext"
 import { QRightDrawerButton } from "../../components/RightDrawerButton"
@@ -110,29 +109,6 @@ const HomePageMyBookmarksContainer = styled.div`
   padding: 0 15px;
 `
 
-const HomePageMyBookmarksButton = styled( Button )`
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 500;
-  padding: 10px 15px;
-  text-transform: none;
-
-  &:hover {
-    background-color: ${ WHITE_SMOKE_COLOR };
-  }
-
-  &.active {
-    .MuiButton-label {
-      color: ${ BLUE_COLOR };
-    }
-
-    &:hover {
-      background: ${ BLUE_COLOR_WITH_OPACITY };
-    }
-  }
-`
-
 const HomePageNoSurahsClearFilterLink = styled.a`
   color: ${ BLUE_COLOR };
   cursor: pointer;
@@ -146,8 +122,7 @@ const HomePageNoSurahsPlaceholderContainer = styled.div`
 `
 
 const HomePageNoSurahsSmallPlaceholderListText = styled.ul`
-  font-size: 13px;
-  line-height: 1.5;
+  font: 400 13px/20px "HarmoniaSansPro";
   list-style-type: none;
   margin: 10px auto;
   max-width: 300px;
@@ -190,7 +165,7 @@ const HomePageSearchContainer = styled.div`
     border: none;
     border-bottom: 1px solid ${ BORDER_COLOR };
     border-radius: 0;
-    box-shadow: 0px 1px 2px 0px rgba( 60, 64, 67, 0.3 ), 0px 2px 6px 2px rgba( 60, 64, 67, 0.15 );
+    box-shadow: 0px 1px 2px 0px rgb( 60 64 67 / 30% ), 0px 2px 6px 2px rgb( 60 64 67 / 15% );
     height: calc( ${ HEADER_HEIGHT } - 1px );
     left: 0;
     margin: 0;
@@ -220,9 +195,7 @@ const HomePageSearchInput = styled.input`
   &::placeholder,
   &::-webkit-input-placeholder {
     color: ${ DEFAULT_TEXT_COLOR };
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 1.45;
+    font-size: 500 16px/24px "HarmoniaSansPro";
     opacity: 1;
   }
 `
@@ -536,7 +509,7 @@ export const HomePage: React.FunctionComponent = () => {
                     <BookmarksIcon className={ clsx( baseClasses.svgIcon, { [ baseClasses.svgIconActive ]: displayMyBookmarks } ) } />
                   </IconButton>
                 ) : (
-                  <HomePageMyBookmarksButton className={ clsx( { "active": displayMyBookmarks } ) }>My Bookmarks</HomePageMyBookmarksButton>
+                  <QButton isActive={ displayMyBookmarks } label="My Bookmarks" />
                 )
             }
           </HomePageMyBookmarksContainer>

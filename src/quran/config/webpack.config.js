@@ -421,13 +421,6 @@ module.exports = function ( webpackEnv ) {
                 ],
                 plugins: [
                   [
-                    require.resolve( "babel-plugin-styled-components" ), {
-                      minify: true,
-                      pure: true,
-                      transpileTemplateLiterals: true,
-                    }
-                  ],
-                  [
                     require.resolve( "babel-plugin-named-asset-import" ), {
                       loaderMap: {
                         svg: {

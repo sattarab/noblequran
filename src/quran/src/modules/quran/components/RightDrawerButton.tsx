@@ -1,6 +1,6 @@
 import IconButton from "@material-ui/core/IconButton"
 import clsx from "clsx"
-import React, { memo, useCallback, useState } from "react"
+import React, { useCallback, useState } from "react"
 import styled from "styled-components"
 
 import { AddTaskIcon } from "../../../components/Icon"
@@ -38,7 +38,7 @@ const StyledTaskIcon = styled( AddTaskIcon )`
   }
 `
 
-const QRightDrawerButtonFunction: React.FunctionComponent = () => {
+export const QRightDrawerButton: React.FunctionComponent = () => {
   const { isMobileDevice, isRightDrawerOpen, selectedAyahs, setIsRightDrawerOpen } = useQuranState()
   const [ displayPopover, setDisplayPopover ] = useState<Element | null>( null )
 
@@ -81,5 +81,3 @@ const QRightDrawerButtonFunction: React.FunctionComponent = () => {
     </RightDrawerButtonContainer>
   )
 }
-
-export const QRightDrawerButton = memo( QRightDrawerButtonFunction )
