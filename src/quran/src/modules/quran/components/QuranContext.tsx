@@ -19,7 +19,7 @@ export interface SelectedAyahs {
 }
 
 interface QuranContextType {
-  baseClasses: Record<"header" | "headerShift" | "svgIcon" | "svgIconActive" | "svgIconDisabled", string>
+  baseClasses: Record<"header" | "headerShift" | "iconButton" | "svgIcon" | "svgIconActive" | "svgIconDisabled", string>
   displaySurahVersesMap: DisplaySurahVersesMap
   isMobileDevice: boolean
   isRightDrawerOpen: boolean
@@ -54,6 +54,9 @@ const useStyles = makeStyles( ( theme: Theme ) =>
       } ),
       marginRight: RIGHT_DRAWER_WIDTH,
       width: `calc( 100% - ${ RIGHT_DRAWER_WIDTH } )`,
+    },
+    iconButton: {
+      margin: "0 5px",
     },
     svgIcon: {
       fill: DEFAULT_TEXT_COLOR,

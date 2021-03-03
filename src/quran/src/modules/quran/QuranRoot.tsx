@@ -6,7 +6,7 @@ import IconButton from "@material-ui/core/IconButton"
 import type { Theme } from "@material-ui/core/styles"
 import { createStyles, makeStyles } from "@material-ui/core/styles"
 import clsx from "clsx"
-import React, { useCallback } from "react"
+import React, { lazy, Suspense, useCallback } from "react"
 import { Route, Switch } from "react-router-dom"
 import styled from "styled-components"
 
@@ -14,10 +14,13 @@ import { ClearIcon, KeyboardArrowDownIcon, RemoveIcon } from "../../components/I
 import { BLUE_COLOR, BORDER_COLOR, DARKER_TEXT_COLOR, DEFAULT_TEXT_COLOR, HEADER_HEIGHT } from "../../components/Styles"
 import { QButton } from "./components/Button"
 import { QHeader } from "./components/Header"
+import { QLoader } from "./components/Loader"
 import { QuranContextProvider, useQuranState } from "./components/QuranContext"
-import { AboutPage } from "./pages/AboutPage/AboutPage"
-import { HomePage } from "./pages/HomePage/HomePage"
-import { SurahPage } from "./pages/SurahPage/SurahPage"
+
+// lazy load components
+const AboutPage = lazy( () => import( "./pages/AboutPage/AboutPage" ).then( ( module ) => ( { default: module.AboutPage } ) ) )
+const HomePage = lazy( () => import( "./pages/HomePage/HomePage" ).then( ( module ) => ( { default: module.HomePage } ) ) )
+const SurahPage = lazy( () => import( "./pages/SurahPage/SurahPage" ).then( ( module ) => ( { default: module.SurahPage } ) ) )
 
 const RIGHT_DRAWER_WIDTH = 320
 
@@ -169,7 +172,7 @@ const useStyles = makeStyles( ( theme: Theme ) =>
     },
     drawerPaper: {
       background: "#ffffff",
-      boxShadow: "0px 1px 2px 0px rgba( 60, 64, 67, 0.3 ), 0px 2px 6px 2px rgba( 60, 64, 67, 0.15 )",
+      boxShadow: "0px 1px 2px 0px rgb( 60 64 67 / 30% ), 0px 2px 6px 2px rgb( 60 64 67 / 15% )",
       width: RIGHT_DRAWER_WIDTH,
     },
   } ),
@@ -181,21 +184,21 @@ export const QuranContainer: React.FunctionComponent = () => {
 
   const closeRightDrawer = useCallback( () => {
     setIsRightDrawerOpen( false )
-  }, [] )
+  }, [ setIsRightDrawerOpen ] )
 
   return (
     <QuranContainerWrapper>
       <QHeader className={ clsx( baseClasses.header, {
         [ baseClasses.headerShift ]: isRightDrawerOpen && ! isMobileDevice,
       } ) } />
-      <main className={ clsx( classes.content, {
-        [ classes.contentShift ]: isRightDrawerOpen && ! isMobileDevice,
-      } ) }>
-        <Switch>
-          <Route exact path="/" component={ HomePage } />
-          <Route path="/about" component={ AboutPage } />
-          <Route path="/:id" component={ SurahPage } />
-        </Switch>
+      <main className={ clsx( classes.content, { [ classes.contentShift ]: isRightDrawerOpen && ! isMobileDevice } ) }>
+        <Suspense fallback={ QLoader }>
+          <Switch>
+            <Route exact path="/" component={ HomePage } />
+            <Route path="/about" component={ AboutPage } />
+            <Route path="/:id" component={ SurahPage } />
+          </Switch>
+        </Suspense>
       </main>
       <Drawer
         anchor="right"
@@ -235,8 +238,8 @@ export const QuranContainer: React.FunctionComponent = () => {
                               ) )
                             }
                             <RightDrawerSurahButtonsContainer>
-                              <QButton isDisabled={ selectedAyahs[ surahId ].length === surahs[ surahId ].numberOfAyahs } label="Add more verses" />
-                              <QButton label="Remove all" />
+                              <QButton isActive={ true } isDisabled={ selectedAyahs[ surahId ].length === surahs[ surahId ].numberOfAyahs } label="Add more verses" />
+                              <QButton isActive={ true } label="Remove all" />
                             </RightDrawerSurahButtonsContainer>
                           </RightDrawerSurahVersesContainer>
                         </RightDrawerSurahContainer>

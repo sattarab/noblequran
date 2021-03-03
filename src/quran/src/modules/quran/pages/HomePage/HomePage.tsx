@@ -1,6 +1,5 @@
 import Button from "@material-ui/core/Button"
 import IconButton from "@material-ui/core/IconButton"
-import { withStyles } from "@material-ui/core/styles"
 import clsx from "clsx"
 import React, { useCallback, useEffect, useState } from "react"
 import { Helmet } from "react-helmet"
@@ -141,12 +140,6 @@ const HomePageNoSurahsPlaceholderText = styled.div`
   font-weight: 400;
   margin-top: 64px;
 `
-
-const HomePageIconButton = withStyles( {
-  root: {
-    margin: "0 5px",
-  },
-} )( IconButton )
 
 const HomePageRightDrawerButtonContainer = styled.div`
   padding-right: 15px;
@@ -396,8 +389,6 @@ export const HomePage: React.FunctionComponent = () => {
     }
   } )
 
-  let regex = searchText ? new RegExp( escapeRegex( searchText ), "i" ) : null
-
   const toggleBookmarkSurah = ( event: React.MouseEvent<HTMLButtonElement, MouseEvent>, surahId: string ) => {
     event.preventDefault()
     event.stopPropagation()
@@ -414,11 +405,12 @@ export const HomePage: React.FunctionComponent = () => {
   }
 
   useEffect( () => {
-    if( ! regex && ! displayMyBookmarks ) {
+    if( ! searchText && ! displayMyBookmarks ) {
       setSurahs( getSurahs() )
       return
     }
 
+    const regex = searchText ? new RegExp( escapeRegex( searchText ), "i" ) : null
     const filteredSurahs: Surah[] = []
 
     for( const surah of getSurahs() ) {
@@ -440,7 +432,6 @@ export const HomePage: React.FunctionComponent = () => {
   }, [ displayMyBookmarks, myBookmarks, searchText ] )
 
   const clearSearch = useCallback( () => {
-    regex = null
     setSearchText( "" )
   }, [] )
 
@@ -461,7 +452,6 @@ export const HomePage: React.FunctionComponent = () => {
   }, [] )
 
   const onSearch = useCallback( ( event: React.ChangeEvent<HTMLInputElement> ) => {
-    regex = event.target.value ? new RegExp( escapeRegex( event.target.value ), "i" ) : null
     setSearchText( event.target.value )
   }, [] )
 
@@ -472,6 +462,7 @@ export const HomePage: React.FunctionComponent = () => {
   const readSurah = useCallback( ( surah: Surah ) => {
     history.push( `/${ surah.id }` )
     window.scroll( 0, 0 )
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [] )
 
   const resetFilters = useCallback( () => {
@@ -513,7 +504,8 @@ export const HomePage: React.FunctionComponent = () => {
                 )
             }
           </HomePageMyBookmarksContainer>
-          <HomePageIconButton
+          <IconButton
+            className={ baseClasses.iconButton }
             disabled={ ! displayMyBookmarks && ! searchText }
             onClick={ () => resetFilters() }
             onMouseOut={ () => closePopover( "reset" ) }
@@ -529,7 +521,7 @@ export const HomePage: React.FunctionComponent = () => {
                 />
               )
             }
-          </HomePageIconButton>
+          </IconButton>
           {
             isSearchContainerFixed && (
               <HomePageRightDrawerButtonContainer>

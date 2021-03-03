@@ -52,7 +52,7 @@ export const QRightDrawerButton: React.FunctionComponent = () => {
 
   const toggleRightMenu = useCallback( ( open: boolean ) => {
     setIsRightDrawerOpen( open )
-  }, [] )
+  }, [ setIsRightDrawerOpen ] )
 
   return (
     <RightDrawerButtonContainer>

@@ -217,7 +217,7 @@ const SurahPageMainContainerHeaderBackIconContainer = styled.div`
   display: flex;
   left: 15px;
   position: fixed;
-  top: 10px;
+  top: 15px;
 `
 
 const SurahPageMainContainerHeaderBackText = styled.div`
@@ -420,12 +420,6 @@ const SurahPageTranslatorsSearchResultsContainer = styled.div`
   overflow: auto;
 `
 
-const SurahPageTranslatorsSearchInputResetButton = withStyles( {
-  root: {
-    margin: "0 5px",
-  },
-} )( IconButton )
-
 const SurahPageTranslatorsSearchInputResetContainer = styled.div`
   border-left: 1px solid ${ BORDER_COLOR };
 `
@@ -441,17 +435,6 @@ export const SurahPage: React.FunctionComponent = () => {
   const id = ( match?.params as { id: string } ).id
   let selectedSurah: Surah = surahs[ id ]
 
-  if( ! selectedSurah ) {
-    selectedSurah = getSurahs().find( ( surah ) => surah.queryIndexes.includes( id ) ) as Surah
-
-    if( ! selectedSurah ) {
-      history.replace( "/" )
-      return null
-    }
-  }
-
-  const numberOfAyahsArray = new Array( selectedSurah.numberOfAyahs ).fill( 0 ).map( ( value, index ) => index + 1 )
-
   const [ ayahs, setAyahs ] = useState<Ayah[]>( [] )
   const [ displayError, setDisplayError ] = useState<boolean>( false )
   const [ displayTranslatorsMenu, setDisplayTranslatorsMenu ] = useState<boolean>( false )
@@ -466,10 +449,7 @@ export const SurahPage: React.FunctionComponent = () => {
   const [ popoverMap, setPopoverMap ] = useState<{ [ key: string ]: Element | null }>( {} )
   const [ searchText, setSearchText ] = useState<string>( "" )
   const [ selectedTranslations, setSelectedTranslations ] = useState<string[]>( getObjectFromLocalStorage( "translations" ) || [ DEFAULT_TRANSLATION ] )
-
-  let regex = searchText ? new RegExp( escapeRegex( searchText ), "i" ) : null
-
-  const translatorNames: { [ identifier: string ]: string } = {}
+  const [ translatorNames, setTranslatorNames ] = useState<{ [ identifier: string ]: string }>( {} )
 
   useClickAway( translatorsMenuRef, () => {
     if( displayTranslatorsMenu ) {
@@ -484,11 +464,10 @@ export const SurahPage: React.FunctionComponent = () => {
   } )
 
   useEffect( () => {
-    getSurahAyahs( selectedSurah.id, { page: 1, perPage: pagination?.pageEnd || 10, translations: selectedTranslations } )
+    getSurahAyahs( selectedSurah.id, { page: 1, perPage: 10, translations: selectedTranslations } )
       .then( ( response ) => {
-        const { items } = response
-        setAyahs( [ ...items ] )
-        setPagination( { ...pagination, ...response.pagination } )
+        setAyahs( response.items )
+        setPagination( response.pagination )
       } )
       .catch( ( error ) => {
         setDisplayError( true )
@@ -497,14 +476,41 @@ export const SurahPage: React.FunctionComponent = () => {
       .finally( () => {
         setIsLoading( false )
       } )
-  }, [ selectedTranslations ] )
+  }, [ selectedSurah.id, selectedTranslations ] )
+
+  useEffectOnce( () => {
+    getTranslatorsGroupedByLanguage()
+      .then( ( translators ) => {
+        translators.sort( ( a, b ) => {
+          const aLanguageLabel = getLanguageLabel( a.language )
+          const bLanguageLabel = getLanguageLabel( b.language )
+
+          if( aLanguageLabel < bLanguageLabel ) {
+            return -1
+          }
+
+          if( aLanguageLabel > bLanguageLabel ) {
+            return 1
+          }
+
+          return 0
+        } )
+
+        setGroupedTranslators( groupBy( translators, "language" ) )
+      } )
+      .catch( ( error ) => {
+        logError( error )
+      } )
+  } )
 
   useEffect( () => {
-    if( ! regex ) {
+    if( ! searchText ) {
       setFilterGroupedTranslators( groupedTranslators )
       return
     }
 
+
+    const regex = new RegExp( escapeRegex( searchText ), "i" )
     const updatedFilteredGroupedTranslators: { [ language: string ]: Translator[] } = {}
 
     for( const language in groupedTranslators ) {
@@ -528,31 +534,21 @@ export const SurahPage: React.FunctionComponent = () => {
     setFilterGroupedTranslators( updatedFilteredGroupedTranslators )
   }, [ groupedTranslators, searchText ] )
 
-  useEffectOnce( () => {
-    getTranslatorsGroupedByLanguage()
-      .then( ( translators ) => {
-        translators.sort( ( a, b ) => {
-          const aLanguageLabel = getLanguageLabel( a.language )
-          const bLanguageLabel = getLanguageLabel( b.language )
+  const onPageScroll = useCallback( () => {
+    if( displayTranslatorsMenu ) {
+      setDisplayTranslatorsMenu( false )
+    }
 
-          if( aLanguageLabel < bLanguageLabel ) {
-            return -1
-          }
+    if( displayVerseMenu ) {
+      setDisplayVerseMenu( false )
+    }
 
-          if( aLanguageLabel > bLanguageLabel ) {
-            return 1
-          }
-
-          return 0
-        } )
-
-        const updatedGroupedTranslators = groupBy( translators, "language" )
-        setGroupedTranslators( updatedGroupedTranslators )
-      } )
-      .catch( ( error ) => {
-        logError( error )
-      } )
-  } )
+    if( window.pageYOffset > MAX_SCROLL_OFFSET && document.documentElement.scrollHeight > MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER ) {
+      setIsSurahTitleFixed( true )
+    } else {
+      setIsSurahTitleFixed( false )
+    }
+  }, [ displayTranslatorsMenu, displayVerseMenu ] )
 
   useLayoutEffect( () => {
     window.addEventListener( "scroll", onPageScroll )
@@ -560,23 +556,15 @@ export const SurahPage: React.FunctionComponent = () => {
     return () => {
       window.removeEventListener( "scroll", onPageScroll )
     }
-  }, [ displayTranslatorsMenu, displayVerseMenu ] )
+  }, [ onPageScroll ] )
 
   const closePopover = ( key: string ) => {
     setPopoverMap( { ...popoverMap, ...{ [ key ]: null } } )
   }
 
-  const getTranslationsButtonText = () => {
-    if( selectedTranslations.length <= 1 ) {
-      return "Translations"
-    }
-
-    return `${ getTranslatorName( selectedTranslations[ 0 ] ) } +${ selectedTranslations.length - 1 }`
-  }
-
   const getTranslatorName = useCallback( ( identifier: string ) => {
     if( ! filterGroupedTranslators ) {
-      return
+      return null
     }
 
     const language = identifier.split( "." )[ 0 ]
@@ -591,9 +579,26 @@ export const SurahPage: React.FunctionComponent = () => {
       return null
     }
 
-    translatorNames[ identifier ] = selectedTranslator.translations[ 0 ].name
+    setTranslatorNames( ( prevTranslatorNames ) => {
+      prevTranslatorNames[ identifier ] = selectedTranslator.translations[ 0 ].name
+      return prevTranslatorNames
+    } )
     return translatorNames[ identifier ]
-  }, [ filterGroupedTranslators ] )
+  }, [ filterGroupedTranslators, translatorNames ] )
+
+  const getTranslationsButtonText = useCallback( () => {
+    if( selectedTranslations.length <= 1 ) {
+      return "Translations"
+    }
+
+    let translatorName = getTranslatorName( selectedTranslations[ 0 ] )
+
+    if( isMobileDevice && translatorName && translatorName.length > 15 ) {
+      translatorName = `${ translatorName?.substr( 0, 15 ) }…`
+    }
+
+    return `${ translatorName } +${ selectedTranslations.length - 1 }`
+  }, [ getTranslatorName, isMobileDevice, selectedTranslations ] )
 
   const goToAyah = async ( ayahNumberInSurah: number ) => {
     if( ! pagination ) {
@@ -656,12 +661,11 @@ export const SurahPage: React.FunctionComponent = () => {
         }
 
         setAyahs( updatedAyahs )
-
-        setPagination( { ...pagination, ...response.pagination } )
+        setPagination( response.pagination )
       } )
       .catch( logError )
 
-  }, [ pagination ] )
+  }, [ ayahs, pagination, selectedSurah.id, selectedSurah.numberOfAyahs, selectedTranslations ] )
 
   const onClickSelectVerseHandler = useCallback( () => {
     setDisplayVerseMenu( ! displayVerseMenu )
@@ -670,22 +674,6 @@ export const SurahPage: React.FunctionComponent = () => {
   const onClickTranslatorsHandler = useCallback( () => {
     setDisplayTranslatorsMenu( ! displayTranslatorsMenu )
   }, [ displayTranslatorsMenu ] )
-
-  const onPageScroll = useCallback( () => {
-    if( displayTranslatorsMenu ) {
-      setDisplayTranslatorsMenu( false )
-    }
-
-    if( displayVerseMenu ) {
-      setDisplayVerseMenu( false )
-    }
-
-    if( window.pageYOffset > MAX_SCROLL_OFFSET && document.documentElement.scrollHeight > MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER ) {
-      setIsSurahTitleFixed( true )
-    } else {
-      setIsSurahTitleFixed( false )
-    }
-  }, [ displayTranslatorsMenu, displayVerseMenu ] )
 
   const openPopover = ( key: string, event: React.MouseEvent<HTMLSpanElement> ) => {
     setPopoverMap( { ...popoverMap, ...{ [ key ]: event.currentTarget } } )
@@ -706,7 +694,6 @@ export const SurahPage: React.FunctionComponent = () => {
   }, [ selectedTranslations ] )
 
   const onSearch = useCallback( ( event: React.ChangeEvent<HTMLInputElement> ) => {
-    regex = event.target.value ? new RegExp( escapeRegex( event.target.value ), "i" ) : null
     setSearchText( event.target.value )
   }, [] )
 
@@ -732,12 +719,23 @@ export const SurahPage: React.FunctionComponent = () => {
 
     setSelectedAyahs( updatedSelectedAyahs )
     setObjectInLocalStorage( "selectedAyahs", updatedSelectedAyahs )
-  }, [ selectedAyahs ] )
+  }, [ selectedAyahs, setSelectedAyahs ] )
 
   const resetFilters = useCallback( () => {
     setSearchText( "" )
     setSelectedTranslations( [ DEFAULT_TRANSLATION ] )
   }, [] )
+
+  if( ! selectedSurah ) {
+    selectedSurah = getSurahs().find( ( surah ) => surah.queryIndexes.includes( id ) ) as Surah
+
+    if( ! selectedSurah ) {
+      history.replace( "/" )
+      return null
+    }
+  }
+
+  const numberOfAyahsArray = new Array( selectedSurah.numberOfAyahs ).fill( 0 ).map( ( value, index ) => index + 1 )
 
   return (
     <div>
@@ -812,12 +810,13 @@ export const SurahPage: React.FunctionComponent = () => {
                                       <StyledSearchIcon />
                                       <SurahPageTranslatorsSearchInput autoComplete="false" onChange={ onSearch } placeholder="Search" type="text" value={ searchText }/>
                                       <SurahPageTranslatorsSearchInputResetContainer>
-                                        <SurahPageTranslatorsSearchInputResetButton
+                                        <IconButton
+                                          className={ baseClasses.iconButton }
                                           disabled={ selectedTranslations.includes( DEFAULT_TRANSLATION ) && selectedTranslations.length === 1 && ! searchText }
                                           onClick={ () => resetFilters() }
                                         >
                                           <StyledRefreshIcon className={ clsx( { "disable": selectedTranslations.includes( DEFAULT_TRANSLATION ) && selectedTranslations.length === 1 && ! searchText } ) } />
-                                        </SurahPageTranslatorsSearchInputResetButton>
+                                        </IconButton>
                                       </SurahPageTranslatorsSearchInputResetContainer>
                                     </SurahPageTranslatorsSearchInputContainer>
                                     <SurahPageTranslatorsSearchResultsContainer>

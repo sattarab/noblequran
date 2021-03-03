@@ -13,13 +13,14 @@ module.exports = {
     }
   },
   plugins: [
+    "@typescript-eslint/eslint-plugin",
     "eslint-plugin-simple-import-sort",
     "eslint-plugin-react",
-    "@typescript-eslint/eslint-plugin"
+    "react-hooks",
   ],
   extends: [
-    "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
   ],
   root: true,
   env: {
@@ -93,6 +94,8 @@ module.exports = {
     "prettier/prettier": "off",
     "quotes": [ "warn", "double" ],
     "react/jsx-curly-spacing": [ "warn", { "when": "always", "children": true } ],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
     "semi": [ "warn", "never" ],
     "simple-import-sort/exports": "warn",
     "simple-import-sort/imports": "warn",
