@@ -1,8 +1,8 @@
+import styled from "@emotion/styled"
 import Button from "@material-ui/core/Button"
 import clsx from "clsx"
 import PropTypes from "prop-types"
 import React from "react"
-import styled from "styled-components"
 
 import { BLUE_COLOR, BLUE_COLOR_WITH_OPACITY, DEFAULT_TEXT_COLOR_WITH_OPACITY, WHITE_SMOKE_COLOR } from "../../../components/Styles"
 

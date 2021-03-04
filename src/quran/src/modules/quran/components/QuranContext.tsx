@@ -56,6 +56,7 @@ const useStyles = makeStyles( ( theme: Theme ) =>
       width: `calc( 100% - ${ RIGHT_DRAWER_WIDTH } )`,
     },
     iconButton: {
+      cursor: "pointer",
       margin: "0 5px",
     },
     svgIcon: {

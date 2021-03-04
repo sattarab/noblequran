@@ -1,6 +1,6 @@
+import styled from "@emotion/styled"
 import React from "react"
 import { Helmet } from "react-helmet"
-import styled from "styled-components"
 
 import { LARGE_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
 import { AL_QURAN } from "../../constants/common"

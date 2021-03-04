@@ -1,10 +1,10 @@
+import styled from "@emotion/styled"
 import IconButton from "@material-ui/core/IconButton"
 import clsx from "clsx"
-import React, { useCallback, useState } from "react"
-import styled from "styled-components"
+import React, { memo, useCallback, useState } from "react"
 
 import { AddTaskIcon } from "../../../components/Icon"
-import { BLUE_COLOR, BLUE_COLOR_WITH_OPACITY, DEFAULT_TEXT_COLOR } from "../../../components/Styles"
+import { BLUE_COLOR_WITH_OPACITY } from "../../../components/Styles"
 import { QPopper } from "./Popper"
 import { useQuranState } from "./QuranContext"
 
@@ -30,16 +30,8 @@ const RightDrawerButton = styled( IconButton )`
   }
 `
 
-const StyledTaskIcon = styled( AddTaskIcon )`
-  fill: ${ DEFAULT_TEXT_COLOR };
-
-  &.active {
-    fill: ${ BLUE_COLOR };
-  }
-`
-
-export const QRightDrawerButton: React.FunctionComponent = () => {
-  const { isMobileDevice, isRightDrawerOpen, selectedAyahs, setIsRightDrawerOpen } = useQuranState()
+const QRightDrawerButtonFunction: React.FunctionComponent = () => {
+  const { baseClasses, isMobileDevice, isRightDrawerOpen, selectedAyahs, setIsRightDrawerOpen } = useQuranState()
   const [ displayPopover, setDisplayPopover ] = useState<Element | null>( null )
 
   const closePopover = () => {
@@ -50,19 +42,19 @@ export const QRightDrawerButton: React.FunctionComponent = () => {
     setDisplayPopover( event.currentTarget )
   }
 
-  const toggleRightMenu = useCallback( ( open: boolean ) => {
-    setIsRightDrawerOpen( open )
-  }, [ setIsRightDrawerOpen ] )
+  const toggleRightMenu = useCallback( () => {
+    setIsRightDrawerOpen( ! isRightDrawerOpen )
+  }, [ isRightDrawerOpen, setIsRightDrawerOpen ] )
 
   return (
     <RightDrawerButtonContainer>
       <RightDrawerButton
-        onClick={ () => toggleRightMenu( ! isRightDrawerOpen ) }
-        onMouseOut={ () => closePopover() }
-        onMouseOver={ ( event ) => openPopover( event ) }
+        onClick={ toggleRightMenu }
+        onMouseOut={ closePopover }
+        onMouseOver={ openPopover }
         className={ clsx( { "active": isRightDrawerOpen } ) }
       >
-        <StyledTaskIcon className={ clsx( { "active": isRightDrawerOpen } ) } />
+        <AddTaskIcon className={ clsx( baseClasses.svgIcon, { [ baseClasses.svgIconActive ]: isRightDrawerOpen } ) } />
       </RightDrawerButton>
       {
         ( ! isMobileDevice || ! isRightDrawerOpen ) && (
@@ -81,3 +73,5 @@ export const QRightDrawerButton: React.FunctionComponent = () => {
     </RightDrawerButtonContainer>
   )
 }
+
+export const QRightDrawerButton = memo( QRightDrawerButtonFunction )

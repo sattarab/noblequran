@@ -1,3 +1,4 @@
+import styled from "@emotion/styled"
 import Backdrop from "@material-ui/core/Backdrop"
 import Button from "@material-ui/core/Button"
 import Checkbox from "@material-ui/core/Checkbox"
@@ -11,7 +12,6 @@ import { Helmet } from "react-helmet"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { matchPath, useHistory, useLocation } from "react-router-dom"
 import { useClickAway, useEffectOnce } from "react-use"
-import styled from "styled-components"
 
 import { ArrowBackIcon, ArrowDownIcon, ArrowUpIcon, RefreshIcon, SearchIcon } from "../../../../components/Icon"
 import {
@@ -593,8 +593,8 @@ export const SurahPage: React.FunctionComponent = () => {
 
     let translatorName = getTranslatorName( selectedTranslations[ 0 ] )
 
-    if( isMobileDevice && translatorName && translatorName.length > 15 ) {
-      translatorName = `${ translatorName?.substr( 0, 15 ) }…`
+    if( isMobileDevice && translatorName && translatorName.length > 10 ) {
+      translatorName = `${ translatorName?.substr( 0, 10 ) }…`
     }
 
     return `${ translatorName } +${ selectedTranslations.length - 1 }`

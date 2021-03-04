@@ -1,10 +1,10 @@
+import styled from "@emotion/styled"
 import Button from "@material-ui/core/Button"
 import Drawer from "@material-ui/core/Drawer"
 import { withStyles } from "@material-ui/core/styles"
-import PropTypes from "prop-types"
-import React, { useCallback, useState } from "react"
+import clsx from "clsx"
+import React, { memo, useCallback, useState } from "react"
 import { Link, useHistory, useLocation } from "react-router-dom"
-import styled from "styled-components"
 
 import { MenuIcon } from "../../../components/Icon"
 import { BLUE_COLOR, BLUE_COLOR_WITH_OPACITY, BORDER_COLOR, DARK_BLUE_COLOR, DEFAULT_TEXT_COLOR, HEADER_HEIGHT, WHITE_SMOKE_COLOR } from "../../../components/Styles"
@@ -151,27 +151,25 @@ const MenuTitleContainer = styled.div`
   padding-left: 24px;
 `
 
-export interface QHeaderProps {
-  className?: string
-}
-
-export const QHeader: React.FunctionComponent<QHeaderProps> = ( { className } ) => {
+const QHeaderFunction: React.FunctionComponent = () => {
   const history = useHistory()
   const location = useLocation()
   const [ isLeftDrawerOpen, setIsLeftDrawerOpen ] = useState<boolean>( false )
-  const { isMobileDevice } = useQuranState()
+  const { baseClasses, isMobileDevice, isRightDrawerOpen } = useQuranState()
 
   const toggleLeftMenu = useCallback( ( open: boolean ) => {
     setIsLeftDrawerOpen( open )
   }, [] )
 
   return (
-    <React.Fragment>
-      <HeaderContainer className={ className }>
+    <>
+      <HeaderContainer className={ clsx( baseClasses.header, {
+        [ baseClasses.headerShift ]: isRightDrawerOpen && ! isMobileDevice,
+      } ) }>
         <HeaderTitleContainer>
           {
             isMobileDevice && (
-              <div onClick={ () => toggleLeftMenu( ! isLeftDrawerOpen ) }><StyledMenuIcon/></div>
+              <StyledMenuIcon onClick={ () => toggleLeftMenu( ! isLeftDrawerOpen ) } />
             )
           }
           <HeaderTitle onClick={ () => history.push( "/" ) }>Quran</HeaderTitle>
@@ -207,10 +205,8 @@ export const QHeader: React.FunctionComponent<QHeaderProps> = ( { className } ) 
           </MenuNavigationTabContainer>
         </MenuContainer>
       </Drawer>
-    </React.Fragment>
+    </>
   )
 }
 
-QHeader.propTypes = {
-  className: PropTypes.string,
-}
+export const QHeader = memo( QHeaderFunction )
