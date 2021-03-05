@@ -738,7 +738,7 @@ export const SurahPage: React.FunctionComponent = () => {
   const numberOfAyahsArray = new Array( selectedSurah.numberOfAyahs ).fill( 0 ).map( ( value, index ) => index + 1 )
 
   return (
-    <div>
+    <>
       <Helmet>
         <title>{ selectedSurah.transliterations[ 0 ].text } - The Noble Quran - { AL_QURAN }</title>
         <meta name="description" content={ `Surah ${ selectedSurah.transliterations[ 0 ].text }(${ selectedSurah.name }) - ${ selectedSurah.ayahs?.[ 0 ].text.uthmani }` } />
@@ -960,7 +960,7 @@ export const SurahPage: React.FunctionComponent = () => {
               )
           )
       }
-    </div>
+    </>
   )
 }
 

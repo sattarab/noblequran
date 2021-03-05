@@ -1,16 +1,15 @@
 import styled from "@emotion/styled"
 import { IconButton } from "@material-ui/core"
-import clsx from "clsx"
-import PropTypes from "prop-types"
-import React, { memo, useCallback, useState } from "react"
+import React, { memo, useCallback } from "react"
 import { useHistory } from "react-router-dom"
 
-import { BookmarkAddIcon, BookmarkRemoveIcon } from "../../../components/Icon"
-import { BORDER_COLOR, DARK_TEXT_COLOR, DEFAULT_TEXT_COLOR } from "../../../components/Styles"
-import { LARGE_SCREEN_MEDIA_QUERY, MEDIUM_SCREEN_MEDIA_QUERY, SMALL_SCREEN_MEDIA_QUERY } from "../../../helpers/responsive"
-import { getObjectFromLocalStorage, setObjectInLocalStorage } from "../../../helpers/utility"
-import type { Surah } from "../../../types/surah"
-import { useQuranState } from "./QuranContext"
+import { BookmarkAddIcon, BookmarkRemoveIcon } from "../../../../../components/Icon"
+import { BORDER_COLOR, DARK_TEXT_COLOR, DEFAULT_TEXT_COLOR } from "../../../../../components/Styles"
+import { LARGE_SCREEN_MEDIA_QUERY, MEDIUM_SCREEN_MEDIA_QUERY, SMALL_SCREEN_MEDIA_QUERY } from "../../../../../helpers/responsive"
+import { setObjectInLocalStorage } from "../../../../../helpers/utility"
+import type { Surah } from "../../../../../types/surah"
+import { useQuranState } from "../../../components/QuranContext"
+import { SurahPropType } from "../../../services/surah"
 
 const HomePageSurahGridContainer = styled.div`
   box-sizing: border-box;
@@ -120,8 +119,7 @@ interface QSurahGridPropTypes {
 
 const QSurahGridFunction: React.FunctionComponent<QSurahGridPropTypes> = ( { surah } ) => {
   const history = useHistory()
-  const [ myBookmarks, setMyBookmarks ] = useState<string[]>( getObjectFromLocalStorage( "surahBookmarks" ) || [] )
-  const { baseClasses, isSurahNamesFontLoaded } = useQuranState()
+  const { baseClasses, isSurahNamesFontLoaded, myBookmarks, setMyBookmarks } = useQuranState()
 
   const getRevelationTypeText = useCallback( ( type: string ) => {
     return type.charAt( 0 ).toUpperCase() + type.slice( 1 )
@@ -166,7 +164,7 @@ const QSurahGridFunction: React.FunctionComponent<QSurahGridPropTypes> = ( { sur
           <HomePageSurahDetailsText>{ surah.numberOfAyahs } verses &#8226; { getRevelationTypeText( surah.revelation.place ) }</HomePageSurahDetailsText>
         </HomePageSurahGridDetailsContainer>
         <HomePageSurahGridFooterContainer>
-          <IconButton className={ clsx( baseClasses.iconButton ) } onClick={ toggleBookmarkSurah }>
+          <IconButton className={ baseClasses.iconButton } onClick={ toggleBookmarkSurah }>
             {
               myBookmarks.includes( surah.id )
                 ? (
@@ -184,27 +182,7 @@ const QSurahGridFunction: React.FunctionComponent<QSurahGridPropTypes> = ( { sur
 }
 
 QSurahGridFunction.propTypes = {
-  surah: PropTypes.shape( {
-    id: PropTypes.string.isRequired,
-    hasBismillah: PropTypes.bool.isRequired,
-    name: PropTypes.string.isRequired,
-    number: PropTypes.number.isRequired,
-    numberOfAyahs: PropTypes.number.isRequired,
-    queryIndexes: PropTypes.arrayOf( PropTypes.string.isRequired ).isRequired,
-    revelation: PropTypes.exact( {
-      order: PropTypes.number.isRequired,
-      place: PropTypes.string.isRequired
-    } ).isRequired,
-    translations: PropTypes.arrayOf( PropTypes.shape( {
-      language: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired
-    } ).isRequired ).isRequired,
-    transliterations: PropTypes.arrayOf( PropTypes.shape( {
-      language: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired
-    } ).isRequired ).isRequired,
-    unicode: PropTypes.string.isRequired,
-  } ).isRequired,
+  surah: SurahPropType,
 }
 
 export const QSurahGrid = memo( QSurahGridFunction )

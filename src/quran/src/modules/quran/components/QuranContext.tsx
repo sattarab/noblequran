@@ -24,6 +24,7 @@ interface QuranContextType {
   isMobileDevice: boolean
   isRightDrawerOpen: boolean
   isSurahNamesFontLoaded: boolean
+  myBookmarks: string[]
   selectedAyahs: SelectedAyahs
   surahs: { [ id: string ]: Surah }
 
@@ -31,6 +32,7 @@ interface QuranContextType {
   setDisplaySurahVersesMap( displaySurahVersesMap: DisplaySurahVersesMap ): void
   setIsRightDrawerOpen( isRightDrawerOpen: boolean ): void
   setIsSurahNamesFontLoaded( isSurahNamesFontLoaded: boolean ): void
+  setMyBookmarks( myBookmarks: string[] ): void
   setSelectedAyahs( selectedAyahs: SelectedAyahs ): void
 }
 
@@ -77,6 +79,7 @@ export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildr
   const [ displaySurahVersesMap, setDisplaySurahVersesMap ] = useState<DisplaySurahVersesMap>( {} )
   const [ isRightDrawerOpen, setIsRightDrawerOpen ] = useState<boolean>( false )
   const [ isSurahNamesFontLoaded, setIsSurahNamesFontLoaded ] = useState<boolean>( false )
+  const [ myBookmarks, setMyBookmarks ] = useState<string[]>( getObjectFromLocalStorage( "surahBookmarks" ) || [] )
   const [ selectedAyahs, setSelectedAyahs ] = useState<{ [ id: string ]: SelectedAyahModel }>( getObjectFromLocalStorage( "selectedAyahs" ) || {} )
   const surahs = getSurahs().reduce( ( result: { [ id: string ]: Surah }, surah ) => {
     result[ surah.id ] = surah
@@ -97,6 +100,7 @@ export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildr
     isMobileDevice,
     isRightDrawerOpen,
     isSurahNamesFontLoaded,
+    myBookmarks,
     selectedAyahs,
     surahs,
 
@@ -104,6 +108,7 @@ export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildr
     setDisplaySurahVersesMap,
     setIsRightDrawerOpen,
     setIsSurahNamesFontLoaded,
+    setMyBookmarks,
     setSelectedAyahs,
   }
 

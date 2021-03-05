@@ -4,28 +4,27 @@ import IconButton from "@material-ui/core/IconButton"
 import clsx from "clsx"
 import React, { useCallback, useEffect, useState } from "react"
 import { Helmet } from "react-helmet"
-import { useHistory } from "react-router-dom"
 import { useEffectOnce } from "react-use"
 
-import { BookmarkAddIcon, BookmarkRemoveIcon, BookmarksIcon, ClearIcon, GridIcon, ListIcon, RefreshIcon, SearchIcon } from "../../../../components/Icon"
+import { BookmarksIcon, ClearIcon, GridIcon, ListIcon, RefreshIcon, SearchIcon } from "../../../../components/Icon"
 import {
   BLUE_COLOR,
   BORDER_COLOR,
-  DARK_TEXT_COLOR,
   DARKER_TEXT_COLOR,
   DEFAULT_TEXT_COLOR,
   HEADER_HEIGHT,
 } from "../../../../components/Styles"
 import { LARGE_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
-import { escapeRegex, getObjectFromLocalStorage, setObjectInLocalStorage } from "../../../../helpers/utility"
+import { escapeRegex } from "../../../../helpers/utility"
 import type { Surah } from "../../../../types/surah"
 import { QButton } from "../../components/Button"
 import { QPopper } from "../../components/Popper"
 import { useQuranState } from "../../components/QuranContext"
 import { QRightDrawerButton } from "../../components/RightDrawerButton"
-import { QSurahGrid } from "../../components/SurahGrid"
 import { AL_QURAN, MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER } from "../../constants/common"
 import { getSurahs } from "../../services/surah"
+import { QSurahGrid } from "./components/SurahGrid"
+import { QSurahList } from "./components/SurahList"
 
 const HomePageClearIconContainer = styled.a`
   height: 24px;
@@ -208,10 +207,6 @@ const HomePageSurahsContentContainer = styled.div`
   padding: 15px;
 `
 
-const HomePageSurahBookmarkContainer = styled( IconButton )`
-  cursor: pointer;
-`
-
 const HomePageSurahsGridContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -219,57 +214,6 @@ const HomePageSurahsGridContainer = styled.div`
 
 const HomePageSurahsListContainer = styled.div`
   padding: 15px;
-`
-
-const HomePageSurahListContainer = styled.div`
-  border-top: 1px solid ${ BORDER_COLOR };
-  box-sizing: border-box;
-  cursor: pointer;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 15px 0;
-
-  &:last-of-type {
-    border-bottom: 1px solid ${ BORDER_COLOR };
-  }
-`
-
-const HomePageSurahListDetailsContainer = styled.div`
-  align-items: center;
-  display: flex;
-`
-
-const HomePageSurahListDetailsText = styled.div`
-  font-size: 14px;
-  font-weight: 500;
-  margin: 0 10px;
-`
-
-const HomePageSurahListTitleContainer = styled.div`
-  display: flex;
-  margin-top: 10px;
-`
-
-const HomePageSurahListTitleText = styled.div`
-  color: ${ DARK_TEXT_COLOR };
-  flex: 1;
-  font-family: "QuranKarim";
-  font-size: 110px;
-  text-align: right;
-  margin-top: -50px;
-`
-
-const HomePageSurahTranslatedText = styled.div`
-  color: ${ DEFAULT_TEXT_COLOR };
-  font-size: 14px;
-  font-weight: 500;
-`
-
-const HomePageSurahTransliteratedText = styled.div`
-  font-size: 16px;
-  font-weight: 500;
 `
 
 enum ViewType {
@@ -280,11 +224,9 @@ enum ViewType {
 export const HomePage: React.FunctionComponent = () => {
   const MAX_SCROLL_OFFSET = 130
 
-  const history = useHistory()
-  const { baseClasses, isMobileDevice, isRightDrawerOpen, isSurahNamesFontLoaded } = useQuranState()
+  const { baseClasses, isMobileDevice, isRightDrawerOpen, myBookmarks } = useQuranState()
   const [ isSearchContainerFixed, setIsSearchContainerFixed ] = useState<boolean>( false )
   const [ displayMyBookmarks, setMyDisplayBookmarks ] = useState<boolean>( false )
-  const [ myBookmarks, setMyBookmarks ] = useState<string[]>( getObjectFromLocalStorage( "surahBookmarks" ) || [] )
   const [ popoverMap, setPopoverMap ] = useState<{ [ key: string ]: Element | null }>( {} )
   const [ searchText, setSearchText ] = useState<string>( "" )
   const [ selectViewType, setSelectedViewType ] = useState<ViewType>( ViewType.GRID )
@@ -298,21 +240,6 @@ export const HomePage: React.FunctionComponent = () => {
       window.removeEventListener( "scroll", onPageScroll )
     }
   } )
-
-  const toggleBookmarkSurah = ( event: React.MouseEvent<HTMLButtonElement, MouseEvent>, surahId: string ) => {
-    event.preventDefault()
-    event.stopPropagation()
-
-    const updatedMyBookmarks = [ ...myBookmarks ]
-    const index = updatedMyBookmarks.indexOf( surahId )
-    if( index !== -1 ) {
-      updatedMyBookmarks.splice( index, 1 )
-    } else {
-      updatedMyBookmarks.push( surahId )
-    }
-    setObjectInLocalStorage( "surahBookmarks", updatedMyBookmarks )
-    setMyBookmarks( updatedMyBookmarks )
-  }
 
   useEffect( () => {
     if( ! searchText && ! displayMyBookmarks ) {
@@ -349,10 +276,6 @@ export const HomePage: React.FunctionComponent = () => {
     setPopoverMap( { ...popoverMap, ...{ [ key ]: null } } )
   }
 
-  const getRevelationTypeText = useCallback( ( type: string ) => {
-    return type.charAt( 0 ).toUpperCase() + type.slice( 1 )
-  }, [] )
-
   const onPageScroll = useCallback( () => {
     if( window.pageYOffset > MAX_SCROLL_OFFSET && document.documentElement.scrollHeight > MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER ) {
       setIsSearchContainerFixed( true )
@@ -368,11 +291,6 @@ export const HomePage: React.FunctionComponent = () => {
   const openPopover = ( key: string, event: React.MouseEvent<HTMLSpanElement> ) => {
     setPopoverMap( { ...popoverMap, ...{ [ key ]: event.currentTarget } } )
   }
-
-  const readSurah = useCallback( ( surah: Surah ) => {
-    history.push( `/${ surah.id }` )
-    window.scroll( 0, 0 )
-  }, [ history ] )
 
   const resetFilters = useCallback( () => {
     setMyDisplayBookmarks( false )
@@ -488,26 +406,7 @@ export const HomePage: React.FunctionComponent = () => {
                           <HomePageSurahsListContainer>
                             {
                               surahs.map( ( surah ) => (
-                                <HomePageSurahListContainer aria-label={ surah.transliterations[ 0 ].text } onClick={ () => readSurah( surah ) } key={ surah.id }>
-                                  <HomePageSurahListTitleContainer>
-                                    <HomePageSurahTranslatedText>{ surah.translations[ 0 ].text }</HomePageSurahTranslatedText>
-                                    <HomePageSurahListTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } style={ { visibility: isSurahNamesFontLoaded ? "visible" : "hidden" } } />
-                                  </HomePageSurahListTitleContainer>
-                                  <HomePageSurahListDetailsContainer>
-                                    <HomePageSurahTransliteratedText>{ surah.number } &#8226; { surah.transliterations[ 0 ].text }</HomePageSurahTransliteratedText>
-                                    <HomePageSurahListDetailsText>{ surah.numberOfAyahs } verses &#8226; { getRevelationTypeText( surah.revelation.place ) }</HomePageSurahListDetailsText>
-                                    <HomePageSurahBookmarkContainer onClick={ ( event ) => toggleBookmarkSurah( event, surah.id ) }>
-                                      {
-                                        myBookmarks.includes( surah.id )
-                                          ? (
-                                            <BookmarkRemoveIcon className={ baseClasses.svgIconActive } />
-                                          ) : (
-                                            <BookmarkAddIcon className={ baseClasses.svgIcon } />
-                                          )
-                                      }
-                                    </HomePageSurahBookmarkContainer>
-                                  </HomePageSurahListDetailsContainer>
-                                </HomePageSurahListContainer>
+                                <QSurahList key={ surah.id } surah={ surah } />
                               ) )
                             }
                           </HomePageSurahsListContainer>

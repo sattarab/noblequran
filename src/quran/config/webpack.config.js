@@ -410,13 +410,6 @@ module.exports = function ( webpackEnv ) {
               options: {
                 presets: [
                   [
-                    require.resolve( "@babel/preset-env" ), {
-                      bugfixes: true,
-                      corejs: "3.9",
-                      useBuiltIns: "entry"
-                    }
-                  ],
-                  [
                     require.resolve( "@babel/preset-typescript" )
                   ],
                   [
