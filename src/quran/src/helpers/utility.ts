@@ -1,3 +1,7 @@
+import localforage from "localforage"
+
+import { logError } from "./error"
+
 const ESCAPE_REGEX = /([.*+?^=!:${}()|\[\]\/\\])/g
 
 export function getLanguageLabel( code: string ): string {
@@ -174,14 +178,12 @@ export function escapeRegex( string: string ): string {
   return string.replace( ESCAPE_REGEX, "\\$1" )
 }
 
-export function getObjectFromLocalStorage<T>( key: string ): T | null {
-  try {
-    return localStorage.getItem( key ) != null ? JSON.parse( localStorage.getItem( key ) as string ) as T : null
-  } catch( exception ) {
-    console.error( "Problem storing in localStorage", exception )
-  }
-
-  return null
+export async function getItemFromStorage<T>( key: string ): Promise<T | null> {
+  return localforage.getItem<T>( key )
+    .catch( ( err ) => {
+      logError( err )
+      return null
+    } )
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -197,12 +199,12 @@ export function groupBy<T extends Record<string, any>>( array: T[], key: string 
   }, {} )
 }
 
-export function setObjectInLocalStorage<T>( key: string, object: T ): void {
-  try {
-    localStorage.setItem( key, JSON.stringify( object ) )
-  } catch( exception ) {
-    console.error( "Problem storing in localStorage", exception )
-  }
+export function setItemInStorage<T>( key: string, object: T ): Promise<T | null> {
+  return localforage.setItem<T>( key, object )
+    .catch( ( err ) => {
+      logError( err )
+      return null
+    } )
 }
 
 

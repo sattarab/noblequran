@@ -1,35 +1,26 @@
 import styled from "@emotion/styled"
 import Button from "@material-ui/core/Button"
-import IconButton from "@material-ui/core/IconButton"
 import clsx from "clsx"
-import React, { useCallback, useEffect, useState } from "react"
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react"
 import { Helmet } from "react-helmet"
-import { useEffectOnce } from "react-use"
 
-import { BookmarksIcon, ClearIcon, GridIcon, ListIcon, RefreshIcon, SearchIcon } from "../../../../components/Icon"
+import {
+  GridIcon,
+  ListIcon,
+} from "../../../../components/Icon"
 import {
   BLUE_COLOR,
-  BORDER_COLOR,
   DARKER_TEXT_COLOR,
-  DEFAULT_TEXT_COLOR,
-  HEADER_HEIGHT,
 } from "../../../../components/Styles"
 import { LARGE_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
 import { escapeRegex } from "../../../../helpers/utility"
 import type { Surah } from "../../../../types/surah"
-import { QButton } from "../../components/Button"
-import { QPopper } from "../../components/Popper"
 import { useQuranState } from "../../components/QuranContext"
-import { QRightDrawerButton } from "../../components/RightDrawerButton"
-import { AL_QURAN, MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER } from "../../constants/common"
+import { AL_QURAN } from "../../constants/common"
 import { getSurahs } from "../../services/surah"
-import { QSurahGrid } from "./components/SurahGrid"
-import { QSurahList } from "./components/SurahList"
-
-const HomePageClearIconContainer = styled.a`
-  height: 24px;
-  text-decoration: none;
-`
+import { SearchBar } from "./components/SearchBar"
+import { SurahGrid } from "./components/SurahGrid"
+import { SurahList } from "./components/SurahList"
 
 const HomePageContainer = styled.div`
   margin: 0 auto;
@@ -100,14 +91,6 @@ const HomePageMainContainer = styled.div`
   width: 100%;
 `
 
-const HomePageMyBookmarksContainer = styled.div`
-  align-items: center;
-  border-right: 1px solid ${ BORDER_COLOR };
-  display: flex;
-  height: 100%;
-  padding: 0 15px;
-`
-
 const HomePageNoSurahsClearFilterLink = styled.a`
   color: ${ BLUE_COLOR };
   cursor: pointer;
@@ -141,78 +124,13 @@ const HomePageNoSurahsPlaceholderText = styled.div`
   margin-top: 64px;
 `
 
-const HomePageRightDrawerButtonContainer = styled.div`
-  padding-right: 15px;
-`
-
-const HomePageSearchContainer = styled.div`
-  align-items: center;
-  border: 1px solid ${ BORDER_COLOR };
-  border-radius: 48px;
-  display: flex;
-  flex: 1;
-  height: 54px;
-
-  &.fixed {
-    background: #ffffff;
-    border: none;
-    border-bottom: 1px solid ${ BORDER_COLOR };
-    border-radius: 0;
-    box-shadow: 0px 1px 2px 0px rgb( 60 64 67 / 30% ), 0px 2px 6px 2px rgb( 60 64 67 / 15% );
-    height: calc( ${ HEADER_HEIGHT } - 1px );
-    left: 0;
-    margin: 0;
-    position: fixed;
-    top: 0;
-    z-index: 1000;
-  }
-`
-
 const HomePageSearchWrapperContainer = styled.div`
   box-sizing: border-box;
   padding: 0 30px 23px 30px;
   width: 100%;
 `
 
-const HomePageSearchInput = styled.input`
-  border: none;
-  caret-color: ${ BLUE_COLOR };
-  color: ${ DEFAULT_TEXT_COLOR };
-  font-size: 16px;
-  font-weight: 500;
-  height: 32px;
-  width: calc( 100% - 70px );
-
-  &::-moz-placeholder,
-  &:-moz-placeholder
-  &::placeholder,
-  &::-webkit-input-placeholder {
-    color: ${ DEFAULT_TEXT_COLOR };
-    font-size: 500 16px/24px "HarmoniaSansPro";
-    opacity: 1;
-  }
-`
-
-const HomePageSearchInputContainer = styled.div`
-  align-items: center;
-  border-right: 1px solid ${ BORDER_COLOR };
-  display: flex;
-  flex: 1;
-  height: 100%;
-  min-width: 100px;
-  padding-left: 15px;
-`
-
 const HomePageSurahsContentContainer = styled.div`
-  padding: 15px;
-`
-
-const HomePageSurahsGridContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`
-
-const HomePageSurahsListContainer = styled.div`
   padding: 15px;
 `
 
@@ -221,25 +139,11 @@ enum ViewType {
   LIST = "list",
 }
 
-export const HomePage: React.FunctionComponent = () => {
-  const MAX_SCROLL_OFFSET = 130
-
-  const { baseClasses, isMobileDevice, isRightDrawerOpen, myBookmarks } = useQuranState()
-  const [ isSearchContainerFixed, setIsSearchContainerFixed ] = useState<boolean>( false )
-  const [ displayMyBookmarks, setMyDisplayBookmarks ] = useState<boolean>( false )
-  const [ popoverMap, setPopoverMap ] = useState<{ [ key: string ]: Element | null }>( {} )
-  const [ searchText, setSearchText ] = useState<string>( "" )
+const HomePage: React.FunctionComponent = () => {
+  const { displayMyBookmarks, resetFilters, searchText } = useHomeState()
+  const { baseClasses, myBookmarks } = useQuranState()
   const [ selectViewType, setSelectedViewType ] = useState<ViewType>( ViewType.GRID )
   const [ surahs, setSurahs ] = useState<Surah[]>( getSurahs() )
-
-  useEffectOnce( () => {
-    window.scrollTo( 0, 0 )
-    window.addEventListener( "scroll", onPageScroll )
-
-    return () => {
-      window.removeEventListener( "scroll", onPageScroll )
-    }
-  } )
 
   useEffect( () => {
     if( ! searchText && ! displayMyBookmarks ) {
@@ -268,95 +172,13 @@ export const HomePage: React.FunctionComponent = () => {
     setSurahs( filteredSurahs )
   }, [ displayMyBookmarks, myBookmarks, searchText ] )
 
-  const clearSearch = useCallback( () => {
-    setSearchText( "" )
-  }, [] )
-
-  const closePopover = ( key: string ) => {
-    setPopoverMap( { ...popoverMap, ...{ [ key ]: null } } )
-  }
-
-  const onPageScroll = useCallback( () => {
-    if( window.pageYOffset > MAX_SCROLL_OFFSET && document.documentElement.scrollHeight > MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER ) {
-      setIsSearchContainerFixed( true )
-    } else {
-      setIsSearchContainerFixed( false )
-    }
-  }, [] )
-
-  const onSearch = useCallback( ( event: React.ChangeEvent<HTMLInputElement> ) => {
-    setSearchText( event.target.value )
-  }, [] )
-
-  const openPopover = ( key: string, event: React.MouseEvent<HTMLSpanElement> ) => {
-    setPopoverMap( { ...popoverMap, ...{ [ key ]: event.currentTarget } } )
-  }
-
-  const resetFilters = useCallback( () => {
-    setMyDisplayBookmarks( false )
-    setSearchText( "" )
-  }, [] )
-
-  const toggleDisplayMyBookmarks = useCallback( () => {
-    setMyDisplayBookmarks( ! displayMyBookmarks )
-  }, [ displayMyBookmarks ] )
-
   return (
     <HomePageContainer>
       <Helmet>
         <title>Browse Surahs | The Noble Quran | { AL_QURAN }</title>
       </Helmet>
       <HomePageSearchWrapperContainer>
-        <HomePageSearchContainer className={ clsx( baseClasses.header, { "fixed": isSearchContainerFixed, [ baseClasses.headerShift ]: ! isMobileDevice && isSearchContainerFixed && isRightDrawerOpen } ) }>
-          <HomePageSearchInputContainer>
-            <SearchIcon className={ baseClasses.svgIcon } />
-            <HomePageSearchInput autoComplete="false" onChange={ onSearch } placeholder="Search" type="text" value={ searchText } />
-            {
-              searchText && (
-                <HomePageClearIconContainer onClick={ clearSearch } >
-                  <ClearIcon className={ baseClasses.svgIcon } />
-                </HomePageClearIconContainer>
-              )
-            }
-          </HomePageSearchInputContainer>
-          <HomePageMyBookmarksContainer onClick={ toggleDisplayMyBookmarks }>
-            {
-              isMobileDevice
-                ? (
-                  <IconButton>
-                    <BookmarksIcon className={ clsx( baseClasses.svgIcon, { [ baseClasses.svgIconActive ]: displayMyBookmarks } ) } />
-                  </IconButton>
-                ) : (
-                  <QButton isActive={ displayMyBookmarks } label="My Bookmarks" />
-                )
-            }
-          </HomePageMyBookmarksContainer>
-          <IconButton
-            className={ baseClasses.iconButton }
-            disabled={ ! displayMyBookmarks && ! searchText }
-            onClick={ () => resetFilters() }
-            onMouseOut={ () => closePopover( "reset" ) }
-            onMouseOver={ ( event ) => openPopover( "reset", event ) }
-          >
-            <RefreshIcon className={ clsx( baseClasses.svgIcon, { [ baseClasses.svgIconDisabled ]: ! displayMyBookmarks && ! searchText } ) } />
-            {
-              ( displayMyBookmarks || searchText ) && (
-                <QPopper
-                  anchorEl={ popoverMap[ "reset" ] }
-                  open={ Boolean( popoverMap[ "reset" ] ) }
-                  text="Reset"
-                />
-              )
-            }
-          </IconButton>
-          {
-            isSearchContainerFixed && (
-              <HomePageRightDrawerButtonContainer>
-                <QRightDrawerButton />
-              </HomePageRightDrawerButtonContainer>
-            )
-          }
-        </HomePageSearchContainer>
+        <SearchBar />
       </HomePageSearchWrapperContainer>
       <HomePageMainContainer>
         <HomePageContentContainer>
@@ -395,21 +217,9 @@ export const HomePage: React.FunctionComponent = () => {
                     {
                       selectViewType === ViewType.GRID
                         ? (
-                          <HomePageSurahsGridContainer>
-                            {
-                              surahs.map( ( surah ) => (
-                                <QSurahGrid key={ surah.id } surah={ surah } />
-                              ) )
-                            }
-                          </HomePageSurahsGridContainer>
+                          <SurahGrid surahs={ surahs } />
                         ) : (
-                          <HomePageSurahsListContainer>
-                            {
-                              surahs.map( ( surah ) => (
-                                <QSurahList key={ surah.id } surah={ surah } />
-                              ) )
-                            }
-                          </HomePageSurahsListContainer>
+                          <SurahList surahs={ surahs } />
                         )
                     }
                   </div>
@@ -420,4 +230,53 @@ export const HomePage: React.FunctionComponent = () => {
       </HomePageMainContainer>
     </HomePageContainer>
   )
+}
+
+export const HomePageRoot: React.FunctionComponent = () => {
+  return (
+    <HomePageContextProvider>
+      <HomePage />
+    </HomePageContextProvider>
+  )
+}
+
+interface HomePageContextType {
+  displayMyBookmarks: boolean
+  searchText: string
+
+  resetFilters(): void
+  setDisplayMyBookmarks( displayMyBookmarks: boolean ): void
+  setSearchText( searchText: string ): void
+}
+
+export const HomePageContext = createContext<HomePageContextType | null>( null )
+
+export const HomePageContextProvider: React.FunctionComponent<React.PropsWithChildren<Record<string, JSX.Element>>> = ( props ) => {
+  const [ displayMyBookmarks, setDisplayMyBookmarks ] = useState<boolean>( false )
+  const [ searchText, setSearchText ] = useState<string>( "" )
+
+  const resetFilters = useCallback( () => {
+    setDisplayMyBookmarks( false )
+    setSearchText( "" )
+  }, [] )
+
+  const contextValue: HomePageContextType = {
+    displayMyBookmarks,
+    searchText,
+
+    resetFilters,
+    setDisplayMyBookmarks,
+    setSearchText
+  }
+
+  // eslint-disable-next-line react/prop-types
+  return <HomePageContext.Provider value={ { ...contextValue } }>{ props.children }</HomePageContext.Provider>
+}
+
+export function useHomeState(): HomePageContextType {
+  const context = useContext( HomePageContext )
+  if( ! context ) {
+    throw new Error( "useHomeState must be used within the HomeContextProvider" )
+  }
+  return context
 }

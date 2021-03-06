@@ -21,11 +21,12 @@ import {
   DARK_TEXT_COLOR,
   DEFAULT_TEXT_COLOR,
   LIGHT_WHITE_SMOKE_COLOR,
+  MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER,
   WHITE_SMOKE_COLOR,
 } from "../../../../components/Styles"
 import { logError } from "../../../../helpers/error"
 import { LARGE_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
-import { escapeRegex, getLanguageLabel, getObjectFromLocalStorage, groupBy, setObjectInLocalStorage } from "../../../../helpers/utility"
+import { escapeRegex, getLanguageLabel, groupBy, setItemInStorage } from "../../../../helpers/utility"
 import type { Ayah } from "../../../../types/ayah"
 import type { Pagination } from "../../../../types/pagination"
 import type { Surah } from "../../../../types/surah"
@@ -35,7 +36,7 @@ import { QPopper } from "../../components/Popper"
 import type { SelectedAyahs } from "../../components/QuranContext"
 import { useQuranState } from "../../components/QuranContext"
 import { QRightDrawerButton } from "../../components/RightDrawerButton"
-import { AL_QURAN, MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER } from "../../constants/common"
+import { AL_QURAN } from "../../constants/common"
 import { getSurahAyahs, getSurahs, getTranslatorsGroupedByLanguage } from "../../services/surah"
 
 const DEFAULT_TRANSLATION = "en.sahih"
@@ -448,7 +449,7 @@ export const SurahPage: React.FunctionComponent = () => {
   const [ pagination, setPagination ] = useState<Pagination | null>( null )
   const [ popoverMap, setPopoverMap ] = useState<{ [ key: string ]: Element | null }>( {} )
   const [ searchText, setSearchText ] = useState<string>( "" )
-  const [ selectedTranslations, setSelectedTranslations ] = useState<string[]>( getObjectFromLocalStorage( "translations" ) || [ DEFAULT_TRANSLATION ] )
+  const [ selectedTranslations, setSelectedTranslations ] = useState<string[]>( [ DEFAULT_TRANSLATION ] )
   const [ translatorNames, setTranslatorNames ] = useState<{ [ identifier: string ]: string }>( {} )
 
   useClickAway( translatorsMenuRef, () => {
@@ -575,6 +576,7 @@ export const SurahPage: React.FunctionComponent = () => {
 
     const translators = filterGroupedTranslators[ language ]
     const selectedTranslator = translators?.find( ( translator ) => translator.id === identifier )
+
     if( ! selectedTranslator ) {
       return null
     }
@@ -583,10 +585,11 @@ export const SurahPage: React.FunctionComponent = () => {
       prevTranslatorNames[ identifier ] = selectedTranslator.translations[ 0 ].name
       return prevTranslatorNames
     } )
+
     return translatorNames[ identifier ]
   }, [ filterGroupedTranslators, translatorNames ] )
 
-  const getTranslationsButtonText = useCallback( () => {
+  const getTranslationsButtonText = () => {
     if( selectedTranslations.length <= 1 ) {
       return "Translations"
     }
@@ -598,7 +601,7 @@ export const SurahPage: React.FunctionComponent = () => {
     }
 
     return `${ translatorName } +${ selectedTranslations.length - 1 }`
-  }, [ getTranslatorName, isMobileDevice, selectedTranslations ] )
+  }
 
   const goToAyah = async ( ayahNumberInSurah: number ) => {
     if( ! pagination ) {
@@ -643,7 +646,7 @@ export const SurahPage: React.FunctionComponent = () => {
     }, 200 )
   }
 
-  const loadAyahs = useCallback( () => {
+  const loadAyahs = () => {
     if( ayahs.length === selectedSurah.numberOfAyahs || ! pagination?.nextPage ) {
       setHasMore( false )
       return
@@ -665,7 +668,7 @@ export const SurahPage: React.FunctionComponent = () => {
       } )
       .catch( logError )
 
-  }, [ ayahs, pagination, selectedSurah.id, selectedSurah.numberOfAyahs, selectedTranslations ] )
+  }
 
   const onClickSelectVerseHandler = useCallback( () => {
     setDisplayVerseMenu( ! displayVerseMenu )
@@ -689,7 +692,7 @@ export const SurahPage: React.FunctionComponent = () => {
       updatedSelectedTranslations.push( translatorId )
     }
 
-    setObjectInLocalStorage( "translations", updatedSelectedTranslations )
+    setItemInStorage( "translations", updatedSelectedTranslations )
     setSelectedTranslations( updatedSelectedTranslations )
   }, [ selectedTranslations ] )
 
@@ -718,7 +721,7 @@ export const SurahPage: React.FunctionComponent = () => {
     }
 
     setSelectedAyahs( updatedSelectedAyahs )
-    setObjectInLocalStorage( "selectedAyahs", updatedSelectedAyahs )
+    setItemInStorage( "selectedAyahs", updatedSelectedAyahs )
   }, [ selectedAyahs, setSelectedAyahs ] )
 
   const resetFilters = useCallback( () => {

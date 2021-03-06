@@ -6,7 +6,7 @@ import { useEffectOnce, useMedia } from "react-use"
 
 import { BLUE_COLOR, BORDER_COLOR, DEFAULT_TEXT_COLOR, RIGHT_DRAWER_WIDTH } from "../../../components/Styles"
 import { isGreaterThanMediumScreen, MOBILE_SCREEN_MEDIA_QUERY } from "../../../helpers/responsive"
-import { getObjectFromLocalStorage } from "../../../helpers/utility"
+import { getItemFromStorage } from "../../../helpers/utility"
 import type { Surah } from "../../../types/surah"
 import { getSurahs } from "../services/surah"
 export interface DisplaySurahVersesMap {
@@ -79,8 +79,8 @@ export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildr
   const [ displaySurahVersesMap, setDisplaySurahVersesMap ] = useState<DisplaySurahVersesMap>( {} )
   const [ isRightDrawerOpen, setIsRightDrawerOpen ] = useState<boolean>( false )
   const [ isSurahNamesFontLoaded, setIsSurahNamesFontLoaded ] = useState<boolean>( false )
-  const [ myBookmarks, setMyBookmarks ] = useState<string[]>( getObjectFromLocalStorage( "surahBookmarks" ) || [] )
-  const [ selectedAyahs, setSelectedAyahs ] = useState<{ [ id: string ]: SelectedAyahModel }>( getObjectFromLocalStorage( "selectedAyahs" ) || {} )
+  const [ myBookmarks, setMyBookmarks ] = useState<string[]>( [] )
+  const [ selectedAyahs, setSelectedAyahs ] = useState<{ [ id: string ]: SelectedAyahModel }>( {} )
   const surahs = getSurahs().reduce( ( result: { [ id: string ]: Surah }, surah ) => {
     result[ surah.id ] = surah
     return result
@@ -92,6 +92,20 @@ export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildr
     surahNamesFontObserver.load( null, 15000 ).then( () => {
       setIsSurahNamesFontLoaded( true )
     } )
+
+    getItemFromStorage<string[]>( "surahBookmarks" )
+      .then( ( bookmarks ) => {
+        if( bookmarks ) {
+          setMyBookmarks( bookmarks )
+        }
+      } )
+
+    getItemFromStorage<{ [ id: string ]: SelectedAyahModel }>( "selectedAyahs" )
+      .then( ( ayahs ) => {
+        if( ayahs ) {
+          setSelectedAyahs( ayahs )
+        }
+      } )
   } )
 
   const contextValue: QuranContextType = {

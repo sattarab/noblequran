@@ -1,15 +1,21 @@
 import styled from "@emotion/styled"
 import { IconButton } from "@material-ui/core"
+import PropTypes from "prop-types"
 import React, { memo, useCallback } from "react"
 import { useHistory } from "react-router-dom"
 
 import { BookmarkAddIcon, BookmarkRemoveIcon } from "../../../../../components/Icon"
 import { BORDER_COLOR, DARK_TEXT_COLOR, DEFAULT_TEXT_COLOR } from "../../../../../components/Styles"
 import { LARGE_SCREEN_MEDIA_QUERY, MEDIUM_SCREEN_MEDIA_QUERY, SMALL_SCREEN_MEDIA_QUERY } from "../../../../../helpers/responsive"
-import { setObjectInLocalStorage } from "../../../../../helpers/utility"
+import { setItemInStorage } from "../../../../../helpers/utility"
 import type { Surah } from "../../../../../types/surah"
 import { useQuranState } from "../../../components/QuranContext"
 import { SurahPropType } from "../../../services/surah"
+
+const HomePageSurahsGridContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`
 
 const HomePageSurahGridContainer = styled.div`
   box-sizing: border-box;
@@ -51,12 +57,15 @@ const HomePageSurahGridTitleContainer = styled.div`
   flex-direction: column;
   height: 150px;
   justify-content: center;
+  overflow: hidden;
+  position: relative;
 `
 
 const HomePageSurahGridTitleText = styled.div`
   color: ${ DARK_TEXT_COLOR };
   font-family: "QuranKarim";
   font-size: 110px;
+  margin-bottom: 20px;
 `
 
 const HomePageSurahGridDetailsContainer = styled.div`
@@ -93,7 +102,8 @@ const HomePageSurahGridReadSurahButton = styled.button`
 `
 
 const HomePageSurahGridTranslatedTextContainer = styled.div`
-  margin-top: -30px;
+  position: absolute;
+  margin-top: 90px;
 `
 
 const HomePageSurahDetailsText = styled.div`
@@ -109,15 +119,15 @@ const HomePageSurahTranslatedText = styled.div`
 `
 
 const HomePageSurahTransliteratedText = styled.div`
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 700;
 `
 
 interface QSurahGridPropTypes {
-  surah: Surah
+  surahs: Surah[]
 }
 
-const QSurahGridFunction: React.FunctionComponent<QSurahGridPropTypes> = ( { surah } ) => {
+const SurahGridFunction: React.FunctionComponent<QSurahGridPropTypes> = ( { surahs } ) => {
   const history = useHistory()
   const { baseClasses, isSurahNamesFontLoaded, myBookmarks, setMyBookmarks } = useQuranState()
 
@@ -125,64 +135,72 @@ const QSurahGridFunction: React.FunctionComponent<QSurahGridPropTypes> = ( { sur
     return type.charAt( 0 ).toUpperCase() + type.slice( 1 )
   }, [] )
 
-  const readSurah = useCallback( () => {
+  const readSurah = useCallback( ( surah: Surah ) => {
     history.push( `/${ surah.id }` )
     window.scroll( 0, 0 )
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ history ] )
 
-  const toggleBookmarkSurah = useCallback( ( event: React.MouseEvent<HTMLButtonElement, MouseEvent> ) => {
+  const toggleBookmarkSurah = useCallback( ( event: React.MouseEvent<HTMLButtonElement, MouseEvent>, surah: Surah ) => {
     event.preventDefault()
     event.stopPropagation()
 
     const updatedMyBookmarks = [ ...myBookmarks ]
     const index = updatedMyBookmarks.indexOf( surah.id )
+
     if( index !== -1 ) {
       updatedMyBookmarks.splice( index, 1 )
     } else {
       updatedMyBookmarks.push( surah.id )
     }
-    setObjectInLocalStorage( "surahBookmarks", updatedMyBookmarks )
+
+    setItemInStorage( "surahBookmarks", updatedMyBookmarks )
     setMyBookmarks( updatedMyBookmarks )
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ myBookmarks ] )
 
   return (
-    <HomePageSurahGridContainer
-      aria-label={ surah.transliterations[ 0 ].text }
-      onClick={ readSurah } key={ surah.id }
-    >
-      <HomePageSurahGridInnerContainer>
-        <HomePageSurahGridTitleContainer>
-          <HomePageSurahGridTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } style={ { visibility: isSurahNamesFontLoaded ? "visible" : "hidden" } } />
-          <HomePageSurahGridTranslatedTextContainer>
-            <HomePageSurahTranslatedText>{ surah.translations[ 0 ].text }</HomePageSurahTranslatedText>
-          </HomePageSurahGridTranslatedTextContainer>
-        </HomePageSurahGridTitleContainer>
-        <HomePageSurahGridDetailsContainer>
-          <HomePageSurahTransliteratedText>{ surah.number } &#8226; { surah.transliterations[ 0 ].text }</HomePageSurahTransliteratedText>
-          <HomePageSurahDetailsText>{ surah.numberOfAyahs } verses &#8226; { getRevelationTypeText( surah.revelation.place ) }</HomePageSurahDetailsText>
-        </HomePageSurahGridDetailsContainer>
-        <HomePageSurahGridFooterContainer>
-          <IconButton className={ baseClasses.iconButton } onClick={ toggleBookmarkSurah }>
-            {
-              myBookmarks.includes( surah.id )
-                ? (
-                  <BookmarkRemoveIcon className={ baseClasses.svgIconActive } />
-                ) : (
-                  <BookmarkAddIcon className={ baseClasses.svgIcon } />
-                )
-            }
-          </IconButton>
-          <HomePageSurahGridReadSurahButton>Read</HomePageSurahGridReadSurahButton>
-        </HomePageSurahGridFooterContainer>
-      </HomePageSurahGridInnerContainer>
-    </HomePageSurahGridContainer>
+    <HomePageSurahsGridContainer>
+      {
+        surahs.map( ( surah ) => (
+          <HomePageSurahGridContainer
+            aria-label={ surah.transliterations[ 0 ].text }
+            onClick={ () => readSurah( surah ) } key={ surah.id }
+          >
+            <HomePageSurahGridInnerContainer>
+              <HomePageSurahGridTitleContainer>
+                <HomePageSurahGridTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } style={ { visibility: isSurahNamesFontLoaded ? "visible" : "hidden" } } />
+                <HomePageSurahGridTranslatedTextContainer>
+                  <HomePageSurahTranslatedText>{ surah.translations[ 0 ].text }</HomePageSurahTranslatedText>
+                </HomePageSurahGridTranslatedTextContainer>
+              </HomePageSurahGridTitleContainer>
+              <HomePageSurahGridDetailsContainer>
+                <HomePageSurahTransliteratedText>{ surah.number } &#8226; { surah.transliterations[ 0 ].text }</HomePageSurahTransliteratedText>
+                <HomePageSurahDetailsText>{ surah.numberOfAyahs } verses &#8226; { getRevelationTypeText( surah.revelation.place ) }</HomePageSurahDetailsText>
+              </HomePageSurahGridDetailsContainer>
+              <HomePageSurahGridFooterContainer>
+                <IconButton className={ baseClasses.iconButton } onClick={ ( event ) => toggleBookmarkSurah( event, surah ) }>
+                  {
+                    myBookmarks.includes( surah.id )
+                      ? (
+                        <BookmarkRemoveIcon className={ baseClasses.svgIconActive } />
+                      ) : (
+                        <BookmarkAddIcon className={ baseClasses.svgIcon } />
+                      )
+                  }
+                </IconButton>
+                <HomePageSurahGridReadSurahButton>Read</HomePageSurahGridReadSurahButton>
+              </HomePageSurahGridFooterContainer>
+            </HomePageSurahGridInnerContainer>
+          </HomePageSurahGridContainer>
+        ) )
+      }
+    </HomePageSurahsGridContainer>
   )
 }
 
-QSurahGridFunction.propTypes = {
-  surah: SurahPropType,
+SurahGridFunction.propTypes = {
+  surahs: PropTypes.arrayOf( SurahPropType ).isRequired,
 }
 
-export const QSurahGrid = memo( QSurahGridFunction )
+export const SurahGrid = memo( SurahGridFunction )

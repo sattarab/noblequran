@@ -10,7 +10,7 @@ import { useHistory } from "react-router-dom"
 
 import { ClearIcon, KeyboardArrowDownIcon, RemoveIcon } from "../../../components/Icon"
 import { BLUE_COLOR, BORDER_COLOR, DARKER_TEXT_COLOR, DEFAULT_TEXT_COLOR, HEADER_HEIGHT, RIGHT_DRAWER_WIDTH } from "../../../components/Styles"
-import { setObjectInLocalStorage } from "../../../helpers/utility"
+import { setItemInStorage } from "../../../helpers/utility"
 import { QButton } from "./Button"
 import { useQuranState } from "./QuranContext"
 
@@ -143,6 +143,7 @@ const useStyles = makeStyles( () =>
     drawerPaper: {
       background: "#ffffff",
       boxShadow: "0px 1px 2px 0px rgb( 60 64 67 / 30% ), 0px 2px 6px 2px rgb( 60 64 67 / 15% )",
+      paddingBottom: 64,
       width: RIGHT_DRAWER_WIDTH,
     },
   } ),
@@ -174,7 +175,7 @@ export const RightDrawer: React.FunctionComponent = () => {
       delete updatedSelectedAyahs[ surahId ]
     }
     setSelectedAyahs( updatedSelectedAyahs )
-    setObjectInLocalStorage( "selectedAyahs", updatedSelectedAyahs )
+    setItemInStorage( "selectedAyahs", updatedSelectedAyahs )
   }, [ selectedAyahs, setSelectedAyahs ] )
 
   const removeAyah = useCallback( ( surahId: string, ayahNumberInSurah: string ) => {
@@ -190,7 +191,7 @@ export const RightDrawer: React.FunctionComponent = () => {
 
     updatedSelectedAyahs[ surahId ].splice( index, 1 )
     setSelectedAyahs( updatedSelectedAyahs )
-    setObjectInLocalStorage( "selectedAyahs", updatedSelectedAyahs )
+    setItemInStorage( "selectedAyahs", updatedSelectedAyahs )
   }, [ selectedAyahs, setSelectedAyahs ] )
 
   return (

@@ -21,3 +21,4 @@ export const QURAN_KARIM_FONT_FAMILY = "QuranKarim"
 
 // Height Constants
 export const HEADER_HEIGHT = "63px"
+export const MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER = 1350

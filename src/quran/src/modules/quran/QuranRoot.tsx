@@ -13,7 +13,7 @@ import { RightDrawer } from "./components/RightDrawer"
 
 // lazy load components
 const AboutPage = lazy( () => import( "./pages/AboutPage/AboutPage" ).then( ( module ) => ( { default: module.AboutPage } ) ) )
-const HomePage = lazy( () => import( "./pages/HomePage/HomePage" ).then( ( module ) => ( { default: module.HomePage } ) ) )
+const HomePageRoot = lazy( () => import( "./pages/HomePage/HomePage" ).then( ( module ) => ( { default: module.HomePageRoot } ) ) )
 const SurahPage = lazy( () => import( "./pages/SurahPage/SurahPage" ).then( ( module ) => ( { default: module.SurahPage } ) ) )
 
 const QuranContainerWrapper = styled.div`
@@ -66,7 +66,7 @@ export const QuranContainer: React.FunctionComponent = () => {
       <main className={ clsx( classes.content, { [ classes.contentShift ]: isRightDrawerOpen && ! isMobileDevice } ) }>
         <Suspense fallback={ <QuranLoading /> }>
           <Switch>
-            <Route exact path="/" component={ HomePage } />
+            <Route exact path="/" component={ HomePageRoot } />
             <Route path="/about" component={ AboutPage } />
             <Route path="/:id" component={ SurahPage } />
           </Switch>
