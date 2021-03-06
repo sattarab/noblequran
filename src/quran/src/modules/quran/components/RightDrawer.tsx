@@ -42,10 +42,10 @@ const RightDrawerHeaderContainer = styled.div`
   padding: 0 15px;
 `
 
-const RightDrawerHeaderTitle = styled.div`
+const RightDrawerHeaderTitle = styled.h1`
   color: ${ DARKER_TEXT_COLOR };
   flex: 1;
-  font-weight: 700;
+  font: 500 16px/24px "HarmoniaSansPro";
   letter-spacing: 0.1px;
 `
 
@@ -70,9 +70,9 @@ const RightDrawerPlaceholderContainer = styled.div`
   padding: 0 15px;
 `
 
-const RightDrawerPlaceholderText = styled.div`
+const RightDrawerPlaceholderText = styled.p`
   color: ${ DARKER_TEXT_COLOR };
-  font-weight: 500;
+  font: 400 14px/20px "HarmoniaSansPro";
   text-align: center;
   width: 100%;
 `

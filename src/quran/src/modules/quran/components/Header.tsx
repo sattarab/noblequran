@@ -6,7 +6,7 @@ import clsx from "clsx"
 import React, { memo, useCallback, useState } from "react"
 import { Link, useHistory, useLocation } from "react-router-dom"
 
-import { MenuIcon } from "../../../components/Icon"
+import { MenuIcon, QuranIcon } from "../../../components/Icon"
 import { BLUE_COLOR, BLUE_COLOR_WITH_OPACITY, BORDER_COLOR, DARK_BLUE_COLOR, DEFAULT_TEXT_COLOR, HEADER_HEIGHT, WHITE_SMOKE_COLOR } from "../../../components/Styles"
 import { LARGE_SCREEN_MEDIA_QUERY } from "../../../helpers/responsive"
 import { useQuranState } from "./QuranContext"
@@ -151,6 +151,10 @@ const MenuTitleContainer = styled.div`
   padding-left: 24px;
 `
 
+const StyledQuranIcon = styled( QuranIcon )`
+  margin-right: 5px;
+`
+
 const QHeaderFunction: React.FunctionComponent = () => {
   const history = useHistory()
   const location = useLocation()
@@ -172,6 +176,7 @@ const QHeaderFunction: React.FunctionComponent = () => {
               <StyledMenuIcon onClick={ () => toggleLeftMenu( ! isLeftDrawerOpen ) } />
             )
           }
+          <StyledQuranIcon />
           <HeaderTitle onClick={ () => history.push( "/" ) }>Quran</HeaderTitle>
         </HeaderTitleContainer>
         {
@@ -193,6 +198,7 @@ const QHeaderFunction: React.FunctionComponent = () => {
       <Drawer onClose={ () => toggleLeftMenu( false ) } open={ isLeftDrawerOpen } >
         <MenuContainer>
           <MenuTitleContainer>
+            <StyledQuranIcon />
             <HeaderTitle>Quran</HeaderTitle>
           </MenuTitleContainer>
           <MenuNavigationTabContainer>

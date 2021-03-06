@@ -192,15 +192,15 @@ const SurahPageMainContainerAyahTranslationContainer = styled.div`
   }
 `
 
-const SurahPageMainContainerAyahTranslatedText = styled.div`
+const SurahPageMainContainerAyahTranslatedText = styled.p`
   line-height: 1.5;
+  margin: 0;
 `
 
-const SurahPageMainContainerAyahTranslatorName = styled.div`
+const SurahPageMainContainerAyahTranslatorName = styled.h3`
   color: ${ DARK_TEXT_COLOR };
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 5px;
+  font: 500 14px/20px "HarmoniaSansPro";
+  margin: 0 0 5px;
 `
 
 const SurahPageMainContainerAyahWord = styled.span`
@@ -279,7 +279,7 @@ const SurahPageMainContainerSettingsContainer = styled.div`
   align-items: center;
   display: flex;
   margin-bottom: 10px;
-  margin-top: 40px;
+  margin-top: 25px;
 `
 
 const SurahPageMainContainerSettingsButton = styled.button`
@@ -324,23 +324,23 @@ const SurahPageMainContainerTitle = styled.div`
   font-family: "QuranKarim";
   font-size: 200px;
   margin-top: -80px;
-  margin-bottom: -60px;
+  margin-bottom: -80px;
 
   &.fixed {
     font-size: 140px;
     margin-top: -50px;
-    margin-bottom: -30px;
+    margin-bottom: -50px;
   }
 `
 
-const SurahPageMainContainerTranslatedTitle = styled.div`
-  font-size: 15px;
-  margin-top: 10px;
+const SurahPageMainContainerTranslatedTitle = styled.h2`
+  font: 400 14px/20px "HarmoniaSansPro";
+  margin: 0 0 5px;
 `
 
-const SurahPageMainContainerTransliteratedTitle = styled.div`
-  font-size: 16px;
-  font-weight: 500;
+const SurahPageMainContainerTransliteratedTitle = styled.h1`
+  font: 500 16px/24px "HarmoniaSansPro";
+  margin: 15px 0 5px;
 `
 
 const SurahPageSettingsButtonMenu = styled.div`

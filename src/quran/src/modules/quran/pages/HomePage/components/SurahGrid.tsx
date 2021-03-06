@@ -111,15 +111,15 @@ const HomePageSurahDetailsText = styled.div`
   margin-top: 5px;
 `
 
-const HomePageSurahTranslatedText = styled.div`
+const HomePageSurahTranslatedText = styled.h2`
   color: ${ DEFAULT_TEXT_COLOR };
-  font-size: 14px;
-  font-weight: 500;
+  font: 500 14px/24px "HarmoniaSansPro";
+  margin: 0;
 `
 
-const HomePageSurahTransliteratedText = styled.div`
-  font-size: 15px;
-  font-weight: 700;
+const HomePageSurahTransliteratedText = styled.h1`
+  font: 500 16px/20px "HarmoniaSansPro";
+  margin: 0;
 `
 
 interface QSurahGridPropTypes {

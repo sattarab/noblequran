@@ -85,6 +85,7 @@ const SearchBarFunction: React.FunctionComponent = () => {
   const [ popoverMap, setPopoverMap ] = useState<{ [ key: string ]: Element | null }>( {} )
 
   useEffectOnce( () => {
+    window.scrollTo( 0, 0 )
     window.addEventListener( "scroll", onPageScroll )
 
     return () => {
