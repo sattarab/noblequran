@@ -3,6 +3,7 @@ import Button from "@material-ui/core/Button"
 import clsx from "clsx"
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react"
 import { Helmet } from "react-helmet"
+import { useHistory } from "react-router"
 
 import {
   GridIcon,
@@ -13,7 +14,7 @@ import {
   DARKER_TEXT_COLOR,
 } from "../../../../components/Styles"
 import { LARGE_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
-import { escapeRegex } from "../../../../helpers/utility"
+import { escapeRegex, setItemInStorage } from "../../../../helpers/utility"
 import type { Surah } from "../../../../types/surah"
 import { useQuranState } from "../../components/QuranContext"
 import { AL_QURAN } from "../../constants/common"
@@ -244,29 +245,63 @@ interface HomePageContextType {
   displayMyBookmarks: boolean
   searchText: string
 
+  getRevelationTypeText( type: string ): string
+  readSurah( surahId: string ): void
   resetFilters(): void
   setDisplayMyBookmarks( displayMyBookmarks: boolean ): void
   setSearchText( searchText: string ): void
+  toggleBookmarkSurah( event: React.MouseEvent<HTMLButtonElement, MouseEvent>, surahId: string ): void
 }
 
 export const HomePageContext = createContext<HomePageContextType | null>( null )
 
 export const HomePageContextProvider: React.FunctionComponent<React.PropsWithChildren<Record<string, JSX.Element>>> = ( props ) => {
+  const history = useHistory()
+  const { myBookmarks, setMyBookmarks } = useQuranState()
   const [ displayMyBookmarks, setDisplayMyBookmarks ] = useState<boolean>( false )
   const [ searchText, setSearchText ] = useState<string>( "" )
+
+  const getRevelationTypeText = useCallback( ( type: string ) => {
+    return type.charAt( 0 ).toUpperCase() + type.slice( 1 )
+  }, [] )
+
+  const readSurah = useCallback( ( surahId: string ) => {
+    history.push( `/${ surahId }` )
+    window.scroll( 0, 0 )
+  }, [ history ] )
 
   const resetFilters = useCallback( () => {
     setDisplayMyBookmarks( false )
     setSearchText( "" )
   }, [] )
 
+  const toggleBookmarkSurah = useCallback( ( event: React.MouseEvent<HTMLButtonElement, MouseEvent>, surahId: string ) => {
+    event.preventDefault()
+    event.stopPropagation()
+
+    const updatedMyBookmarks = [ ...myBookmarks ]
+    const index = updatedMyBookmarks.indexOf( surahId )
+
+    if( index !== -1 ) {
+      updatedMyBookmarks.splice( index, 1 )
+    } else {
+      updatedMyBookmarks.push( surahId )
+    }
+
+    setItemInStorage( "surahBookmarks", updatedMyBookmarks )
+    setMyBookmarks( updatedMyBookmarks )
+  }, [ myBookmarks, setMyBookmarks ] )
+
   const contextValue: HomePageContextType = {
     displayMyBookmarks,
     searchText,
 
+    getRevelationTypeText,
+    readSurah,
     resetFilters,
     setDisplayMyBookmarks,
-    setSearchText
+    setSearchText,
+    toggleBookmarkSurah,
   }
 
   // eslint-disable-next-line react/prop-types

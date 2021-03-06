@@ -60,7 +60,7 @@ const RightDrawerOptionsContainerHeader = styled.h2`
 `
 
 const RightDrawerOptionsContainerHelpText = styled.p`
-  font-sie
+  font-size: 14px;
 `
 
 const RightDrawerPlaceholderContainer = styled.div`
@@ -143,7 +143,7 @@ const useStyles = makeStyles( () =>
     drawerPaper: {
       background: "#ffffff",
       boxShadow: "0px 1px 2px 0px rgb( 60 64 67 / 30% ), 0px 2px 6px 2px rgb( 60 64 67 / 15% )",
-      paddingBottom: 64,
+      paddingBottom: HEADER_HEIGHT,
       width: RIGHT_DRAWER_WIDTH,
     },
   } ),

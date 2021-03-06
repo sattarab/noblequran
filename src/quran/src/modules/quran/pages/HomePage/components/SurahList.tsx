@@ -1,15 +1,14 @@
 import styled from "@emotion/styled"
 import { IconButton } from "@material-ui/core"
 import PropTypes from "prop-types"
-import React, { memo, useCallback } from "react"
-import { useHistory } from "react-router-dom"
+import React, { memo } from "react"
 
 import { BookmarkAddIcon, BookmarkRemoveIcon } from "../../../../../components/Icon"
 import { BORDER_COLOR, DARK_TEXT_COLOR, DEFAULT_TEXT_COLOR } from "../../../../../components/Styles"
-import { setItemInStorage } from "../../../../../helpers/utility"
 import type { Surah } from "../../../../../types/surah"
 import { useQuranState } from "../../../components/QuranContext"
 import { SurahPropType } from "../../../services/surah"
+import { useHomeState } from "../HomePage"
 
 const HomePageSurahsListContainer = styled.div`
   padding: 15px;
@@ -73,42 +72,14 @@ interface SurahList {
 }
 
 const SurahListFunction: React.FunctionComponent<SurahList> = ( { surahs } ) => {
-  const history = useHistory()
-  const { baseClasses, isSurahNamesFontLoaded, myBookmarks, setMyBookmarks } = useQuranState()
-
-  const getRevelationTypeText = useCallback( ( type: string ) => {
-    return type.charAt( 0 ).toUpperCase() + type.slice( 1 )
-  }, [] )
-
-  const readSurah = useCallback( ( surah: Surah ) => {
-    history.push( `/${ surah.id }` )
-    window.scroll( 0, 0 )
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ history ] )
-
-  const toggleBookmarkSurah = useCallback( ( event: React.MouseEvent<HTMLButtonElement, MouseEvent>, surah: Surah ) => {
-    event.preventDefault()
-    event.stopPropagation()
-
-    const updatedMyBookmarks = [ ...myBookmarks ]
-    const index = updatedMyBookmarks.indexOf( surah.id )
-
-    if( index !== -1 ) {
-      updatedMyBookmarks.splice( index, 1 )
-    } else {
-      updatedMyBookmarks.push( surah.id )
-    }
-
-    setItemInStorage( "surahBookmarks", updatedMyBookmarks )
-    setMyBookmarks( updatedMyBookmarks )
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [] )
+  const { getRevelationTypeText, readSurah, toggleBookmarkSurah } = useHomeState()
+  const { baseClasses, isSurahNamesFontLoaded, myBookmarks } = useQuranState()
 
   return (
     <HomePageSurahsListContainer>
       {
         surahs.map( ( surah ) =>
-          <HomePageSurahListContainer aria-label={ surah.transliterations[ 0 ].text } onClick={ () => readSurah( surah ) } key={ surah.id }>
+          <HomePageSurahListContainer aria-label={ surah.transliterations[ 0 ].text } onClick={ () => readSurah( surah.id ) } key={ surah.id }>
             <HomePageSurahListTitleContainer>
               <HomePageSurahTranslatedText>{ surah.translations[ 0 ].text }</HomePageSurahTranslatedText>
               <HomePageSurahListTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } style={ { visibility: isSurahNamesFontLoaded ? "visible" : "hidden" } } />
@@ -116,7 +87,7 @@ const SurahListFunction: React.FunctionComponent<SurahList> = ( { surahs } ) => 
             <HomePageSurahListDetailsContainer>
               <HomePageSurahTransliteratedText>{ surah.number } &#8226; { surah.transliterations[ 0 ].text }</HomePageSurahTransliteratedText>
               <HomePageSurahListDetailsText>{ surah.numberOfAyahs } verses &#8226; { getRevelationTypeText( surah.revelation.place ) }</HomePageSurahListDetailsText>
-              <IconButton className={ baseClasses.iconButton } onClick={ ( event ) => toggleBookmarkSurah( event, surah ) }>
+              <IconButton className={ baseClasses.iconButton } onClick={ ( event ) => toggleBookmarkSurah( event, surah.id ) }>
                 {
                   myBookmarks.includes( surah.id )
                     ? (
