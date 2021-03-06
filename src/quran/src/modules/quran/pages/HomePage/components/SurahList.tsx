@@ -47,6 +47,11 @@ const HomePageSurahListTitleContainer = styled.div`
   margin-top: 10px;
 `
 
+const HomePageSurahListTextContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
 const HomePageSurahListTitleText = styled.div`
   color: ${ DARK_TEXT_COLOR };
   flex: 1;
@@ -63,7 +68,8 @@ const HomePageSurahTranslatedText = styled.div`
 `
 
 const HomePageSurahTransliteratedText = styled.div`
-  font-size: 15px;
+  flex: 1;
+  font-size: 14px;
   font-weight: 700;
 `
 
@@ -85,8 +91,10 @@ const SurahListFunction: React.FunctionComponent<SurahList> = ( { surahs } ) => 
               <HomePageSurahListTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } style={ { visibility: isSurahNamesFontLoaded ? "visible" : "hidden" } } />
             </HomePageSurahListTitleContainer>
             <HomePageSurahListDetailsContainer>
-              <HomePageSurahTransliteratedText>{ surah.number } &#8226; { surah.transliterations[ 0 ].text }</HomePageSurahTransliteratedText>
-              <HomePageSurahListDetailsText>{ surah.numberOfAyahs } verses &#8226; { getRevelationTypeText( surah.revelation.place ) }</HomePageSurahListDetailsText>
+              <HomePageSurahListTextContainer>
+                <HomePageSurahTransliteratedText> { surah.number } &#8226; { surah.transliterations[ 0 ].text }</HomePageSurahTransliteratedText>
+                <HomePageSurahListDetailsText>{ surah.numberOfAyahs } verses &#8226; { getRevelationTypeText( surah.revelation.place ) }</HomePageSurahListDetailsText>
+              </HomePageSurahListTextContainer>
               <IconButton className={ baseClasses.iconButton } onClick={ ( event ) => toggleBookmarkSurah( event, surah.id ) }>
                 {
                   myBookmarks.includes( surah.id )
