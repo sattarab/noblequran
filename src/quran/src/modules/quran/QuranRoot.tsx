@@ -9,7 +9,7 @@ import { HEADER_HEIGHT, RIGHT_DRAWER_WIDTH } from "../../components/Styles"
 import { QHeader } from "./components/Header"
 import { QLoader } from "./components/Loader"
 import { QuranContextProvider, useQuranState } from "./components/QuranContext"
-import { RightDrawer } from "./components/RightDrawer"
+import { QRightDrawer } from "./components/RightDrawer"
 
 // lazy load components
 const AboutPage = lazy( () => import( "./pages/AboutPage/AboutPage" ).then( ( module ) => ( { default: module.AboutPage } ) ) )
@@ -72,7 +72,7 @@ export const QuranContainer: React.FunctionComponent = () => {
           </Switch>
         </Suspense>
       </main>
-      <RightDrawer />
+      <QRightDrawer />
     </QuranContainerWrapper>
   )
 }

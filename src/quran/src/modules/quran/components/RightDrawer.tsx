@@ -149,7 +149,7 @@ const useStyles = makeStyles( () =>
   } ),
 )
 
-export const RightDrawer: React.FunctionComponent = () => {
+export const QRightDrawer: React.FunctionComponent = () => {
   const classes = useStyles()
   const history = useHistory()
   const { isMobileDevice, isRightDrawerOpen, selectedAyahs, setIsRightDrawerOpen, setSelectedAyahs, surahs } = useQuranState()

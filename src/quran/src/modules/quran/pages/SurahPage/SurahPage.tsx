@@ -36,6 +36,7 @@ import { QPopper } from "../../components/Popper"
 import type { SelectedAyahs } from "../../components/QuranContext"
 import { useQuranState } from "../../components/QuranContext"
 import { QRightDrawerButton } from "../../components/RightDrawerButton"
+import { ScrollUpButton } from "../../components/ScrollUpButton"
 import { AL_QURAN } from "../../constants/common"
 import { getSurahAyahs, getSurahs, getTranslatorsGroupedByLanguage } from "../../services/surah"
 
@@ -959,6 +960,13 @@ export const SurahPage: React.FunctionComponent = () => {
                       </SurahPageMainContainerAyahsContainer>
                     </SurahPageMainContainerBody>
                   </SurahPageMainContainer>
+                  <>
+                    {
+                      isSurahTitleFixed && (
+                        <ScrollUpButton />
+                      )
+                    }
+                  </>
                 </SurahPageContainer>
               )
           )

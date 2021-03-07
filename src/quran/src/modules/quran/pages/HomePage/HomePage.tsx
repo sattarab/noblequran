@@ -1,22 +1,17 @@
 import styled from "@emotion/styled"
 import Button from "@material-ui/core/Button"
 import clsx from "clsx"
-import React, { createContext, useCallback, useContext, useEffect, useState } from "react"
+import React, { createContext, useCallback, useContext, useState } from "react"
 import { Helmet } from "react-helmet"
 import { useHistory } from "react-router"
 
-import {
-  GridIcon,
-  ListIcon,
-} from "../../../../components/Icon"
-import {
-  BLUE_COLOR,
-  DARKER_TEXT_COLOR,
-} from "../../../../components/Styles"
+import { GridIcon, ListIcon } from "../../../../components/Icon"
+import { BLUE_COLOR, DARKER_TEXT_COLOR } from "../../../../components/Styles"
 import { LARGE_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
-import { escapeRegex, setItemInStorage } from "../../../../helpers/utility"
+import { setItemInStorage } from "../../../../helpers/utility"
 import type { Surah } from "../../../../types/surah"
 import { useQuranState } from "../../components/QuranContext"
+import { ScrollUpButton } from "../../components/ScrollUpButton"
 import { AL_QURAN } from "../../constants/common"
 import { getSurahs } from "../../services/surah"
 import { SearchBar } from "./components/SearchBar"
@@ -141,37 +136,9 @@ enum ViewType {
 }
 
 const HomePage: React.FunctionComponent = () => {
-  const { displayMyBookmarks, resetFilters, searchText } = useHomeState()
-  const { baseClasses, myBookmarks } = useQuranState()
+  const { isSearchContainerFixed, resetFilters, surahs } = useHomeState()
+  const { baseClasses } = useQuranState()
   const [ selectViewType, setSelectedViewType ] = useState<ViewType>( ViewType.GRID )
-  const [ surahs, setSurahs ] = useState<Surah[]>( getSurahs() )
-
-  useEffect( () => {
-    if( ! searchText && ! displayMyBookmarks ) {
-      setSurahs( getSurahs() )
-      return
-    }
-
-    const regex = searchText ? new RegExp( escapeRegex( searchText ), "i" ) : null
-    const filteredSurahs: Surah[] = []
-
-    for( const surah of getSurahs() ) {
-      if( regex ) {
-        for( const queryIndex of surah.queryIndexes ) {
-          if( regex.test( queryIndex )
-              && ( ! displayMyBookmarks || myBookmarks.includes( surah.id ) )
-          ) {
-            filteredSurahs.push( surah )
-            break
-          }
-        }
-      } else if( displayMyBookmarks && myBookmarks.includes( surah.id ) ) {
-        filteredSurahs.push( surah )
-      }
-    }
-
-    setSurahs( filteredSurahs )
-  }, [ displayMyBookmarks, myBookmarks, searchText ] )
 
   return (
     <HomePageContainer>
@@ -184,18 +151,16 @@ const HomePage: React.FunctionComponent = () => {
       <HomePageMainContainer>
         <HomePageContentContainer>
           <HomePageContentOptionsContainer>
-            <div>
-              <HomePageContentViewOptionsContainer>
-                <HomePageContentViewOptionContainer onClick={ () => setSelectedViewType( ViewType.GRID ) } className={ selectViewType === ViewType.GRID ? "active" : "" }>
-                  <GridIcon className={ clsx( baseClasses.svgIcon, "view-option-icon" ) } />
-                  <HomePageContentViewOptionContainerLabel className="view-option-label">Grid</HomePageContentViewOptionContainerLabel>
-                </HomePageContentViewOptionContainer>
-                <HomePageContentViewOptionContainer onClick={ () => setSelectedViewType( ViewType.LIST ) } className={ selectViewType === ViewType.LIST ? "active" : "" }>
-                  <ListIcon className={ clsx( baseClasses.svgIcon, "view-option-icon" ) } />
-                  <HomePageContentViewOptionContainerLabel className="view-option-label">List</HomePageContentViewOptionContainerLabel>
-                </HomePageContentViewOptionContainer>
-              </HomePageContentViewOptionsContainer>
-            </div>
+            <HomePageContentViewOptionsContainer>
+              <HomePageContentViewOptionContainer onClick={ () => setSelectedViewType( ViewType.GRID ) } className={ selectViewType === ViewType.GRID ? "active" : "" }>
+                <GridIcon className={ clsx( baseClasses.svgIcon, "view-option-icon" ) } />
+                <HomePageContentViewOptionContainerLabel className="view-option-label">Grid</HomePageContentViewOptionContainerLabel>
+              </HomePageContentViewOptionContainer>
+              <HomePageContentViewOptionContainer onClick={ () => setSelectedViewType( ViewType.LIST ) } className={ selectViewType === ViewType.LIST ? "active" : "" }>
+                <ListIcon className={ clsx( baseClasses.svgIcon, "view-option-icon" ) } />
+                <HomePageContentViewOptionContainerLabel className="view-option-label">List</HomePageContentViewOptionContainerLabel>
+              </HomePageContentViewOptionContainer>
+            </HomePageContentViewOptionsContainer>
             <HomePageDisplayNumberContainer>
               { surahs.length } of 114 surahs
             </HomePageDisplayNumberContainer>
@@ -229,6 +194,13 @@ const HomePage: React.FunctionComponent = () => {
           </HomePageSurahsContentContainer>
         </HomePageContentContainer>
       </HomePageMainContainer>
+      <>
+        {
+          isSearchContainerFixed && (
+            <ScrollUpButton />
+          )
+        }
+      </>
     </HomePageContainer>
   )
 }
@@ -243,13 +215,17 @@ export const HomePageRoot: React.FunctionComponent = () => {
 
 interface HomePageContextType {
   displayMyBookmarks: boolean
+  isSearchContainerFixed: boolean
   searchText: string
+  surahs: Surah[]
 
   getRevelationTypeText( type: string ): string
   readSurah( surahId: string ): void
   resetFilters(): void
   setDisplayMyBookmarks( displayMyBookmarks: boolean ): void
+  setIsSearchContainerFixed( isSearchContainerFixed: boolean ): void
   setSearchText( searchText: string ): void
+  setSurahs( surahs: Surah[] ): void
   toggleBookmarkSurah( event: React.MouseEvent<HTMLButtonElement, MouseEvent>, surahId: string ): void
 }
 
@@ -259,21 +235,24 @@ export const HomePageContextProvider: React.FunctionComponent<React.PropsWithChi
   const history = useHistory()
   const { myBookmarks, setMyBookmarks } = useQuranState()
   const [ displayMyBookmarks, setDisplayMyBookmarks ] = useState<boolean>( false )
+  const [ isSearchContainerFixed, setIsSearchContainerFixed ] = useState<boolean>( false )
   const [ searchText, setSearchText ] = useState<string>( "" )
+  const [ surahs, setSurahs ] = useState<Surah[]>( getSurahs() )
 
-  const getRevelationTypeText = useCallback( ( type: string ) => {
+  const getRevelationTypeText = ( type: string ) => {
     return type.charAt( 0 ).toUpperCase() + type.slice( 1 )
-  }, [] )
+  }
 
-  const readSurah = useCallback( ( surahId: string ) => {
+  const readSurah = ( surahId: string ) => {
     history.push( `/${ surahId }` )
     window.scroll( 0, 0 )
-  }, [ history ] )
+  }
 
-  const resetFilters = useCallback( () => {
+  const resetFilters = () => {
     setDisplayMyBookmarks( false )
     setSearchText( "" )
-  }, [] )
+    setSurahs( getSurahs() )
+  }
 
   const toggleBookmarkSurah = useCallback( ( event: React.MouseEvent<HTMLButtonElement, MouseEvent>, surahId: string ) => {
     event.preventDefault()
@@ -294,13 +273,17 @@ export const HomePageContextProvider: React.FunctionComponent<React.PropsWithChi
 
   const contextValue: HomePageContextType = {
     displayMyBookmarks,
+    isSearchContainerFixed,
     searchText,
+    surahs,
 
     getRevelationTypeText,
     readSurah,
     resetFilters,
     setDisplayMyBookmarks,
+    setIsSearchContainerFixed,
     setSearchText,
+    setSurahs,
     toggleBookmarkSurah,
   }
 

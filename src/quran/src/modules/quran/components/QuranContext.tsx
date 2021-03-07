@@ -4,7 +4,13 @@ import FontFaceObserver from "fontfaceobserver"
 import React, { createContext, useContext, useState } from "react"
 import { useEffectOnce, useMedia } from "react-use"
 
-import { BLUE_COLOR, BORDER_COLOR, DEFAULT_TEXT_COLOR, RIGHT_DRAWER_WIDTH } from "../../../components/Styles"
+import {
+  BLUE_COLOR,
+  BORDER_COLOR,
+  DEFAULT_TEXT_COLOR,
+  RIGHT_DRAWER_WIDTH,
+  WHITE_SMOKE_COLOR
+} from "../../../components/Styles"
 import { isGreaterThanMediumScreen, MOBILE_SCREEN_MEDIA_QUERY } from "../../../helpers/responsive"
 import { getItemFromStorage } from "../../../helpers/utility"
 import type { Surah } from "../../../types/surah"
@@ -19,7 +25,7 @@ export interface SelectedAyahs {
 }
 
 interface QuranContextType {
-  baseClasses: Record<"header" | "headerShift" | "iconButton" | "svgIcon" | "svgIconActive" | "svgIconDisabled", string>
+  baseClasses: Record<"fabButton" | "header" | "headerShift" | "iconButton" | "svgIcon" | "svgIconActive" | "svgIconDisabled", string>
   displaySurahVersesMap: DisplaySurahVersesMap
   isMobileDevice: boolean
   isRightDrawerOpen: boolean
@@ -41,6 +47,10 @@ export const QuranContext = createContext<QuranContextType | null>( null )
 
 const useStyles = makeStyles( ( theme: Theme ) =>
   createStyles( {
+    fabButton: {
+      background: WHITE_SMOKE_COLOR,
+      color: DEFAULT_TEXT_COLOR,
+    },
     header: {
       transition: theme.transitions.create( [ "margin", "width" ], {
         easing: theme.transitions.easing.sharp,
@@ -92,14 +102,18 @@ export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildr
     surahNamesFontObserver.load( null, 15000 ).then( () => {
       setIsSurahNamesFontLoaded( true )
     } )
+  } )
 
+  useEffectOnce( () => {
     getItemFromStorage<string[]>( "surahBookmarks" )
       .then( ( bookmarks ) => {
         if( bookmarks ) {
           setMyBookmarks( bookmarks )
         }
       } )
+  } )
 
+  useEffectOnce( () => {
     getItemFromStorage<{ [ id: string ]: SelectedAyahModel }>( "selectedAyahs" )
       .then( ( ayahs ) => {
         if( ayahs ) {

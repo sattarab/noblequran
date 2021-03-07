@@ -6,10 +6,13 @@ import { useEffectOnce } from "react-use"
 
 import { BookmarksIcon, ClearIcon, RefreshIcon, SearchIcon } from "../../../../../components/Icon"
 import { BLUE_COLOR, BORDER_COLOR, DEFAULT_TEXT_COLOR, HEADER_HEIGHT, MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER } from "../../../../../components/Styles"
+import { escapeRegex } from "../../../../../helpers/utility"
+import type { Surah } from "../../../../../types/surah"
 import { QButton } from "../../../components/Button"
 import { QPopper } from "../../../components/Popper"
 import { useQuranState } from "../../../components/QuranContext"
 import { QRightDrawerButton } from "../../../components/RightDrawerButton"
+import { getSurahs } from "../../../services/surah"
 import { useHomeState } from "../HomePage"
 
 const HomePageMyBookmarksContainer = styled.div`
@@ -79,9 +82,17 @@ const HomePageSearchInputContainer = styled.div`
 const SearchBarFunction: React.FunctionComponent = () => {
   const MAX_SCROLL_OFFSET = 130
 
-  const { displayMyBookmarks, resetFilters, searchText, setDisplayMyBookmarks, setSearchText } = useHomeState()
-  const { baseClasses, isMobileDevice, isRightDrawerOpen } = useQuranState()
-  const [ isSearchContainerFixed, setIsSearchContainerFixed ] = useState<boolean>( false )
+  const {
+    displayMyBookmarks,
+    isSearchContainerFixed,
+    resetFilters,
+    searchText,
+    setDisplayMyBookmarks,
+    setIsSearchContainerFixed,
+    setSearchText,
+    setSurahs,
+  } = useHomeState()
+  const { baseClasses, isMobileDevice, isRightDrawerOpen, myBookmarks } = useQuranState()
   const [ popoverMap, setPopoverMap ] = useState<{ [ key: string ]: Element | null }>( {} )
 
   useEffectOnce( () => {
@@ -93,9 +104,37 @@ const SearchBarFunction: React.FunctionComponent = () => {
     }
   } )
 
-  const clearSearch = useCallback( () => {
+  const handleSearch = ( text: string, displayBookmarks: boolean ) => {
+    if( ! text && ! displayBookmarks ) {
+      setSurahs( getSurahs() )
+      return
+    }
+
+    const regex = text ? new RegExp( escapeRegex( text ), "i" ) : null
+    const filteredSurahs: Surah[] = []
+
+    for( const surah of getSurahs() ) {
+      if( regex ) {
+        for( const queryIndex of surah.queryIndexes ) {
+          if( regex.test( queryIndex )
+              && ( ! displayBookmarks || myBookmarks.includes( surah.id ) )
+          ) {
+            filteredSurahs.push( surah )
+            break
+          }
+        }
+      } else if( displayBookmarks && myBookmarks.includes( surah.id ) ) {
+        filteredSurahs.push( surah )
+      }
+    }
+
+    setSurahs( filteredSurahs )
+  }
+
+  const clearSearch = () => {
     setSearchText( "" )
-  }, [ setSearchText ] )
+    handleSearch( "", displayMyBookmarks )
+  }
 
   const closePopover = ( key: string ) => {
     setPopoverMap( { ...popoverMap, ...{ [ key ]: null } } )
@@ -107,19 +146,22 @@ const SearchBarFunction: React.FunctionComponent = () => {
     } else {
       setIsSearchContainerFixed( false )
     }
-  }, [] )
+  }, [ setIsSearchContainerFixed ] )
 
-  const onSearch = useCallback( ( event: React.ChangeEvent<HTMLInputElement> ) => {
+  const onSearch = ( event: React.ChangeEvent<HTMLInputElement> ) => {
     setSearchText( event.target.value )
-  }, [ setSearchText ] )
+    handleSearch( event.target.value, displayMyBookmarks )
+  }
 
   const openPopover = ( key: string, event: React.MouseEvent<HTMLSpanElement> ) => {
     setPopoverMap( { ...popoverMap, ...{ [ key ]: event.currentTarget } } )
   }
 
-  const toggleDisplayMyBookmarks = useCallback( () => {
+  const toggleDisplayMyBookmarks = () => {
+    const updatedMyBookmarks = ! displayMyBookmarks
     setDisplayMyBookmarks( ! displayMyBookmarks )
-  }, [ displayMyBookmarks, setDisplayMyBookmarks ] )
+    handleSearch( searchText, updatedMyBookmarks )
+  }
 
   return (
     <HomePageSearchContainer className={ clsx( baseClasses.header, { "fixed": isSearchContainerFixed, [ baseClasses.headerShift ]: ! isMobileDevice && isSearchContainerFixed && isRightDrawerOpen } ) }>
