@@ -1,11 +1,13 @@
 import styled from "@emotion/styled"
 import { IconButton } from "@material-ui/core"
-import React, { memo } from "react"
+import React, { memo, useCallback } from "react"
+import { useHistory } from "react-router-dom"
 
 import { BookmarkAddIcon, BookmarkRemoveIcon } from "../../../../../components/Icon"
 import { BORDER_COLOR, DARK_TEXT_COLOR, DEFAULT_TEXT_COLOR } from "../../../../../components/Styles"
+import { useAppDispatch, useAppSelector } from "../../../../../hooks"
 import { useQuranState } from "../../../components/QuranContext"
-import { useHomeState } from "../HomePage"
+import { toggleBookmark } from "../state/homeSlice"
 
 const HomePageSurahsListContainer = styled.div`
   padding: 15px;
@@ -72,8 +74,26 @@ const HomePageSurahTransliteratedText = styled.h1`
 `
 
 const SurahListFunction: React.FunctionComponent = () => {
-  const { getRevelationTypeText, readSurah, toggleBookmarkSurah, surahs } = useHomeState()
-  const { baseClasses, isSurahNamesFontLoaded, myBookmarks } = useQuranState()
+  const bookmarks = useAppSelector( ( state ) => state.homeReducer.bookmarks )
+  const dispatch = useAppDispatch()
+  const history = useHistory()
+  const { baseClasses, isSurahNamesFontLoaded } = useQuranState()
+  const surahs = useAppSelector( ( state ) => state.homeReducer.surahs )
+
+  const getRevelationTypeText = useCallback( ( type: string ) => {
+    return type.charAt( 0 ).toUpperCase() + type.slice( 1 )
+  }, [] )
+
+  const readSurah = useCallback( ( surahId: string ) => {
+    history.push( `/${ surahId }` )
+    window.scroll( 0, 0 )
+  }, [ history ] )
+
+  const toggleBookmarkSurah = useCallback( ( event: React.MouseEvent<HTMLButtonElement, MouseEvent>, surahId: string ) => {
+    event.preventDefault()
+    event.stopPropagation()
+    dispatch( toggleBookmark( surahId ) )
+  }, [ dispatch ] )
 
   return (
     <HomePageSurahsListContainer>
@@ -91,7 +111,7 @@ const SurahListFunction: React.FunctionComponent = () => {
               </HomePageSurahListTextContainer>
               <IconButton className={ baseClasses.iconButton } onClick={ ( event ) => toggleBookmarkSurah( event, surah.id ) }>
                 {
-                  myBookmarks.includes( surah.id )
+                  bookmarks.includes( surah.id )
                     ? (
                       <BookmarkRemoveIcon className={ baseClasses.svgIconActive } />
                     ) : (

@@ -10,7 +10,8 @@ import { useHistory } from "react-router-dom"
 
 import { ClearIcon, KeyboardArrowDownIcon, RemoveIcon } from "../../../components/Icon"
 import { BLUE_COLOR, BORDER_COLOR, DARKER_TEXT_COLOR, DEFAULT_TEXT_COLOR, HEADER_HEIGHT, RIGHT_DRAWER_WIDTH } from "../../../components/Styles"
-import { setItemInStorage } from "../../../helpers/utility"
+import { useAppDispatch, useAppSelector } from "../../../hooks"
+import { removeAyah, removeAyahsForSurah } from "../state/quranSlice"
 import { QButton } from "./Button"
 import { useQuranState } from "./QuranContext"
 
@@ -153,8 +154,10 @@ const useStyles = makeStyles( () =>
 
 export const QRightDrawer: React.FunctionComponent = () => {
   const classes = useStyles()
+  const dispatch = useAppDispatch()
   const history = useHistory()
-  const { isMobileDevice, isRightDrawerOpen, selectedAyahs, setIsRightDrawerOpen, setSelectedAyahs, surahs } = useQuranState()
+  const selectedAyahs = useAppSelector( ( state ) => state.quranReducer.selectedAyahs )
+  const { isMobileDevice, isRightDrawerOpen, setIsRightDrawerOpen, surahs } = useQuranState()
 
   const closeRightDrawer = useCallback( () => {
     setIsRightDrawerOpen( false )
@@ -169,32 +172,12 @@ export const QRightDrawer: React.FunctionComponent = () => {
   }, [ history, isMobileDevice, setIsRightDrawerOpen ] )
 
   const removeAll = useCallback( ( surahId: string ) => {
-    const updatedSelectedAyahs = {
-      ...selectedAyahs,
-    }
+    dispatch( removeAyahsForSurah( surahId ) )
+  }, [ dispatch ] )
 
-    if( updatedSelectedAyahs[ surahId ] ) {
-      delete updatedSelectedAyahs[ surahId ]
-    }
-    setSelectedAyahs( updatedSelectedAyahs )
-    setItemInStorage( "selectedAyahs", updatedSelectedAyahs )
-  }, [ selectedAyahs, setSelectedAyahs ] )
-
-  const removeAyah = useCallback( ( surahId: string, ayahNumberInSurah: string ) => {
-    const updatedSelectedAyahs = {
-      ...selectedAyahs,
-    }
-
-    const index = updatedSelectedAyahs[ surahId ] != null ? updatedSelectedAyahs[ surahId ].findIndex( ( number ) => number === ayahNumberInSurah ) : -1
-
-    if( index === -1 ) {
-      return
-    }
-
-    updatedSelectedAyahs[ surahId ].splice( index, 1 )
-    setSelectedAyahs( updatedSelectedAyahs )
-    setItemInStorage( "selectedAyahs", updatedSelectedAyahs )
-  }, [ selectedAyahs, setSelectedAyahs ] )
+  const remove = useCallback( ( surahId: string, ayahNumberInSurah: string ) => {
+    dispatch( removeAyah( { ayahId: ayahNumberInSurah, surahId } ) )
+  }, [ dispatch ] )
 
   return (
     <Drawer
@@ -229,7 +212,7 @@ export const QRightDrawer: React.FunctionComponent = () => {
                               <RightDrawerSurahVerseContainer key={ `${ surahId }:${ ayahNumberInSurah }` }>
                                 <RightDrawerSurahVerseText>Verse { ayahNumberInSurah }</RightDrawerSurahVerseText>
                                 <IconButton>
-                                  <RemoveIcon className={ classes.clickableSvgIcon } onClick={ () => removeAyah( surahId, ayahNumberInSurah ) } />
+                                  <RemoveIcon className={ classes.clickableSvgIcon } onClick={ () => remove( surahId, ayahNumberInSurah ) } />
                                 </IconButton>
                               </RightDrawerSurahVerseContainer>
                             ) )

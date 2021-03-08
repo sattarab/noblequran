@@ -6,14 +6,12 @@ import { useEffectOnce } from "react-use"
 
 import { BookmarksIcon, ClearIcon, RefreshIcon, SearchIcon } from "../../../../../components/Icon"
 import { BLUE_COLOR, BORDER_COLOR, DEFAULT_TEXT_COLOR, HEADER_HEIGHT, MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER } from "../../../../../components/Styles"
-import { escapeRegex } from "../../../../../helpers/utility"
-import type { Surah } from "../../../../../types/surah"
+import { useAppDispatch, useAppSelector } from "../../../../../hooks"
 import { QButton } from "../../../components/Button"
 import { QPopper } from "../../../components/Popper"
 import { useQuranState } from "../../../components/QuranContext"
 import { QRightDrawerButton } from "../../../components/RightDrawerButton"
-import { getSurahs } from "../../../services/surah"
-import { useHomeState } from "../HomePage"
+import { reset, search, setIsHeaderFixed, toggleDisplayBookmarks } from "../state/homeSlice"
 
 const HomePageMyBookmarksContainer = styled.div`
   align-items: center;
@@ -82,18 +80,18 @@ const HomePageSearchInputContainer = styled.div`
 const SearchBarFunction: React.FunctionComponent = () => {
   const MAX_SCROLL_OFFSET = 130
 
-  const {
-    displayMyBookmarks,
-    isSearchContainerFixed,
-    resetFilters,
-    searchText,
-    setDisplayMyBookmarks,
-    setIsSearchContainerFixed,
-    setSearchText,
-    setSurahs,
-  } = useHomeState()
-  const { baseClasses, isMobileDevice, isRightDrawerOpen, myBookmarks } = useQuranState()
+  const displayBookmarks = useAppSelector( ( state ) => state.homeReducer.displayBookmarks )
+  const isHeaderFixed = useAppSelector( ( state ) => state.homeReducer.isHeaderFixed )
+  const searchText = useAppSelector( ( state ) => state.homeReducer.searchText )
+
+  const dispatch = useAppDispatch()
+
+  const { baseClasses, isMobileDevice, isRightDrawerOpen } = useQuranState()
   const [ popoverMap, setPopoverMap ] = useState<{ [ key: string ]: Element | null }>( {} )
+
+  const resetFilters = useCallback( () => {
+    dispatch( reset() )
+  }, [ dispatch ] )
 
   useEffectOnce( () => {
     window.scrollTo( 0, 0 )
@@ -104,37 +102,9 @@ const SearchBarFunction: React.FunctionComponent = () => {
     }
   } )
 
-  const handleSearch = useCallback( ( text: string, displayBookmarks: boolean ) => {
-    if( ! text && ! displayBookmarks ) {
-      setSurahs( getSurahs() )
-      return
-    }
-
-    const regex = text ? new RegExp( escapeRegex( text ), "i" ) : null
-    const filteredSurahs: Surah[] = []
-
-    for( const surah of getSurahs() ) {
-      if( regex ) {
-        for( const queryIndex of surah.queryIndexes ) {
-          if( regex.test( queryIndex )
-              && ( ! displayBookmarks || myBookmarks.includes( surah.id ) )
-          ) {
-            filteredSurahs.push( surah )
-            break
-          }
-        }
-      } else if( displayBookmarks && myBookmarks.includes( surah.id ) ) {
-        filteredSurahs.push( surah )
-      }
-    }
-
-    setSurahs( filteredSurahs )
-  }, [ myBookmarks, setSurahs ] )
-
-  const clearSearch = () => {
-    setSearchText( "" )
-    handleSearch( "", displayMyBookmarks )
-  }
+  const clearSearch = useCallback( () => {
+    dispatch( search( "" ) )
+  }, [ dispatch ] )
 
   const closePopover = ( key: string ) => {
     setPopoverMap( { ...popoverMap, ...{ [ key ]: null } } )
@@ -142,29 +112,26 @@ const SearchBarFunction: React.FunctionComponent = () => {
 
   const onPageScroll = useCallback( () => {
     if( window.pageYOffset > MAX_SCROLL_OFFSET && document.documentElement.scrollHeight > MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER ) {
-      setIsSearchContainerFixed( true )
+      dispatch( setIsHeaderFixed( true ) )
     } else {
-      setIsSearchContainerFixed( false )
+      dispatch( setIsHeaderFixed( false ) )
     }
-  }, [ setIsSearchContainerFixed ] )
+  }, [ dispatch ] )
 
   const onSearch = useCallback( ( event: React.ChangeEvent<HTMLInputElement> ) => {
-    setSearchText( event.target.value )
-    handleSearch( event.target.value, displayMyBookmarks )
-  }, [ displayMyBookmarks, handleSearch, setSearchText ] )
+    dispatch( search( event.target.value ) )
+  }, [ dispatch ] )
 
   const openPopover = useCallback( ( key: string, event: React.MouseEvent<HTMLSpanElement> ) => {
     setPopoverMap( { ...popoverMap, ...{ [ key ]: event.currentTarget } } )
   }, [ popoverMap ] )
 
-  const toggleDisplayMyBookmarks = useCallback( () => {
-    const updatedMyBookmarks = ! displayMyBookmarks
-    setDisplayMyBookmarks( updatedMyBookmarks )
-    handleSearch( searchText, updatedMyBookmarks )
-  }, [ displayMyBookmarks, handleSearch, searchText, setDisplayMyBookmarks ] )
+  const toggledisplayBookmarks = useCallback( () => {
+    dispatch( toggleDisplayBookmarks() )
+  }, [ dispatch ] )
 
   return (
-    <HomePageSearchContainer className={ clsx( baseClasses.header, { "fixed": isSearchContainerFixed, [ baseClasses.headerShift ]: ! isMobileDevice && isSearchContainerFixed && isRightDrawerOpen } ) }>
+    <HomePageSearchContainer className={ clsx( baseClasses.header, { "fixed": isHeaderFixed, [ baseClasses.headerShift ]: ! isMobileDevice && isHeaderFixed && isRightDrawerOpen } ) }>
       <HomePageSearchInputContainer>
         <SearchIcon className={ baseClasses.svgIcon } />
         <HomePageSearchInput autoComplete="false" onChange={ onSearch } placeholder="Search" type="text" value={ searchText } />
@@ -176,28 +143,28 @@ const SearchBarFunction: React.FunctionComponent = () => {
           )
         }
       </HomePageSearchInputContainer>
-      <HomePageMyBookmarksContainer onClick={ toggleDisplayMyBookmarks }>
+      <HomePageMyBookmarksContainer onClick={ toggledisplayBookmarks }>
         {
           isMobileDevice
             ? (
               <IconButton>
-                <BookmarksIcon className={ clsx( baseClasses.svgIcon, { [ baseClasses.svgIconActive ]: displayMyBookmarks } ) } />
+                <BookmarksIcon className={ clsx( baseClasses.svgIcon, { [ baseClasses.svgIconActive ]: displayBookmarks } ) } />
               </IconButton>
             ) : (
-              <QButton isActive={ displayMyBookmarks } label="My Bookmarks" />
+              <QButton isActive={ displayBookmarks } label="My Bookmarks" />
             )
         }
       </HomePageMyBookmarksContainer>
       <IconButton
         className={ baseClasses.iconButton }
-        disabled={ ! displayMyBookmarks && ! searchText }
+        disabled={ ! displayBookmarks && ! searchText }
         onClick={ resetFilters }
         onMouseOut={ () => closePopover( "reset" ) }
         onMouseOver={ ( event ) => openPopover( "reset", event ) }
       >
-        <RefreshIcon className={ clsx( baseClasses.svgIcon, { [ baseClasses.svgIconDisabled ]: ! displayMyBookmarks && ! searchText } ) } />
+        <RefreshIcon className={ clsx( baseClasses.svgIcon, { [ baseClasses.svgIconDisabled ]: ! displayBookmarks && ! searchText } ) } />
         {
-          ( displayMyBookmarks || searchText ) && (
+          ( displayBookmarks || searchText ) && (
             <QPopper
               anchorEl={ popoverMap[ "reset" ] }
               open={ Boolean( popoverMap[ "reset" ] ) }
@@ -207,7 +174,7 @@ const SearchBarFunction: React.FunctionComponent = () => {
         }
       </IconButton>
       {
-        isSearchContainerFixed && (
+        isHeaderFixed && (
           <HomePageRightDrawerButtonContainer>
             <QRightDrawerButton />
           </HomePageRightDrawerButtonContainer>

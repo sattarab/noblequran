@@ -9,10 +9,8 @@ import {
   BORDER_COLOR,
   DEFAULT_TEXT_COLOR,
   RIGHT_DRAWER_WIDTH,
-  WHITE_SMOKE_COLOR
 } from "../../../components/Styles"
 import { isGreaterThanMediumScreen, MOBILE_SCREEN_MEDIA_QUERY } from "../../../helpers/responsive"
-import { getItemFromStorage } from "../../../helpers/utility"
 import type { Surah } from "../../../types/surah"
 import { getSurahs } from "../services/surah"
 export interface DisplaySurahVersesMap {
@@ -31,7 +29,6 @@ interface QuranContextType {
   isRightDrawerOpen: boolean
   isSurahNamesFontLoaded: boolean
   myBookmarks: string[]
-  selectedAyahs: SelectedAyahs
   surahs: { [ id: string ]: Surah }
 
   setBaseClasses( classes: Record<string, string> ): void
@@ -39,7 +36,6 @@ interface QuranContextType {
   setIsRightDrawerOpen( isRightDrawerOpen: boolean ): void
   setIsSurahNamesFontLoaded( isSurahNamesFontLoaded: boolean ): void
   setMyBookmarks( myBookmarks: string[] ): void
-  setSelectedAyahs( selectedAyahs: SelectedAyahs ): void
 }
 
 export const QuranContext = createContext<QuranContextType | null>( null )
@@ -47,10 +43,6 @@ export const QuranContext = createContext<QuranContextType | null>( null )
 
 const useStyles = makeStyles( ( theme: Theme ) =>
   createStyles( {
-    fabButton: {
-      background: WHITE_SMOKE_COLOR,
-      color: DEFAULT_TEXT_COLOR,
-    },
     header: {
       transition: theme.transitions.create( [ "margin", "width" ], {
         easing: theme.transitions.easing.sharp,
@@ -90,7 +82,6 @@ export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildr
   const [ isRightDrawerOpen, setIsRightDrawerOpen ] = useState<boolean>( false )
   const [ isSurahNamesFontLoaded, setIsSurahNamesFontLoaded ] = useState<boolean>( false )
   const [ myBookmarks, setMyBookmarks ] = useState<string[]>( [] )
-  const [ selectedAyahs, setSelectedAyahs ] = useState<{ [ id: string ]: SelectedAyahModel }>( {} )
   const surahs = getSurahs().reduce( ( result: { [ id: string ]: Surah }, surah ) => {
     result[ surah.id ] = surah
     return result
@@ -104,24 +95,6 @@ export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildr
     } )
   } )
 
-  useEffectOnce( () => {
-    getItemFromStorage<string[]>( "surahBookmarks" )
-      .then( ( bookmarks ) => {
-        if( bookmarks ) {
-          setMyBookmarks( bookmarks )
-        }
-      } )
-  } )
-
-  useEffectOnce( () => {
-    getItemFromStorage<{ [ id: string ]: SelectedAyahModel }>( "selectedAyahs" )
-      .then( ( ayahs ) => {
-        if( ayahs ) {
-          setSelectedAyahs( ayahs )
-        }
-      } )
-  } )
-
   const contextValue: QuranContextType = {
     baseClasses,
     displaySurahVersesMap,
@@ -129,7 +102,6 @@ export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildr
     isRightDrawerOpen,
     isSurahNamesFontLoaded,
     myBookmarks,
-    selectedAyahs,
     surahs,
 
     setBaseClasses,
@@ -137,7 +109,6 @@ export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildr
     setIsRightDrawerOpen,
     setIsSurahNamesFontLoaded,
     setMyBookmarks,
-    setSelectedAyahs,
   }
 
   // eslint-disable-next-line react/prop-types

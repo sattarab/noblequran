@@ -5,6 +5,7 @@ import React, { memo, useCallback, useState } from "react"
 
 import { AddTaskIcon } from "../../../components/Icon"
 import { BLUE_COLOR_WITH_OPACITY } from "../../../components/Styles"
+import { useAppSelector } from "../../../hooks"
 import { QPopper } from "./Popper"
 import { useQuranState } from "./QuranContext"
 
@@ -31,7 +32,8 @@ const RightDrawerButton = styled( IconButton )`
 `
 
 const QRightDrawerButtonFunction: React.FunctionComponent = () => {
-  const { baseClasses, isMobileDevice, isRightDrawerOpen, selectedAyahs, setIsRightDrawerOpen } = useQuranState()
+  const selectedAyahs = useAppSelector( ( state ) => state.quranReducer.selectedAyahs )
+  const { baseClasses, isMobileDevice, isRightDrawerOpen, setIsRightDrawerOpen } = useQuranState()
   const [ displayPopover, setDisplayPopover ] = useState<Element | null>( null )
 
   const closePopover = () => {

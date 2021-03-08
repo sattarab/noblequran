@@ -27,18 +27,19 @@ import {
 import { logError } from "../../../../helpers/error"
 import { LARGE_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
 import { escapeRegex, getLanguageLabel, groupBy, setItemInStorage } from "../../../../helpers/utility"
+import { useAppDispatch, useAppSelector } from "../../../../hooks"
 import type { Ayah } from "../../../../types/ayah"
 import type { Pagination } from "../../../../types/pagination"
 import type { Surah } from "../../../../types/surah"
 import type { Translator } from "../../../../types/translator"
 import { QLoader } from "../../components/Loader"
 import { QPopper } from "../../components/Popper"
-import type { SelectedAyahs } from "../../components/QuranContext"
 import { useQuranState } from "../../components/QuranContext"
 import { QRightDrawerButton } from "../../components/RightDrawerButton"
 import { ScrollUpButton } from "../../components/ScrollUpButton"
 import { AL_QURAN } from "../../constants/common"
 import { getSurahAyahs, getSurahs, getTranslatorsGroupedByLanguage } from "../../services/surah"
+import { toggleAyah } from "../../state/quranSlice"
 
 const DEFAULT_TRANSLATION = "en.sahih"
 const MAX_SCROLL_OFFSET = 210
@@ -427,9 +428,11 @@ const SurahPageTranslatorsSearchInputResetContainer = styled.div`
 `
 
 export const SurahPage: React.FunctionComponent = () => {
+  const dispatch = useAppDispatch()
+  const selectedAyahs = useAppSelector( ( state ) => state.quranReducer.selectedAyahs )
   const history = useHistory()
   const location = useLocation()
-  const { baseClasses, isMobileDevice, isRightDrawerOpen, isSurahNamesFontLoaded, selectedAyahs, setSelectedAyahs, surahs } = useQuranState()
+  const { baseClasses, isMobileDevice, isRightDrawerOpen, isSurahNamesFontLoaded, surahs } = useQuranState()
   const translatorsMenuRef = useRef( null )
   const versesMenuRef = useRef( null )
 
@@ -709,28 +712,8 @@ export const SurahPage: React.FunctionComponent = () => {
   }, [ handleSearch ] )
 
   const toggleAyahSelection = useCallback( ( ayah: Ayah ) => {
-    const updatedSelectedAyahs: SelectedAyahs = {
-      ...selectedAyahs,
-    }
-
-    const index = updatedSelectedAyahs[ ayah.surahId ]?.findIndex( ( ayahIds ) => ayahIds.includes( `${ ayah.numberInSurah }` ) )
-
-    if( updatedSelectedAyahs[ ayah.surahId ]?.length && index !== -1 ) {
-      updatedSelectedAyahs[ ayah.surahId ].splice( index, 1 )
-      if( updatedSelectedAyahs[ ayah.surahId ].length === 0 ) {
-        delete updatedSelectedAyahs[ ayah.surahId ]
-      }
-    } else {
-      if( ! updatedSelectedAyahs[ ayah.surahId ] ) {
-        updatedSelectedAyahs[ ayah.surahId ] = []
-      }
-      updatedSelectedAyahs[ ayah.surahId ].push( `${ ayah.numberInSurah }` )
-      updatedSelectedAyahs[ ayah.surahId ].sort()
-    }
-
-    setSelectedAyahs( updatedSelectedAyahs )
-    setItemInStorage( "selectedAyahs", updatedSelectedAyahs )
-  }, [ selectedAyahs, setSelectedAyahs ] )
+    dispatch( toggleAyah( { ayahId: `${ ayah.numberInSurah }`, surahId: ayah.surahId } ) )
+  }, [ dispatch ] )
 
   if( ! selectedSurah ) {
     selectedSurah = getSurahs().find( ( surah ) => surah.queryIndexes.includes( id ) ) as Surah

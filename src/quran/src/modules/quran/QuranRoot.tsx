@@ -4,16 +4,20 @@ import { createStyles, makeStyles } from "@material-ui/core/styles"
 import clsx from "clsx"
 import React, { lazy, Suspense } from "react"
 import { Route, Switch } from "react-router-dom"
+import { useEffectOnce } from "react-use"
 
 import { HEADER_HEIGHT, RIGHT_DRAWER_WIDTH } from "../../components/Styles"
+import { getItemFromStorage } from "../../helpers/utility"
+import { useAppDispatch } from "../../hooks"
 import { QHeader } from "./components/Header"
 import { QLoader } from "./components/Loader"
 import { QuranContextProvider, useQuranState } from "./components/QuranContext"
 import { QRightDrawer } from "./components/RightDrawer"
+import { selectedAyahs } from "./state/quranSlice"
 
 // lazy load components
 const AboutPage = lazy( () => import( "./pages/AboutPage/AboutPage" ).then( ( module ) => ( { default: module.AboutPage } ) ) )
-const HomePageRoot = lazy( () => import( "./pages/HomePage/HomePage" ).then( ( module ) => ( { default: module.HomePageRoot } ) ) )
+const HomePage = lazy( () => import( "./pages/HomePage/HomePage" ).then( ( module ) => ( { default: module.HomePage } ) ) )
 const SurahPage = lazy( () => import( "./pages/SurahPage/SurahPage" ).then( ( module ) => ( { default: module.SurahPage } ) ) )
 
 const QuranContainerWrapper = styled.div`
@@ -58,7 +62,17 @@ const QuranLoading: React.FunctionComponent = () => {
 
 export const QuranContainer: React.FunctionComponent = () => {
   const classes = useStyles()
+  const dispatch = useAppDispatch()
   const { isMobileDevice, isRightDrawerOpen } = useQuranState()
+
+  useEffectOnce( () => {
+    getItemFromStorage<{ [ key: string ]: string[] }>( "selectedAyahs" )
+      .then( ( storedSelectedAyahs ) => {
+        if( storedSelectedAyahs ) {
+          dispatch( selectedAyahs( storedSelectedAyahs ) )
+        }
+      } )
+  } )
 
   return (
     <QuranContainerWrapper>
@@ -66,7 +80,7 @@ export const QuranContainer: React.FunctionComponent = () => {
       <main className={ clsx( classes.content, { [ classes.contentShift ]: isRightDrawerOpen && ! isMobileDevice } ) }>
         <Suspense fallback={ <QuranLoading /> }>
           <Switch>
-            <Route exact path="/" component={ HomePageRoot } />
+            <Route exact path="/" component={ HomePage } />
             <Route path="/about" component={ AboutPage } />
             <Route path="/:id" component={ SurahPage } />
           </Switch>

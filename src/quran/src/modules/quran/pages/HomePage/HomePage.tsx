@@ -1,22 +1,22 @@
 import styled from "@emotion/styled"
 import Button from "@material-ui/core/Button"
 import clsx from "clsx"
-import React, { createContext, useCallback, useContext, useState } from "react"
+import React, { useCallback, useState } from "react"
 import { Helmet } from "react-helmet"
-import { useHistory } from "react-router"
+import { useEffectOnce } from "react-use"
 
 import { GridIcon, ListIcon } from "../../../../components/Icon"
 import { BLUE_COLOR, DARKER_TEXT_COLOR } from "../../../../components/Styles"
 import { LARGE_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
-import { setItemInStorage } from "../../../../helpers/utility"
-import type { Surah } from "../../../../types/surah"
+import { getItemFromStorage } from "../../../../helpers/utility"
+import { useAppDispatch, useAppSelector } from "../../../../hooks"
 import { useQuranState } from "../../components/QuranContext"
 import { ScrollUpButton } from "../../components/ScrollUpButton"
 import { AL_QURAN } from "../../constants/common"
-import { getSurahs } from "../../services/surah"
 import { SearchBar } from "./components/SearchBar"
 import { SurahGrid } from "./components/SurahGrid"
 import { SurahList } from "./components/SurahList"
+import { bookmarks, reset } from "./state/homeSlice"
 
 const HomePageContainer = styled.div`
   margin: 0 auto;
@@ -135,10 +135,25 @@ enum ViewType {
   LIST = "list",
 }
 
-const HomePage: React.FunctionComponent = () => {
-  const { isSearchContainerFixed, resetFilters, surahs } = useHomeState()
+export const HomePage: React.FunctionComponent = () => {
+  const dispatch = useAppDispatch()
+  const isHeaderFixed = useAppSelector( ( state ) => state.homeReducer.surahs )
+  const surahs = useAppSelector( ( state ) => state.homeReducer.surahs )
   const { baseClasses } = useQuranState()
   const [ selectViewType, setSelectedViewType ] = useState<ViewType>( ViewType.GRID )
+
+  useEffectOnce( () => {
+    getItemFromStorage<string[]>( "surahBookmarks" )
+      .then( ( storedBookmarks ) => {
+        if( storedBookmarks ) {
+          dispatch( bookmarks( storedBookmarks ) )
+        }
+      } )
+  } )
+
+  const resetFilters = useCallback( () => {
+    dispatch( reset() )
+  }, [ dispatch ] )
 
   return (
     <HomePageContainer>
@@ -196,105 +211,11 @@ const HomePage: React.FunctionComponent = () => {
       </HomePageMainContainer>
       <>
         {
-          isSearchContainerFixed && (
+          isHeaderFixed && (
             <ScrollUpButton />
           )
         }
       </>
     </HomePageContainer>
   )
-}
-
-export const HomePageRoot: React.FunctionComponent = () => {
-  return (
-    <HomePageContextProvider>
-      <HomePage />
-    </HomePageContextProvider>
-  )
-}
-
-interface HomePageContextType {
-  displayMyBookmarks: boolean
-  isSearchContainerFixed: boolean
-  searchText: string
-  surahs: Surah[]
-
-  getRevelationTypeText( type: string ): string
-  readSurah( surahId: string ): void
-  resetFilters(): void
-  setDisplayMyBookmarks( displayMyBookmarks: boolean ): void
-  setIsSearchContainerFixed( isSearchContainerFixed: boolean ): void
-  setSearchText( searchText: string ): void
-  setSurahs( surahs: Surah[] ): void
-  toggleBookmarkSurah( event: React.MouseEvent<HTMLButtonElement, MouseEvent>, surahId: string ): void
-}
-
-export const HomePageContext = createContext<HomePageContextType | null>( null )
-
-export const HomePageContextProvider: React.FunctionComponent<React.PropsWithChildren<Record<string, JSX.Element>>> = ( props ) => {
-  const history = useHistory()
-  const { myBookmarks, setMyBookmarks } = useQuranState()
-  const [ displayMyBookmarks, setDisplayMyBookmarks ] = useState<boolean>( false )
-  const [ isSearchContainerFixed, setIsSearchContainerFixed ] = useState<boolean>( false )
-  const [ searchText, setSearchText ] = useState<string>( "" )
-  const [ surahs, setSurahs ] = useState<Surah[]>( getSurahs() )
-
-  const getRevelationTypeText = useCallback( ( type: string ) => {
-    return type.charAt( 0 ).toUpperCase() + type.slice( 1 )
-  }, [] )
-
-  const readSurah = useCallback( ( surahId: string ) => {
-    history.push( `/${ surahId }` )
-    window.scroll( 0, 0 )
-  }, [ history ] )
-
-  const resetFilters = useCallback( () => {
-    setDisplayMyBookmarks( false )
-    setSearchText( "" )
-    setSurahs( getSurahs() )
-  }, [] )
-
-  const toggleBookmarkSurah = useCallback( ( event: React.MouseEvent<HTMLButtonElement, MouseEvent>, surahId: string ) => {
-    event.preventDefault()
-    event.stopPropagation()
-
-    const updatedMyBookmarks = [ ...myBookmarks ]
-    const index = updatedMyBookmarks.indexOf( surahId )
-
-    if( index !== -1 ) {
-      updatedMyBookmarks.splice( index, 1 )
-    } else {
-      updatedMyBookmarks.push( surahId )
-    }
-
-    setItemInStorage( "surahBookmarks", updatedMyBookmarks )
-    setMyBookmarks( updatedMyBookmarks )
-  }, [ myBookmarks, setMyBookmarks ] )
-
-  const contextValue: HomePageContextType = {
-    displayMyBookmarks,
-    isSearchContainerFixed,
-    searchText,
-    surahs,
-
-    getRevelationTypeText,
-    readSurah,
-    resetFilters,
-    setDisplayMyBookmarks,
-    setIsSearchContainerFixed,
-    setSearchText,
-    setSurahs,
-    toggleBookmarkSurah,
-  }
-
-  // eslint-disable-next-line react/prop-types
-  return <HomePageContext.Provider value={ { ...contextValue } }>{ props.children }</HomePageContext.Provider>
-}
-
-export function useHomeState(): HomePageContextType {
-  const context = useContext( HomePageContext )
-  if( ! context ) {
-    throw new Error( "useHomeState must be used within the HomeContextProvider" )
-  }
-  return context
 }
