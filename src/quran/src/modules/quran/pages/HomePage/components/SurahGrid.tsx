@@ -1,14 +1,11 @@
 import styled from "@emotion/styled"
 import { IconButton } from "@material-ui/core"
-import PropTypes from "prop-types"
 import React, { memo } from "react"
 
 import { BookmarkAddIcon, BookmarkRemoveIcon } from "../../../../../components/Icon"
 import { BORDER_COLOR, DARK_TEXT_COLOR, DEFAULT_TEXT_COLOR } from "../../../../../components/Styles"
 import { LARGE_SCREEN_MEDIA_QUERY, MEDIUM_SCREEN_MEDIA_QUERY, SMALL_SCREEN_MEDIA_QUERY } from "../../../../../helpers/responsive"
-import type { Surah } from "../../../../../types/surah"
 import { useQuranState } from "../../../components/QuranContext"
-import { SurahPropType } from "../../../services/surah"
 import { useHomeState } from "../HomePage"
 
 const HomePageSurahsGridContainer = styled.div`
@@ -122,12 +119,8 @@ const HomePageSurahTransliteratedText = styled.h1`
   margin: 0;
 `
 
-interface QSurahGridPropTypes {
-  surahs: Surah[]
-}
-
-const SurahGridFunction: React.FunctionComponent<QSurahGridPropTypes> = ( { surahs } ) => {
-  const { getRevelationTypeText, readSurah, toggleBookmarkSurah } = useHomeState()
+const SurahGridFunction: React.FunctionComponent = () => {
+  const { getRevelationTypeText, readSurah, toggleBookmarkSurah, surahs } = useHomeState()
   const { baseClasses, isSurahNamesFontLoaded, myBookmarks } = useQuranState()
 
   return (
@@ -168,10 +161,6 @@ const SurahGridFunction: React.FunctionComponent<QSurahGridPropTypes> = ( { sura
       }
     </HomePageSurahsGridContainer>
   )
-}
-
-SurahGridFunction.propTypes = {
-  surahs: PropTypes.arrayOf( SurahPropType ).isRequired,
 }
 
 export const SurahGrid = memo( SurahGridFunction )

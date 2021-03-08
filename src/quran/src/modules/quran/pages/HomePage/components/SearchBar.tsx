@@ -104,7 +104,7 @@ const SearchBarFunction: React.FunctionComponent = () => {
     }
   } )
 
-  const handleSearch = ( text: string, displayBookmarks: boolean ) => {
+  const handleSearch = useCallback( ( text: string, displayBookmarks: boolean ) => {
     if( ! text && ! displayBookmarks ) {
       setSurahs( getSurahs() )
       return
@@ -129,7 +129,7 @@ const SearchBarFunction: React.FunctionComponent = () => {
     }
 
     setSurahs( filteredSurahs )
-  }
+  }, [ myBookmarks, setSurahs ] )
 
   const clearSearch = () => {
     setSearchText( "" )
@@ -148,20 +148,20 @@ const SearchBarFunction: React.FunctionComponent = () => {
     }
   }, [ setIsSearchContainerFixed ] )
 
-  const onSearch = ( event: React.ChangeEvent<HTMLInputElement> ) => {
+  const onSearch = useCallback( ( event: React.ChangeEvent<HTMLInputElement> ) => {
     setSearchText( event.target.value )
     handleSearch( event.target.value, displayMyBookmarks )
-  }
+  }, [ displayMyBookmarks, handleSearch, setSearchText ] )
 
-  const openPopover = ( key: string, event: React.MouseEvent<HTMLSpanElement> ) => {
+  const openPopover = useCallback( ( key: string, event: React.MouseEvent<HTMLSpanElement> ) => {
     setPopoverMap( { ...popoverMap, ...{ [ key ]: event.currentTarget } } )
-  }
+  }, [ popoverMap ] )
 
-  const toggleDisplayMyBookmarks = () => {
+  const toggleDisplayMyBookmarks = useCallback( () => {
     const updatedMyBookmarks = ! displayMyBookmarks
-    setDisplayMyBookmarks( ! displayMyBookmarks )
+    setDisplayMyBookmarks( updatedMyBookmarks )
     handleSearch( searchText, updatedMyBookmarks )
-  }
+  }, [ displayMyBookmarks, handleSearch, searchText, setDisplayMyBookmarks ] )
 
   return (
     <HomePageSearchContainer className={ clsx( baseClasses.header, { "fixed": isSearchContainerFixed, [ baseClasses.headerShift ]: ! isMobileDevice && isSearchContainerFixed && isRightDrawerOpen } ) }>

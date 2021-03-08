@@ -56,7 +56,9 @@ const RightDrawerOptionsContainer = styled.section`
 `
 
 const RightDrawerOptionsContainerHeader = styled.h2`
+  color: ${ DARKER_TEXT_COLOR };
   font: 500 14px/20px "HarmoniaSansPro";
+  margin: 0 0 24px;
 `
 
 const RightDrawerOptionsContainerHelpText = styled.p`
@@ -249,7 +251,7 @@ export const QRightDrawer: React.FunctionComponent = () => {
               </RightDrawerBodyReviewContainer>
               <RightDrawerOptionsContainer>
                 <RightDrawerOptionsContainerHeader>Format</RightDrawerOptionsContainerHeader>
-                <RightDrawerOptionsContainerHelpText>Select a format you want to download in</RightDrawerOptionsContainerHelpText>
+                <RightDrawerOptionsContainerHelpText>Select all the formats you want to download in</RightDrawerOptionsContainerHelpText>
               </RightDrawerOptionsContainer>
             </RightDrawerBodyContainer>
           ) : (

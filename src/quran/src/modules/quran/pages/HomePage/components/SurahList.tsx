@@ -1,13 +1,10 @@
 import styled from "@emotion/styled"
 import { IconButton } from "@material-ui/core"
-import PropTypes from "prop-types"
 import React, { memo } from "react"
 
 import { BookmarkAddIcon, BookmarkRemoveIcon } from "../../../../../components/Icon"
 import { BORDER_COLOR, DARK_TEXT_COLOR, DEFAULT_TEXT_COLOR } from "../../../../../components/Styles"
-import type { Surah } from "../../../../../types/surah"
 import { useQuranState } from "../../../components/QuranContext"
-import { SurahPropType } from "../../../services/surah"
 import { useHomeState } from "../HomePage"
 
 const HomePageSurahsListContainer = styled.div`
@@ -74,12 +71,8 @@ const HomePageSurahTransliteratedText = styled.h1`
   margin: 0;
 `
 
-interface SurahList {
-  surahs: Surah[]
-}
-
-const SurahListFunction: React.FunctionComponent<SurahList> = ( { surahs } ) => {
-  const { getRevelationTypeText, readSurah, toggleBookmarkSurah } = useHomeState()
+const SurahListFunction: React.FunctionComponent = () => {
+  const { getRevelationTypeText, readSurah, toggleBookmarkSurah, surahs } = useHomeState()
   const { baseClasses, isSurahNamesFontLoaded, myBookmarks } = useQuranState()
 
   return (
@@ -112,11 +105,6 @@ const SurahListFunction: React.FunctionComponent<SurahList> = ( { surahs } ) => 
       }
     </HomePageSurahsListContainer>
   )
-}
-
-
-SurahListFunction.propTypes = {
-  surahs: PropTypes.arrayOf( SurahPropType ).isRequired,
 }
 
 export const SurahList = memo( SurahListFunction )

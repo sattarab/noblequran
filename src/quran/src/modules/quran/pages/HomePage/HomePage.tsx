@@ -179,16 +179,16 @@ const HomePage: React.FunctionComponent = () => {
                     <HomePageNoSurahsClearFilterLink onClick={ resetFilters }>Clear your filters and try again.</HomePageNoSurahsClearFilterLink>
                   </HomePageNoSurahsPlaceholderContainer>
                 ) : (
-                  <div>
+                  <>
                     {
                       selectViewType === ViewType.GRID
                         ? (
-                          <SurahGrid surahs={ surahs } />
+                          <SurahGrid />
                         ) : (
-                          <SurahList surahs={ surahs } />
+                          <SurahList />
                         )
                     }
-                  </div>
+                  </>
                 )
             }
           </HomePageSurahsContentContainer>
@@ -239,20 +239,20 @@ export const HomePageContextProvider: React.FunctionComponent<React.PropsWithChi
   const [ searchText, setSearchText ] = useState<string>( "" )
   const [ surahs, setSurahs ] = useState<Surah[]>( getSurahs() )
 
-  const getRevelationTypeText = ( type: string ) => {
+  const getRevelationTypeText = useCallback( ( type: string ) => {
     return type.charAt( 0 ).toUpperCase() + type.slice( 1 )
-  }
+  }, [] )
 
-  const readSurah = ( surahId: string ) => {
+  const readSurah = useCallback( ( surahId: string ) => {
     history.push( `/${ surahId }` )
     window.scroll( 0, 0 )
-  }
+  }, [ history ] )
 
-  const resetFilters = () => {
+  const resetFilters = useCallback( () => {
     setDisplayMyBookmarks( false )
     setSearchText( "" )
     setSurahs( getSurahs() )
-  }
+  }, [] )
 
   const toggleBookmarkSurah = useCallback( ( event: React.MouseEvent<HTMLButtonElement, MouseEvent>, surahId: string ) => {
     event.preventDefault()
