@@ -7,7 +7,7 @@ import { BookmarkAddIcon, BookmarkRemoveIcon } from "../../../../../components/I
 import { BORDER_COLOR, DARK_TEXT_COLOR, DEFAULT_TEXT_COLOR } from "../../../../../components/Styles"
 import { useAppDispatch, useAppSelector } from "../../../../../hooks"
 import { useQuranState } from "../../../components/QuranContext"
-import { toggleBookmark } from "../state/homeSlice"
+import { toggleBookmark } from "../state/home"
 
 const HomePageSurahsListContainer = styled.div`
   padding: 15px;
@@ -74,11 +74,12 @@ const HomePageSurahTransliteratedText = styled.h1`
 `
 
 const SurahListFunction: React.FunctionComponent = () => {
-  const bookmarks = useAppSelector( ( state ) => state.homeReducer.bookmarks )
+  const bookmarks = useAppSelector( ( state ) => state.home.bookmarks )
   const dispatch = useAppDispatch()
   const history = useHistory()
+  const surahs = useAppSelector( ( state ) => state.home.surahs )
+
   const { baseClasses, isSurahNamesFontLoaded } = useQuranState()
-  const surahs = useAppSelector( ( state ) => state.homeReducer.surahs )
 
   const getRevelationTypeText = useCallback( ( type: string ) => {
     return type.charAt( 0 ).toUpperCase() + type.slice( 1 )

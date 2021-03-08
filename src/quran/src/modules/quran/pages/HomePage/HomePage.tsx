@@ -16,7 +16,7 @@ import { AL_QURAN } from "../../constants/common"
 import { SearchBar } from "./components/SearchBar"
 import { SurahGrid } from "./components/SurahGrid"
 import { SurahList } from "./components/SurahList"
-import { bookmarks, reset } from "./state/homeSlice"
+import { reset, setBookmarks } from "./state/home"
 
 const HomePageContainer = styled.div`
   margin: 0 auto;
@@ -137,16 +137,18 @@ enum ViewType {
 
 export const HomePage: React.FunctionComponent = () => {
   const dispatch = useAppDispatch()
-  const isHeaderFixed = useAppSelector( ( state ) => state.homeReducer.surahs )
-  const surahs = useAppSelector( ( state ) => state.homeReducer.surahs )
+  const isHeaderFixed = useAppSelector( ( state ) => state.home.isHeaderFixed )
+  const surahs = useAppSelector( ( state ) => state.home.surahs )
+
   const { baseClasses } = useQuranState()
   const [ selectViewType, setSelectedViewType ] = useState<ViewType>( ViewType.GRID )
+
 
   useEffectOnce( () => {
     getItemFromStorage<string[]>( "surahBookmarks" )
       .then( ( storedBookmarks ) => {
         if( storedBookmarks ) {
-          dispatch( bookmarks( storedBookmarks ) )
+          dispatch( setBookmarks( storedBookmarks ) )
         }
       } )
   } )

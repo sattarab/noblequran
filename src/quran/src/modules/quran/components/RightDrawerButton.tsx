@@ -32,7 +32,8 @@ const RightDrawerButton = styled( IconButton )`
 `
 
 const QRightDrawerButtonFunction: React.FunctionComponent = () => {
-  const selectedAyahs = useAppSelector( ( state ) => state.quranReducer.selectedAyahs )
+  const selectedAyahs = useAppSelector( ( state ) => state.quran.selectedAyahs )
+
   const { baseClasses, isMobileDevice, isRightDrawerOpen, setIsRightDrawerOpen } = useQuranState()
   const [ displayPopover, setDisplayPopover ] = useState<Element | null>( null )
 

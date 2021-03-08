@@ -33,6 +33,14 @@ export function getSurahs(): Surah[] {
   return [ ...SURAHS ]
 }
 
+
+export function getSurahsById(): { [ id: string ]: Surah } {
+  return getSurahs().reduce( ( result: { [ id: string ]: Surah }, surah ) => {
+    result[ surah.id ] = surah
+    return result
+  }, {} )
+}
+
 export function getSurahAyahs( id: string, options: { page: number, perPage: number, translations?: string[] } ): Promise<{ items: Ayah[], pagination: Pagination }> {
   let url = `/surahs/${ id }/ayahs?page=${ options.page }&perPage=${ options.perPage }`
 

@@ -55,20 +55,20 @@ const filter = ( state: HomePageState ) => {
 }
 
 export const homeSlice = createSlice( {
-  name: "homeReducer",
+  name: "home",
   initialState,
   reducers: {
-    bookmarks( state: HomePageState, action: PayloadAction<string[]> ) {
-      state.bookmarks = action.payload
-    },
     reset( state: HomePageState ) {
       state.searchText = ""
       state.displayBookmarks = false
-      state.surahs = defaultSurahs
+      state.surahs = [ ...defaultSurahs ]
     },
     search( state: HomePageState, action: PayloadAction<string> ) {
       state.searchText = action.payload
       filter( state )
+    },
+    setBookmarks( state: HomePageState, action: PayloadAction<string[]> ) {
+      state.bookmarks = [ ...action.payload ]
     },
     setIsHeaderFixed( state: HomePageState, action: PayloadAction<boolean> ) {
       if( state.isHeaderFixed !== action.payload ) {
@@ -76,19 +76,19 @@ export const homeSlice = createSlice( {
       }
     },
     toggleBookmark( state: HomePageState, action: PayloadAction<string> ) {
-      const updatedBookmarks = [
+      const updateState = [
         ...state.bookmarks,
       ]
-      const index = updatedBookmarks.findIndex( ( surahId ) => surahId === action.payload )
+      const index = updateState.findIndex( ( surahId ) => surahId === action.payload )
 
       if( index !== -1 ) {
-        updatedBookmarks.splice( index, 1 )
+        updateState.splice( index, 1 )
       } else {
-        updatedBookmarks.push( action.payload )
+        updateState.push( action.payload )
       }
 
-      setItemInStorage( "surahBookmarks", updatedBookmarks )
-      state.bookmarks = updatedBookmarks
+      setItemInStorage( "surahBookmarks", updateState )
+      state.bookmarks = updateState
       filter( state )
     },
     toggleDisplayBookmarks( state: HomePageState ) {
@@ -98,6 +98,6 @@ export const homeSlice = createSlice( {
   },
 } )
 
-export const { bookmarks, reset, search, setIsHeaderFixed, toggleBookmark, toggleDisplayBookmarks } = homeSlice.actions
-export const selectHome = ( state: RootState ): HomePageState => state.homeReducer as HomePageState
+export const { reset, search, setBookmarks, setIsHeaderFixed, toggleBookmark, toggleDisplayBookmarks } = homeSlice.actions
+export const selectHome = ( state: RootState ): HomePageState => state.home as HomePageState
 export default homeSlice.reducer

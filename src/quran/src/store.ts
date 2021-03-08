@@ -1,15 +1,14 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit"
+import { configureStore } from "@reduxjs/toolkit"
 
-import homeReducer from "./modules/quran/pages/HomePage/state/homeSlice"
-import quranReducer from "./modules/quran/state/quranSlice"
+import home from "./modules/quran/pages/HomePage/state/home"
+import quran from "./modules/quran/state/quran"
 
 const store = configureStore( {
-  reducer: combineReducers( {
-    homeReducer,
-    quranReducer,
-  } )
+  reducer: {
+    home,
+    quran,
+  },
 } )
-
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch

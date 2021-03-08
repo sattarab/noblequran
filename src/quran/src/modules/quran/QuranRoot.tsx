@@ -13,7 +13,7 @@ import { QHeader } from "./components/Header"
 import { QLoader } from "./components/Loader"
 import { QuranContextProvider, useQuranState } from "./components/QuranContext"
 import { QRightDrawer } from "./components/RightDrawer"
-import { selectedAyahs } from "./state/quranSlice"
+import { setSelectedAyahs } from "./state/quran"
 
 // lazy load components
 const AboutPage = lazy( () => import( "./pages/AboutPage/AboutPage" ).then( ( module ) => ( { default: module.AboutPage } ) ) )
@@ -69,7 +69,7 @@ export const QuranContainer: React.FunctionComponent = () => {
     getItemFromStorage<{ [ key: string ]: string[] }>( "selectedAyahs" )
       .then( ( storedSelectedAyahs ) => {
         if( storedSelectedAyahs ) {
-          dispatch( selectedAyahs( storedSelectedAyahs ) )
+          dispatch( setSelectedAyahs( storedSelectedAyahs ) )
         }
       } )
   } )

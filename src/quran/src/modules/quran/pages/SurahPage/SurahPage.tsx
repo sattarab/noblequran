@@ -7,7 +7,7 @@ import IconButton from "@material-ui/core/IconButton"
 import MenuItem from "@material-ui/core/MenuItem"
 import { withStyles } from "@material-ui/core/styles"
 import clsx from "clsx"
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import { Helmet } from "react-helmet"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { matchPath, useHistory, useLocation } from "react-router-dom"
@@ -39,7 +39,7 @@ import { QRightDrawerButton } from "../../components/RightDrawerButton"
 import { ScrollUpButton } from "../../components/ScrollUpButton"
 import { AL_QURAN } from "../../constants/common"
 import { getSurahAyahs, getSurahs, getTranslatorsGroupedByLanguage } from "../../services/surah"
-import { toggleAyah } from "../../state/quranSlice"
+import { toggleAyah } from "../../state/quran"
 
 const DEFAULT_TRANSLATION = "en.sahih"
 const MAX_SCROLL_OFFSET = 210
@@ -429,7 +429,7 @@ const SurahPageTranslatorsSearchInputResetContainer = styled.div`
 
 export const SurahPage: React.FunctionComponent = () => {
   const dispatch = useAppDispatch()
-  const selectedAyahs = useAppSelector( ( state ) => state.quranReducer.selectedAyahs )
+  const selectedAyahs = useAppSelector( ( state ) => state.quran.selectedAyahs )
   const history = useHistory()
   const location = useLocation()
   const { baseClasses, isMobileDevice, isRightDrawerOpen, isSurahNamesFontLoaded, surahs } = useQuranState()
@@ -455,22 +455,6 @@ export const SurahPage: React.FunctionComponent = () => {
   const [ searchText, setSearchText ] = useState<string>( "" )
   const [ selectedTranslations, setSelectedTranslations ] = useState<string[]>( [ DEFAULT_TRANSLATION ] )
   const [ translatorNames, setTranslatorNames ] = useState<{ [ identifier: string ]: string }>( {} )
-
-  const onPageScroll = useCallback( () => {
-    if( displayTranslatorsMenu ) {
-      setDisplayTranslatorsMenu( false )
-    }
-
-    if( displayVerseMenu ) {
-      setDisplayVerseMenu( false )
-    }
-
-    if( window.pageYOffset > MAX_SCROLL_OFFSET && document.documentElement.scrollHeight > MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER ) {
-      setIsSurahTitleFixed( true )
-    } else {
-      setIsSurahTitleFixed( false )
-    }
-  }, [ displayTranslatorsMenu, displayVerseMenu ] )
 
   useClickAway( translatorsMenuRef, () => {
     if( displayTranslatorsMenu ) {
@@ -524,13 +508,13 @@ export const SurahPage: React.FunctionComponent = () => {
       .catch( logError )
   } )
 
-  useLayoutEffect( () => {
+  useEffectOnce( () => {
     window.addEventListener( "scroll", onPageScroll )
 
     return () => {
       window.removeEventListener( "scroll", onPageScroll )
     }
-  }, [ onPageScroll ] )
+  } )
 
   const closePopover = useCallback( ( key: string ) => {
     setPopoverMap( { ...popoverMap, ...{ [ key ]: null } } )
@@ -681,6 +665,22 @@ export const SurahPage: React.FunctionComponent = () => {
   const onClickTranslatorsHandler = useCallback( () => {
     setDisplayTranslatorsMenu( ! displayTranslatorsMenu )
   }, [ displayTranslatorsMenu ] )
+
+  const onPageScroll = useCallback( () => {
+    if( displayTranslatorsMenu ) {
+      setDisplayTranslatorsMenu( false )
+    }
+
+    if( displayVerseMenu ) {
+      setDisplayVerseMenu( false )
+    }
+
+    if( window.pageYOffset > MAX_SCROLL_OFFSET && document.documentElement.scrollHeight > MIN_PAGE_HEIGHT_TO_DISPLAY_FIXED_HEADER ) {
+      setIsSurahTitleFixed( true )
+    } else {
+      setIsSurahTitleFixed( false )
+    }
+  }, [ displayTranslatorsMenu, displayVerseMenu ] )
 
   const onSearch = useCallback( ( event: React.ChangeEvent<HTMLInputElement> ) => {
     setSearchText( event.target.value )

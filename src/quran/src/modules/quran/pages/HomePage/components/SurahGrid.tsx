@@ -8,7 +8,7 @@ import { BORDER_COLOR, DARK_TEXT_COLOR, DEFAULT_TEXT_COLOR } from "../../../../.
 import { LARGE_SCREEN_MEDIA_QUERY, MEDIUM_SCREEN_MEDIA_QUERY, SMALL_SCREEN_MEDIA_QUERY } from "../../../../../helpers/responsive"
 import { useAppDispatch, useAppSelector } from "../../../../../hooks"
 import { useQuranState } from "../../../components/QuranContext"
-import { toggleBookmark } from "../state/homeSlice"
+import { toggleBookmark } from "../state/home"
 
 const HomePageSurahsGridContainer = styled.div`
   display: flex;
@@ -122,11 +122,12 @@ const HomePageSurahTransliteratedText = styled.h1`
 `
 
 const SurahGridFunction: React.FunctionComponent = () => {
-  const bookmarks = useAppSelector( ( state ) => state.homeReducer.bookmarks )
+  const bookmarks = useAppSelector( ( state ) => state.home.bookmarks )
   const dispatch = useAppDispatch()
   const history = useHistory()
+  const surahs = useAppSelector( ( state ) => state.home.surahs )
+
   const { baseClasses, isSurahNamesFontLoaded } = useQuranState()
-  const surahs = useAppSelector( ( state ) => state.homeReducer.surahs )
 
   const getRevelationTypeText = useCallback( ( type: string ) => {
     return type.charAt( 0 ).toUpperCase() + type.slice( 1 )

@@ -11,7 +11,7 @@ import { QButton } from "../../../components/Button"
 import { QPopper } from "../../../components/Popper"
 import { useQuranState } from "../../../components/QuranContext"
 import { QRightDrawerButton } from "../../../components/RightDrawerButton"
-import { reset, search, setIsHeaderFixed, toggleDisplayBookmarks } from "../state/homeSlice"
+import { reset, search, setIsHeaderFixed, toggleDisplayBookmarks } from "../state/home"
 
 const HomePageMyBookmarksContainer = styled.div`
   align-items: center;
@@ -80,11 +80,11 @@ const HomePageSearchInputContainer = styled.div`
 const SearchBarFunction: React.FunctionComponent = () => {
   const MAX_SCROLL_OFFSET = 130
 
-  const displayBookmarks = useAppSelector( ( state ) => state.homeReducer.displayBookmarks )
-  const isHeaderFixed = useAppSelector( ( state ) => state.homeReducer.isHeaderFixed )
-  const searchText = useAppSelector( ( state ) => state.homeReducer.searchText )
-
   const dispatch = useAppDispatch()
+  const displayBookmarks = useAppSelector( ( state ) => state.home.displayBookmarks )
+  const isHeaderFixed = useAppSelector( ( state ) => state.home.isHeaderFixed )
+  const searchText = useAppSelector( ( state ) => state.home.searchText )
+
 
   const { baseClasses, isMobileDevice, isRightDrawerOpen } = useQuranState()
   const [ popoverMap, setPopoverMap ] = useState<{ [ key: string ]: Element | null }>( {} )
