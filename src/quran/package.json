@@ -88,7 +88,7 @@
     "preload-webpack-plugin": "2.3.0",
     "prettier": "2.2.1",
     "prompts": "2.4.0",
-    "react-dev-utils": "11.0.3",
+    "react-dev-utils": "11.0.4",
     "react-app-polyfill": "2.0.0",
     "regenerator-runtime": "0.13.7",
     "resolve": "1.20.0",
