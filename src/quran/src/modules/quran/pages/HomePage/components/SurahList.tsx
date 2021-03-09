@@ -5,8 +5,10 @@ import { useHistory } from "react-router-dom"
 
 import { BookmarkAddIcon, BookmarkRemoveIcon } from "../../../../../components/Icon"
 import { BORDER_COLOR, DARK_TEXT_COLOR, DEFAULT_TEXT_COLOR } from "../../../../../components/Styles"
+import { capitalize } from "../../../../../helpers/utility"
 import { useAppDispatch, useAppSelector } from "../../../../../hooks"
 import { useQuranState } from "../../../components/QuranContext"
+import { readSurah } from "../../../services/surah"
 import { toggleBookmark } from "../state/home"
 
 const HomePageSurahsListContainer = styled.div`
@@ -77,18 +79,10 @@ const SurahListFunction: React.FunctionComponent = () => {
   const bookmarks = useAppSelector( ( state ) => state.home.bookmarks )
   const dispatch = useAppDispatch()
   const history = useHistory()
+  const isTitleFontLoaded = useAppSelector( ( state ) => state.quran.isTitleFontLoaded )
   const surahs = useAppSelector( ( state ) => state.home.surahs )
 
-  const { baseClasses, isSurahNamesFontLoaded } = useQuranState()
-
-  const getRevelationTypeText = useCallback( ( type: string ) => {
-    return type.charAt( 0 ).toUpperCase() + type.slice( 1 )
-  }, [] )
-
-  const readSurah = useCallback( ( surahId: string ) => {
-    history.push( `/${ surahId }` )
-    window.scroll( 0, 0 )
-  }, [ history ] )
+  const { baseClasses } = useQuranState()
 
   const toggleBookmarkSurah = useCallback( ( event: React.MouseEvent<HTMLButtonElement, MouseEvent>, surahId: string ) => {
     event.preventDefault()
@@ -100,15 +94,21 @@ const SurahListFunction: React.FunctionComponent = () => {
     <HomePageSurahsListContainer>
       {
         surahs.map( ( surah ) =>
-          <HomePageSurahListContainer aria-label={ surah.transliterations[ 0 ].text } onClick={ () => readSurah( surah.id ) } key={ surah.id }>
+          <HomePageSurahListContainer aria-label={ surah.transliterations[ 0 ].text } onClick={ () => readSurah( history, surah.id ) } key={ surah.id }>
             <HomePageSurahListTitleContainer>
               <HomePageSurahTranslatedText>{ surah.translations[ 0 ].text }</HomePageSurahTranslatedText>
-              <HomePageSurahListTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } style={ { visibility: isSurahNamesFontLoaded ? "visible" : "hidden" } } />
+              <>
+                {
+                  isTitleFontLoaded && (
+                    <HomePageSurahListTitleText dangerouslySetInnerHTML={ { __html: surah.unicode } } />
+                  )
+                }
+              </>
             </HomePageSurahListTitleContainer>
             <HomePageSurahListDetailsContainer>
               <HomePageSurahListTextContainer>
                 <HomePageSurahTransliteratedText> { surah.number } &#8226; { surah.transliterations[ 0 ].text }</HomePageSurahTransliteratedText>
-                <HomePageSurahListDetailsText>{ surah.numberOfAyahs } verses &#8226; { getRevelationTypeText( surah.revelation.place ) }</HomePageSurahListDetailsText>
+                <HomePageSurahListDetailsText>{ surah.numberOfAyahs } verses &#8226; { capitalize( surah.revelation.place ) }</HomePageSurahListDetailsText>
               </HomePageSurahListTextContainer>
               <IconButton className={ baseClasses.iconButton } onClick={ ( event ) => toggleBookmarkSurah( event, surah.id ) }>
                 {

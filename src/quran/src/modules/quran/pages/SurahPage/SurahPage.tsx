@@ -429,12 +429,15 @@ const SurahPageTranslatorsSearchInputResetContainer = styled.div`
 
 export const SurahPage: React.FunctionComponent = () => {
   const dispatch = useAppDispatch()
-  const selectedAyahs = useAppSelector( ( state ) => state.quran.selectedAyahs )
   const history = useHistory()
+  const isRightDrawerOpen = useAppSelector( ( state ) => state.quran.isRightDrawerOpen )
+  const isTitleFontLoaded = useAppSelector( ( state ) => state.quran.isTitleFontLoaded )
   const location = useLocation()
-  const { baseClasses, isMobileDevice, isRightDrawerOpen, isSurahNamesFontLoaded, surahs } = useQuranState()
+  const selectedAyahs = useAppSelector( ( state ) => state.quran.selectedAyahs )
   const translatorsMenuRef = useRef( null )
   const versesMenuRef = useRef( null )
+
+  const { baseClasses, isMobileDevice, surahs } = useQuranState()
 
   const match = matchPath( location.pathname, "/:id" )
   const id = ( match?.params as { id: string } ).id
@@ -761,7 +764,13 @@ export const SurahPage: React.FunctionComponent = () => {
                             </SurahPageMainContainerHeaderBackIconContainer>
                           )
                         }
-                        <SurahPageMainContainerTitle dangerouslySetInnerHTML={ { __html: selectedSurah.unicode } } className={ clsx( { "fixed": isSurahTitleFixed } ) } style={ { visibility: isSurahNamesFontLoaded ? "visible" : "hidden" } } />
+                        <>
+                          {
+                            isTitleFontLoaded && (
+                              <SurahPageMainContainerTitle dangerouslySetInnerHTML={ { __html: selectedSurah.unicode } } className={ clsx( { "fixed": isSurahTitleFixed } ) } />
+                            )
+                          }
+                        </>
                         <SurahPageMainContainerTransliteratedTitle>{ selectedSurah.transliterations[ 0 ].text }</SurahPageMainContainerTransliteratedTitle>
                         <SurahPageMainContainerTranslatedTitle>{ selectedSurah.translations[ 0 ].text } &#8226; { selectedSurah.numberOfAyahs } verses</SurahPageMainContainerTranslatedTitle>
                         {

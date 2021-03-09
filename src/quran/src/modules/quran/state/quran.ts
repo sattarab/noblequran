@@ -5,14 +5,16 @@ import { setItemInStorage } from "../../../helpers/utility"
 import type { RootState } from "../../../store"
 
 interface QuranState {
-  isSurahTitleFontLoaded: boolean
+  isRightDrawerOpen: boolean
+  isTitleFontLoaded: boolean
   selectedAyahs: {
     [ id: string ]: string[]
   }
 }
 
 const initialState: QuranState = {
-  isSurahTitleFontLoaded: false,
+  isRightDrawerOpen: false,
+  isTitleFontLoaded: false,
   selectedAyahs: {}
 }
 
@@ -46,6 +48,12 @@ export const quranSlice = createSlice( {
       setItemInStorage( "selectedAyahs", updatedState )
       state.selectedAyahs = updatedState
     },
+    setIsRightDrawerOpen( state: QuranState ) {
+      state.isRightDrawerOpen = ! state.isRightDrawerOpen
+    },
+    setIsTitleFontLoaded( state: QuranState, action: PayloadAction<boolean> ) {
+      state.isTitleFontLoaded = action.payload
+    },
     setSelectedAyahs( state: QuranState, action: PayloadAction<{ [ key: string ]: string[] }> ) {
       state.selectedAyahs = {
         ...action.payload
@@ -77,6 +85,6 @@ export const quranSlice = createSlice( {
   },
 } )
 
-export const { removeAyah, removeAyahsForSurah, setSelectedAyahs, toggleAyah } = quranSlice.actions
-export const selectHome = ( state: RootState ): QuranState => state.quran as QuranState
+export const { removeAyah, removeAyahsForSurah, setIsRightDrawerOpen, setIsTitleFontLoaded, setSelectedAyahs, toggleAyah } = quranSlice.actions
+export const selectQuran = ( state: RootState ): QuranState => state.quran as QuranState
 export default quranSlice.reducer

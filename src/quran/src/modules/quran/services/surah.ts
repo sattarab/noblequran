@@ -1,3 +1,4 @@
+import type { History } from "history"
 import PropTypes from "prop-types"
 
 import { HttpMethod, sendHttpRequest } from "../../../helpers/api"
@@ -59,4 +60,9 @@ export function getTranslatorsGroupedByLanguage(): Promise<Translator[]> {
     method: HttpMethod.GET,
     url: "/translators",
   } )
+}
+
+export function readSurah( history: History, surahId: string ): void {
+  history.push( `/${ surahId }` )
+  window.scroll( 0, 0 )
 }
