@@ -1,8 +1,8 @@
 import type { Theme } from "@material-ui/core/styles"
 import { createStyles, makeStyles } from "@material-ui/core/styles"
 import FontFaceObserver from "fontfaceobserver"
-import React, { createContext, useContext, useState } from "react"
-import { useEffectOnce, useMedia } from "react-use"
+import React, { createContext, useContext } from "react"
+import { useMedia } from "react-use"
 
 import {
   BLUE_COLOR,
@@ -11,11 +11,10 @@ import {
   RIGHT_DRAWER_WIDTH,
 } from "../../../components/Styles"
 import { isGreaterThanMediumScreen, MOBILE_SCREEN_MEDIA_QUERY } from "../../../helpers/responsive"
+import { useAppDispatch } from "../../../hooks"
 import type { Surah } from "../../../types/surah"
-import { getSurahs } from "../services/surah"
-export interface DisplaySurahVersesMap {
-  [ surahId: string ]: boolean
-}
+import { getSurahsById } from "../services/surah"
+import { setIsTitleFontLoaded } from "../state/quran"
 
 export type SelectedAyahModel = string[]
 export interface SelectedAyahs {
@@ -23,19 +22,9 @@ export interface SelectedAyahs {
 }
 
 interface QuranContextType {
-  baseClasses: Record<"fabButton" | "header" | "headerShift" | "iconButton" | "svgIcon" | "svgIconActive" | "svgIconDisabled", string>
-  displaySurahVersesMap: DisplaySurahVersesMap
+  baseClasses: Record<"header" | "headerShift" | "iconButton" | "svgIcon" | "svgIconActive" | "svgIconDisabled", string>
   isMobileDevice: boolean
-  isRightDrawerOpen: boolean
-  isSurahNamesFontLoaded: boolean
-  myBookmarks: string[]
   surahs: { [ id: string ]: Surah }
-
-  setBaseClasses( classes: Record<string, string> ): void
-  setDisplaySurahVersesMap( displaySurahVersesMap: DisplaySurahVersesMap ): void
-  setIsRightDrawerOpen( isRightDrawerOpen: boolean ): void
-  setIsSurahNamesFontLoaded( isSurahNamesFontLoaded: boolean ): void
-  setMyBookmarks( myBookmarks: string[] ): void
 }
 
 export const QuranContext = createContext<QuranContextType | null>( null )
@@ -76,39 +65,22 @@ const useStyles = makeStyles( ( theme: Theme ) =>
 )
 
 export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildren<Record<string, JSX.Element>>> = ( props ) => {
+  console.log( "loaded Quran Context Provider" )
+  const baseClasses = useStyles()
+  const dispatch = useAppDispatch()
   const isMobileDevice = useMedia( MOBILE_SCREEN_MEDIA_QUERY, ! isGreaterThanMediumScreen() )
-  const [ baseClasses, setBaseClasses ] = useState<Record<string, string>>( useStyles() )
-  const [ displaySurahVersesMap, setDisplaySurahVersesMap ] = useState<DisplaySurahVersesMap>( {} )
-  const [ isRightDrawerOpen, setIsRightDrawerOpen ] = useState<boolean>( false )
-  const [ isSurahNamesFontLoaded, setIsSurahNamesFontLoaded ] = useState<boolean>( false )
-  const [ myBookmarks, setMyBookmarks ] = useState<string[]>( [] )
-  const surahs = getSurahs().reduce( ( result: { [ id: string ]: Surah }, surah ) => {
-    result[ surah.id ] = surah
-    return result
-  }, {} )
+  const surahs = getSurahsById()
 
-  useEffectOnce( () => {
-    const surahNamesFontObserver = new FontFaceObserver( "QuranKarim" )
+  const surahNamesFontObserver = new FontFaceObserver( "QuranKarim" )
 
-    surahNamesFontObserver.load( null, 15000 ).then( () => {
-      setIsSurahNamesFontLoaded( true )
-    } )
+  surahNamesFontObserver.load( null, 15000 ).then( () => {
+    dispatch( setIsTitleFontLoaded( true ) )
   } )
 
   const contextValue: QuranContextType = {
     baseClasses,
-    displaySurahVersesMap,
     isMobileDevice,
-    isRightDrawerOpen,
-    isSurahNamesFontLoaded,
-    myBookmarks,
     surahs,
-
-    setBaseClasses,
-    setDisplaySurahVersesMap,
-    setIsRightDrawerOpen,
-    setIsSurahNamesFontLoaded,
-    setMyBookmarks,
   }
 
   // eslint-disable-next-line react/prop-types
@@ -120,5 +92,6 @@ export function useQuranState(): QuranContextType {
   if( ! context ) {
     throw new Error( "useQuranState must be used within the QuranContextProvider" )
   }
+
   return context
 }

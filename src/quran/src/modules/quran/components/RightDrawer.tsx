@@ -11,7 +11,7 @@ import { useHistory } from "react-router-dom"
 import { ClearIcon, KeyboardArrowDownIcon, RemoveIcon } from "../../../components/Icon"
 import { BLUE_COLOR, BORDER_COLOR, DARKER_TEXT_COLOR, DEFAULT_TEXT_COLOR, HEADER_HEIGHT, RIGHT_DRAWER_WIDTH } from "../../../components/Styles"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
-import { removeAyah, removeAyahsForSurah } from "../state/quran"
+import { removeAyah, removeAyahsForSurah, setIsRightDrawerOpen } from "../state/quran"
 import { QButton } from "./Button"
 import { useQuranState } from "./QuranContext"
 
@@ -156,21 +156,22 @@ export const QRightDrawer: React.FunctionComponent = () => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const history = useHistory()
+  const isRightDrawerOpen = useAppSelector( ( state ) => state.quran.isRightDrawerOpen )
   const selectedAyahs = useAppSelector( ( state ) => state.quran.selectedAyahs )
 
-  const { isMobileDevice, isRightDrawerOpen, setIsRightDrawerOpen, surahs } = useQuranState()
+  const { isMobileDevice, surahs } = useQuranState()
 
   const closeRightDrawer = useCallback( () => {
-    setIsRightDrawerOpen( false )
-  }, [ setIsRightDrawerOpen ] )
+    dispatch( setIsRightDrawerOpen() )
+  }, [ dispatch ] )
 
   const readSurah = useCallback( ( surahId: string ) => {
     history.push( `/${ surahId }` )
     window.scroll( 0, 0 )
     if( isMobileDevice ) {
-      setIsRightDrawerOpen( false )
+      dispatch( setIsRightDrawerOpen() )
     }
-  }, [ history, isMobileDevice, setIsRightDrawerOpen ] )
+  }, [ dispatch, history, isMobileDevice ] )
 
   const removeAll = useCallback( ( surahId: string ) => {
     dispatch( removeAyahsForSurah( surahId ) )

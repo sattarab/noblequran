@@ -8,7 +8,7 @@ import { useEffectOnce } from "react-use"
 
 import { HEADER_HEIGHT, RIGHT_DRAWER_WIDTH } from "../../components/Styles"
 import { getItemFromStorage } from "../../helpers/utility"
-import { useAppDispatch } from "../../hooks"
+import { useAppDispatch, useAppSelector } from "../../hooks"
 import { QHeader } from "./components/Header"
 import { QLoader } from "./components/Loader"
 import { QuranContextProvider, useQuranState } from "./components/QuranContext"
@@ -63,7 +63,8 @@ const QuranLoading: React.FunctionComponent = () => {
 export const QuranContainer: React.FunctionComponent = () => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
-  const { isMobileDevice, isRightDrawerOpen } = useQuranState()
+  const isRightDrawerOpen = useAppSelector( ( state ) => state.quran.isRightDrawerOpen )
+  const { isMobileDevice } = useQuranState()
 
   useEffectOnce( () => {
     getItemFromStorage<{ [ key: string ]: string[] }>( "selectedAyahs" )

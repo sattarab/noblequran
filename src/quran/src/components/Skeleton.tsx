@@ -1,4 +1,5 @@
 import styled from "@emotion/styled"
+import PropTypes from "prop-types"
 import React, { memo } from "react"
 
 const SkeletonPulse = styled.div`
@@ -6,7 +7,6 @@ const SkeletonPulse = styled.div`
   background: linear-gradient( -90deg, #f0f0f0 0%, #f8f8f8 50%, #f0f0f0 100% );
   background-size: 400% 400%;
   display: inline-block;
-  height: 10px;
   width: 100%;
 
   @keyframes pulse {
@@ -19,9 +19,16 @@ const SkeletonPulse = styled.div`
   }
 `
 
+interface QSkeletonProps {
+  style: React.CSSProperties
+}
 
-const QSkeletonFunction: React.FunctionComponent = () => {
-  return <SkeletonPulse />
+const QSkeletonFunction: React.FunctionComponent<QSkeletonProps> = ( { style } ) => {
+  return <SkeletonPulse style={ style } />
+}
+
+QSkeletonFunction.propTypes = {
+  style: PropTypes.objectOf( PropTypes.string ).isRequired,
 }
 
 export const QSkeleton = memo( QSkeletonFunction )

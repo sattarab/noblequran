@@ -4,6 +4,22 @@ import { logError } from "./error"
 
 const ESCAPE_REGEX = /([.*+?^=!:${}()|\[\]\/\\])/g
 
+export function capitalize( value: string ): string {
+  return value.charAt( 0 ).toUpperCase() + value.slice( 1 )
+}
+
+export function escapeRegex( string: string ): string {
+  return string.replace( ESCAPE_REGEX, "\\$1" )
+}
+
+export async function getItemFromStorage<T>( key: string ): Promise<T | null> {
+  return localforage.getItem<T>( key )
+    .catch( ( err ) => {
+      logError( err )
+      return null
+    } )
+}
+
 export function getLanguageLabel( code: string ): string {
   switch( code ) {
     case "az": {
@@ -172,18 +188,6 @@ export function getLanguageLabel( code: string ): string {
   }
 
   return "Other"
-}
-
-export function escapeRegex( string: string ): string {
-  return string.replace( ESCAPE_REGEX, "\\$1" )
-}
-
-export async function getItemFromStorage<T>( key: string ): Promise<T | null> {
-  return localforage.getItem<T>( key )
-    .catch( ( err ) => {
-      logError( err )
-      return null
-    } )
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

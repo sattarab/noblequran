@@ -5,7 +5,8 @@ import React, { memo, useCallback, useState } from "react"
 
 import { AddTaskIcon } from "../../../components/Icon"
 import { BLUE_COLOR_WITH_OPACITY } from "../../../components/Styles"
-import { useAppSelector } from "../../../hooks"
+import { useAppDispatch, useAppSelector } from "../../../hooks"
+import { setIsRightDrawerOpen } from "../state/quran"
 import { QPopper } from "./Popper"
 import { useQuranState } from "./QuranContext"
 
@@ -32,9 +33,11 @@ const RightDrawerButton = styled( IconButton )`
 `
 
 const QRightDrawerButtonFunction: React.FunctionComponent = () => {
+  const dispatch = useAppDispatch()
+  const isRightDrawerOpen = useAppSelector( ( state ) => state.quran.isRightDrawerOpen )
   const selectedAyahs = useAppSelector( ( state ) => state.quran.selectedAyahs )
 
-  const { baseClasses, isMobileDevice, isRightDrawerOpen, setIsRightDrawerOpen } = useQuranState()
+  const { baseClasses, isMobileDevice } = useQuranState()
   const [ displayPopover, setDisplayPopover ] = useState<Element | null>( null )
 
   const closePopover = () => {
@@ -46,8 +49,8 @@ const QRightDrawerButtonFunction: React.FunctionComponent = () => {
   }
 
   const toggleRightMenu = useCallback( () => {
-    setIsRightDrawerOpen( ! isRightDrawerOpen )
-  }, [ isRightDrawerOpen, setIsRightDrawerOpen ] )
+    dispatch( setIsRightDrawerOpen() )
+  }, [ dispatch ] )
 
   return (
     <RightDrawerButtonContainer>

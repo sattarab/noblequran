@@ -83,10 +83,10 @@ const SearchBarFunction: React.FunctionComponent = () => {
   const dispatch = useAppDispatch()
   const displayBookmarks = useAppSelector( ( state ) => state.home.displayBookmarks )
   const isHeaderFixed = useAppSelector( ( state ) => state.home.isHeaderFixed )
+  const isRightDrawerOpen = useAppSelector( ( state ) => state.quran.isRightDrawerOpen )
   const searchText = useAppSelector( ( state ) => state.home.searchText )
 
-
-  const { baseClasses, isMobileDevice, isRightDrawerOpen } = useQuranState()
+  const { baseClasses, isMobileDevice } = useQuranState()
   const [ popoverMap, setPopoverMap ] = useState<{ [ key: string ]: Element | null }>( {} )
 
   const resetFilters = useCallback( () => {

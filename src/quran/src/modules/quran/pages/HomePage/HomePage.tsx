@@ -169,7 +169,7 @@ export const HomePage: React.FunctionComponent = () => {
         <HomePageContentContainer>
           <HomePageContentOptionsContainer>
             <HomePageContentViewOptionsContainer>
-              <HomePageContentViewOptionContainer onClick={ () => setSelectedViewType( ViewType.GRID ) } className={ selectViewType === ViewType.GRID ? "active" : "" }>
+              <HomePageContentViewOptionContainer onClick={ () => setSelectedViewType( ViewType.GRID ) } className={ clsx( { "active": selectViewType === ViewType.GRID } ) } >
                 <GridIcon className={ clsx( baseClasses.svgIcon, "view-option-icon" ) } />
                 <HomePageContentViewOptionContainerLabel className="view-option-label">Grid</HomePageContentViewOptionContainerLabel>
               </HomePageContentViewOptionContainer>
