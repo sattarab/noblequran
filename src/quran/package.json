@@ -79,7 +79,7 @@
     "optimize-css-assets-webpack-plugin": "5.0.4",
     "patch-package": "6.4.5",
     "pnp-webpack-plugin": "1.6.4",
-    "postcss": "8.2.7",
+    "postcss": "8.2.8",
     "postcss-flexbugs-fixes": "5.0.2",
     "postcss-loader": "5.1.0",
     "postcss-normalize": "9.0.0",
