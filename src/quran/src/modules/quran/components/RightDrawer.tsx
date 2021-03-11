@@ -2,15 +2,18 @@ import styled from "@emotion/styled"
 import Accordion from "@material-ui/core/Accordion"
 import AccordionDetails from "@material-ui/core/AccordionDetails"
 import AccordionSummary from "@material-ui/core/AccordionSummary"
+import Checkbox from "@material-ui/core/Checkbox"
 import Drawer from "@material-ui/core/Drawer"
+import FormControlLabel from "@material-ui/core/FormControlLabel"
 import IconButton from "@material-ui/core/IconButton"
-import { createStyles, makeStyles } from "@material-ui/core/styles"
-import React, { useCallback } from "react"
+import { createStyles, makeStyles, withStyles } from "@material-ui/core/styles"
+import React, { useCallback, useState } from "react"
 import { useHistory } from "react-router-dom"
 
 import { ClearIcon, KeyboardArrowDownIcon, RemoveIcon } from "../../../components/Icon"
 import { BLUE_COLOR, BORDER_COLOR, DARKER_TEXT_COLOR, DEFAULT_TEXT_COLOR, HEADER_HEIGHT, RIGHT_DRAWER_WIDTH } from "../../../components/Styles"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
+import type { Option } from "../../../types/option"
 import { removeAyah, removeAyahsForSurah, setIsRightDrawerOpen } from "../state/quran"
 import { QButton } from "./Button"
 import { useQuranState } from "./QuranContext"
@@ -128,6 +131,14 @@ const RightDrawerSurahsContainer = styled.div`
   margin-top: 25px;
 `
 
+const StyledFormControlLabel = withStyles( {
+  label: {
+    "fontSize": "15px",
+    "fontWeight": 500,
+    "whiteSpace": "normal",
+  },
+} )( FormControlLabel )
+
 const useStyles = makeStyles( () =>
   createStyles( {
     accordion: {
@@ -152,18 +163,53 @@ const useStyles = makeStyles( () =>
   } ),
 )
 
+enum FormatType {
+  INDOPAK = "indopak",
+  MUSHAF = "mushaf",
+  UTHMANI = "uthmani",
+}
+
 export const QRightDrawer: React.FunctionComponent = () => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const history = useHistory()
   const isRightDrawerOpen = useAppSelector( ( state ) => state.quran.isRightDrawerOpen )
   const selectedAyahs = useAppSelector( ( state ) => state.quran.selectedAyahs )
+  const [ selectedFormats, setSelectedFormats ] = useState<string[]>( [] )
 
   const { isMobileDevice, surahs } = useQuranState()
+
+  const formatOptions: Array<Option<FormatType>> = [
+    {
+      label: "Uthamni",
+      value: FormatType.UTHMANI,
+    },
+    {
+      label: "Mushaf",
+      value: FormatType.MUSHAF,
+    },
+    {
+      label: "IndoPak",
+      value: FormatType.INDOPAK,
+    },
+  ]
 
   const closeRightDrawer = useCallback( () => {
     dispatch( setIsRightDrawerOpen() )
   }, [ dispatch ] )
+
+  const onFormatTypeToggle = useCallback( ( type: FormatType ) => {
+    const updatedSelectedFormats = [ ...selectedFormats ]
+    const index = updatedSelectedFormats.indexOf( type )
+
+    if( index !== -1 ) {
+      updatedSelectedFormats.splice( index, 1 )
+    } else {
+      updatedSelectedFormats.push( type )
+    }
+
+    setSelectedFormats( updatedSelectedFormats )
+  }, [ selectedFormats ] )
 
   const readSurah = useCallback( ( surahId: string ) => {
     history.push( `/${ surahId }` )
@@ -173,12 +219,12 @@ export const QRightDrawer: React.FunctionComponent = () => {
     }
   }, [ dispatch, history, isMobileDevice ] )
 
-  const removeAll = useCallback( ( surahId: string ) => {
-    dispatch( removeAyahsForSurah( surahId ) )
-  }, [ dispatch ] )
-
   const remove = useCallback( ( surahId: string, ayahNumberInSurah: string ) => {
     dispatch( removeAyah( { ayahId: ayahNumberInSurah, surahId } ) )
+  }, [ dispatch ] )
+
+  const removeAll = useCallback( ( surahId: string ) => {
+    dispatch( removeAyahsForSurah( surahId ) )
   }, [ dispatch ] )
 
   return (
@@ -237,6 +283,23 @@ export const QRightDrawer: React.FunctionComponent = () => {
               <RightDrawerOptionsContainer>
                 <RightDrawerOptionsContainerHeader>Format</RightDrawerOptionsContainerHeader>
                 <RightDrawerOptionsContainerHelpText>Select all the formats you want to download in</RightDrawerOptionsContainerHelpText>
+                <div>
+                  {
+                    formatOptions.map( ( option ) => (
+                      <div key={ option.value }>
+                        <StyledFormControlLabel
+                          control={
+                            <Checkbox
+                              checked={ selectedFormats.indexOf( option.value ) !== -1 }
+                              onChange={ () => onFormatTypeToggle( option.value ) }
+                            />
+                          }
+                          label={ option.label }
+                        />
+                      </div>
+                    ) )
+                  }
+                </div>
               </RightDrawerOptionsContainer>
             </RightDrawerBodyContainer>
           ) : (

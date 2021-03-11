@@ -1,4 +1,4 @@
-import { Ayah } from "./ayah.type"
+import type { Ayah } from "./ayah.type"
 
 export interface Juz {
   ayahs?: Ayah[]

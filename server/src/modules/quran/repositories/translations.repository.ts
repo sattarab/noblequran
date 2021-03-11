@@ -34,14 +34,14 @@ export class TranslationsRepository {
       number: translationDoc.number,
       numberInSurah: translationDoc.numberInSurah,
       page: translationDoc.page,
+      surahId: `${ translationDoc.surahId }`,
       ruku: translationDoc.ruku,
       text: translationDoc.text,
-      surahId: `${ translationDoc.surahId }`,
     } as Translation
   }
 
   find( translatorId: string ): Promise<Translation[]> {
-    return this.db.collection( `translations.${ translatorId }` ).find().sort( [ [ "number", 1 ] ] ).toArray()
+    return this.db.collection<TranslationDoc>( `translations.${ translatorId }` ).find().sort( [ [ "number", 1 ] ] ).toArray()
       .catch( ( err ) => { throw new MongoDbException( err ) } )
       .then( ( translationDocs ) => translationDocs.map( this.fromDocument ) )
   }
@@ -51,7 +51,7 @@ export class TranslationsRepository {
       _id: { $in: ayahIds.map( parseIntId ) },
     }
 
-    return this.db.collection( `translations.${ name }` ).find( translationsQuery ).sort( [ [ "number", 1 ] ] ).toArray()
+    return this.db.collection<TranslationDoc>( `translations.${ name }` ).find( translationsQuery ).sort( [ [ "number", 1 ] ] ).toArray()
       .catch( ( err ) => { throw new MongoDbException( err ) } )
       .then( ( translationDocs ) => translationDocs.map( this.fromDocument ) )
   }

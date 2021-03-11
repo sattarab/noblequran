@@ -88,14 +88,15 @@ const HeaderNavigationTab = styled( StyledButton )`
   }
 `
 
-const HeaderTitle = styled.div`
-  cursor: pointer;
+const HeaderTitle = styled.h1`
   font-size: 24px;
   font-weight: 500;
+  margin: 0;
 `
 
 const HeaderTitleContainer = styled.div`
   align-items: center;
+  cursor: pointer;
   display: flex;
   flex: 1;
 `
@@ -173,14 +174,14 @@ const QHeaderFunction: React.FunctionComponent = () => {
       <HeaderContainer className={ clsx( baseClasses.header, {
         [ baseClasses.headerShift ]: isRightDrawerOpen && ! isMobileDevice,
       } ) }>
-        <HeaderTitleContainer>
+        <HeaderTitleContainer onClick={ () => history.push( "/" ) }>
           {
             isMobileDevice && (
               <StyledMenuIcon onClick={ () => toggleLeftMenu( ! isLeftDrawerOpen ) } />
             )
           }
           <StyledQuranIcon />
-          <HeaderTitle onClick={ () => history.push( "/" ) }>Quran</HeaderTitle>
+          <HeaderTitle>Quran</HeaderTitle>
         </HeaderTitleContainer>
         {
           ! isMobileDevice && (

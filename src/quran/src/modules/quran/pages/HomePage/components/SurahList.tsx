@@ -71,7 +71,7 @@ const HomePageSurahTranslatedText = styled.h2`
 
 const HomePageSurahTransliteratedText = styled.h1`
   flex: 1;
-  font: 500 16px/24px "HarmoniaSansPro";
+  font: 500 15px/22px "HarmoniaSansPro";
   margin: 0;
 `
 

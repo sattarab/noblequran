@@ -27,7 +27,7 @@ export interface PaginationResults<U> {
 }
 
 export function addPagination<T>( res: Response ) {
-  return ( results: PaginationResults<T> ) => {
+  return ( results: PaginationResults<T> ): T[] => {
     const { pagination } = results
     res.setHeader( "Total-Count", pagination.count || 0 )
     res.setHeader( "Per-Page", pagination.perPage )

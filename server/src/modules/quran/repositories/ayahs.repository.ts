@@ -58,13 +58,13 @@ export class AyahsRepository {
       numberInSurah: ayahDoc.numberInSurah,
       page: ayahDoc.page,
       ruku: ayahDoc.ruku,
-      text: ayahDoc.text,
       surahId: `${ ayahDoc.surahId }`,
-      words: ayahDoc.words.map( ( word_doc ) => ( {
-        id: `${ word_doc._id }`,
-        text: word_doc.text,
-        translations: word_doc.translations,
-        type: word_doc.type,
+      text: ayahDoc.text,
+      words: ayahDoc.words.map( ( wordDoc ) => ( {
+        id: `${ wordDoc._id }`,
+        text: wordDoc.text,
+        translations: wordDoc.translations,
+        type: wordDoc.type,
       } ) ),
     } as Ayah
   }

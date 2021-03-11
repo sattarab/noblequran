@@ -9,7 +9,8 @@ import type { Juz } from "../types/juz.type"
 
 @Controller( "juzs" )
 export class JuzController {
-  constructor( private readonly juzService: JuzService ) {}
+  constructor( private readonly juzService: JuzService ) {
+  }
 
   @Get( ":id" )
   get( @Param() params: { id: string }, @Query() query: { embed?: string } ): Promise<Juz> {

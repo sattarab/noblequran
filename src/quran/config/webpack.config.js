@@ -3,6 +3,7 @@
 // @todo causes issue: `You attempted to import /Users/abdullah/noblequran/src/quran/node_modules/@pmmmwh/react-refresh-webpack-plugin/lib/runtime/RefreshUtils.js which falls outside of the project src/ directory`
 // const ReactRefreshWebpackPlugin = require( "@pmmmwh/react-refresh-webpack-plugin" )
 const CaseSensitivePathsPlugin = require( "case-sensitive-paths-webpack-plugin" )
+const CompressionPlugin = require( "compression-webpack-plugin" )
 const ESLintPlugin = require( "eslint-webpack-plugin" )
 const HtmlWebpackPlugin = require( "html-webpack-plugin" )
 const MiniCssExtractPlugin = require( "mini-css-extract-plugin" )
@@ -626,6 +627,12 @@ module.exports = function ( webpackEnv ) {
       // a plugin that prints an error when you attempt to do this.
       // See https://github.com/facebook/create-react-app/issues/240
       isEnvDevelopment && new CaseSensitivePathsPlugin(),
+      isEnvProduction
+        && new CompressionPlugin( {
+          test: /\.(js|mjs|jsx|ts|tsx)$/,
+          algorithm: "gzip",
+          include: path.appSrc,
+        } ),
       // If you require a missing module and then `npm install` it, you still have
       // to restart the development server for webpack to discover it. This plugin
       // makes the discovery automatic so you don't have to restart.

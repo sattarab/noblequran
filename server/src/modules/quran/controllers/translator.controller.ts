@@ -5,7 +5,8 @@ import type { Translator } from "../types/translator.type"
 
 @Controller( "translators" )
 export class TranslatorController {
-  constructor( private readonly translatorService: TranslatorService ) {}
+  constructor( private readonly translatorService: TranslatorService ) {
+  }
 
   @Get()
   query(): Promise<Translator[]> {

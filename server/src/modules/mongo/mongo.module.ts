@@ -39,7 +39,7 @@ export class MongoModule implements OnModuleDestroy {
     }
   }
 
-  onModuleDestroy() {
+  onModuleDestroy(): void {
     const client = this.moduleRef.get<MongoClient>( getClientToken() )
     if( client?.isConnected() ) {
       client.close()

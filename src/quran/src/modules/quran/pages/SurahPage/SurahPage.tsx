@@ -459,66 +459,6 @@ export const SurahPage: React.FunctionComponent = () => {
   const [ selectedTranslations, setSelectedTranslations ] = useState<string[]>( [ DEFAULT_TRANSLATION ] )
   const [ translatorNames, setTranslatorNames ] = useState<{ [ identifier: string ]: string }>( {} )
 
-  useClickAway( translatorsMenuRef, () => {
-    if( displayTranslatorsMenu ) {
-      setDisplayTranslatorsMenu( false )
-    }
-  } )
-
-  useClickAway( versesMenuRef, () => {
-    if( displayVerseMenu ) {
-      setDisplayVerseMenu( false )
-    }
-  } )
-
-  useEffect( () => {
-    getSurahAyahs( selectedSurah.id, { page: 1, perPage: 10, translations: selectedTranslations } )
-      .then( ( response ) => {
-        setAyahs( response.items )
-        setPagination( response.pagination )
-      } )
-      .catch( ( error ) => {
-        setDisplayError( true )
-        logError( error )
-      } )
-      .finally( () => {
-        setIsLoading( false )
-      } )
-  }, [ selectedSurah.id, selectedTranslations ] )
-
-  useEffectOnce( () => {
-    getTranslatorsGroupedByLanguage()
-      .then( ( translators ) => {
-        translators.sort( ( a, b ) => {
-          const aLanguageLabel = getLanguageLabel( a.language )
-          const bLanguageLabel = getLanguageLabel( b.language )
-
-          if( aLanguageLabel < bLanguageLabel ) {
-            return -1
-          }
-
-          if( aLanguageLabel > bLanguageLabel ) {
-            return 1
-          }
-
-          return 0
-        } )
-
-        const updatedGroupTranslators = groupBy( translators, "language" )
-        setGroupedTranslators( updatedGroupTranslators )
-        setFilterGroupedTranslators( updatedGroupTranslators )
-      } )
-      .catch( logError )
-  } )
-
-  useEffectOnce( () => {
-    window.addEventListener( "scroll", onPageScroll )
-
-    return () => {
-      window.removeEventListener( "scroll", onPageScroll )
-    }
-  } )
-
   const closePopover = useCallback( ( key: string ) => {
     setPopoverMap( { ...popoverMap, ...{ [ key ]: null } } )
   }, [ popoverMap ] )
@@ -704,9 +644,9 @@ export const SurahPage: React.FunctionComponent = () => {
     setSelectedTranslations( updatedSelectedTranslations )
   }, [ selectedTranslations ] )
 
-  const openPopover = ( key: string, event: React.MouseEvent<HTMLSpanElement> ) => {
+  const openPopover = useCallback( ( key: string, event: React.MouseEvent<HTMLSpanElement> ) => {
     setPopoverMap( { ...popoverMap, ...{ [ key ]: event.currentTarget } } )
-  }
+  }, [ popoverMap ] )
 
   const resetFilters = useCallback( () => {
     setSearchText( "" )
@@ -717,6 +657,65 @@ export const SurahPage: React.FunctionComponent = () => {
   const toggleAyahSelection = useCallback( ( ayah: Ayah ) => {
     dispatch( toggleAyah( { ayahId: `${ ayah.numberInSurah }`, surahId: ayah.surahId } ) )
   }, [ dispatch ] )
+
+  // Hooks
+  useClickAway( translatorsMenuRef, () => {
+    if( displayTranslatorsMenu ) {
+      setDisplayTranslatorsMenu( false )
+    }
+  } )
+
+  useClickAway( versesMenuRef, () => {
+    if( displayVerseMenu ) {
+      setDisplayVerseMenu( false )
+    }
+  } )
+
+  useEffect( () => {
+    getSurahAyahs( selectedSurah.id, { page: 1, perPage: 10, translations: selectedTranslations } )
+      .then( ( response ) => {
+        setAyahs( response.items )
+        setPagination( response.pagination )
+      } )
+      .catch( ( error ) => {
+        setDisplayError( true )
+        logError( error )
+      } )
+      .finally( () => {
+        setIsLoading( false )
+      } )
+  }, [ selectedSurah.id, selectedTranslations ] )
+
+  useEffectOnce( () => {
+    getTranslatorsGroupedByLanguage()
+      .then( ( translators ) => {
+        translators.sort( ( a, b ) => {
+          const aLanguageLabel = getLanguageLabel( a.language )
+          const bLanguageLabel = getLanguageLabel( b.language )
+
+          if( aLanguageLabel < bLanguageLabel ) {
+            return -1
+          }
+
+          if( aLanguageLabel > bLanguageLabel ) {
+            return 1
+          }
+
+          return 0
+        } )
+
+        const updatedGroupTranslators = groupBy( translators, "language" )
+        setGroupedTranslators( updatedGroupTranslators )
+        setFilterGroupedTranslators( updatedGroupTranslators )
+      } )
+      .catch( logError )
+
+    window.addEventListener( "scroll", onPageScroll )
+
+    return () => {
+      window.removeEventListener( "scroll", onPageScroll )
+    }
+  } )
 
   if( ! selectedSurah ) {
     selectedSurah = getSurahs().find( ( surah ) => surah.queryIndexes.includes( id ) ) as Surah

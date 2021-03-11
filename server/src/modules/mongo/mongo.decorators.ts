@@ -2,8 +2,5 @@ import { Inject } from "@nestjs/common"
 
 import { getClientToken, getDbToken } from "./mongo.util"
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const InjectClient = ( connectionName?: string ) => Inject( getClientToken( connectionName ) )
-
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const InjectDb = ( connectionName?: string ) => Inject( getDbToken( connectionName ) )
+export const InjectClient = ( connectionName?: string ): ( target: Record<string, string>, key: string | symbol, index?: number ) => void => Inject( getClientToken( connectionName ) )
+export const InjectDb = ( connectionName?: string ): ( target: Record<string, string>, key: string | symbol, index?: number ) => void => Inject( getDbToken( connectionName ) )

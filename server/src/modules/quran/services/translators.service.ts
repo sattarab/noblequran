@@ -5,7 +5,8 @@ import type { Translator } from "../types/translator.type"
 
 @Injectable()
 export class TranslatorService {
-  constructor( private readonly translatorsRepository: TranslatorsRepository ) {}
+  constructor( private readonly translatorsRepository: TranslatorsRepository ) {
+  }
 
   query(): Promise<Translator[]> {
     return this.translatorsRepository.find()

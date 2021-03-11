@@ -21,7 +21,8 @@ export class JuzService {
   constructor(
     private readonly ayahsRepository: AyahsRepository,
     private readonly juzsRepository: JuzsRepository,
-  ) {}
+  ) {
+  }
 
   async get( id: string, options: JuzGetOptions = {} ): Promise<Juz> {
     const juz = await this.juzsRepository.findOneById( id )

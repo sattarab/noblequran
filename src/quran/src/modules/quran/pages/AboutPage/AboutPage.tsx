@@ -21,8 +21,8 @@ const AboutPageContainer = styled.div`
   padding: 0 30px;
 
   @media ${ LARGE_SCREEN_MEDIA_QUERY } {
-    max-width: 70%;
     margin: 0 auto;
+    max-width: 70%;
   }
 `
 

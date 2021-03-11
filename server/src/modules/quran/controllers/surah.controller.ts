@@ -1,15 +1,26 @@
 import { Controller, Get, Param, Query } from "@nestjs/common"
 
+import type { PaginationResults } from "../../common/helpers/pagination.helper"
 import { getPaginationOptions } from "../../common/helpers/pagination.helper"
-import { SurahGetAyahOptions, SurahGetOptions, SurahService } from "../services/surah.service"
-import { Surah } from "../types/surah.type"
+import type { SurahGetAyahOptions, SurahGetOptions } from "../services/surah.service"
+import { SurahService } from "../services/surah.service"
+import type { Ayah } from "../types/ayah.type"
+import type { Surah } from "../types/surah.type"
 
 @Controller( "surahs" )
 export class SurahController {
-  constructor( private readonly surahService: SurahService ) {}
+  constructor( private readonly surahService: SurahService ) {
+  }
 
   @Get( ":id" )
-  get( @Param() params: { id: string }, @Query() query: { embed?: string } ): Promise<Surah> {
+  get(
+    @Param() params: {
+      id: string
+    },
+    @Query() query: {
+      embed?: string
+    }
+  ): Promise<Surah> {
     const options: SurahGetOptions = {}
 
     if( query.embed ) {
@@ -26,7 +37,16 @@ export class SurahController {
   }
 
   @Get( ":id/ayahs" )
-  async getAyahs( @Param() params: { id: string }, @Query() query: { page?: string, perPage?: string, translations?: string } ) {
+  async getAyahs(
+    @Param() params: {
+      id: string
+    },
+    @Query() query: {
+      page?: string
+      perPage?: string
+      translations?: string
+    }
+  ): Promise<PaginationResults<Ayah>> {
     const options: SurahGetAyahOptions = getPaginationOptions( query )
 
     if( query.translations ) {

@@ -29,11 +29,11 @@ export class JuzsRepository {
     return {
       id: `${ juzDoc._id }`,
       number: juzDoc.number,
-      verses: juzDoc.verses.map( ( verse_doc ) => {
+      verses: juzDoc.verses.map( ( verseDoc ) => {
         return {
-          end: verse_doc.end,
-          start: verse_doc.start,
-          surahId: `${ verse_doc.surahId }`,
+          end: verseDoc.end,
+          start: verseDoc.start,
+          surahId: `${ verseDoc.surahId }`,
         }
       } ),
     } as Juz

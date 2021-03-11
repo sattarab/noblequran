@@ -23,7 +23,8 @@ export class SurahService {
     private readonly ayahsRepository: AyahsRepository,
     private readonly surahsRepository: SurahsRepository,
     private readonly translationsRepository: TranslationsRepository,
-  ) {}
+  ) {
+  }
 
   async get( id: string, options: SurahGetOptions = {} ): Promise<Surah> {
     const surah = await this.surahsRepository.findOneById( id )
