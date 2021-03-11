@@ -2,6 +2,7 @@ import styled from "@emotion/styled"
 import Accordion from "@material-ui/core/Accordion"
 import AccordionDetails from "@material-ui/core/AccordionDetails"
 import AccordionSummary from "@material-ui/core/AccordionSummary"
+import Button from "@material-ui/core/Button"
 import Checkbox from "@material-ui/core/Checkbox"
 import Drawer from "@material-ui/core/Drawer"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
@@ -10,7 +11,7 @@ import { createStyles, makeStyles, withStyles } from "@material-ui/core/styles"
 import React, { useCallback, useState } from "react"
 import { useHistory } from "react-router-dom"
 
-import { ClearIcon, KeyboardArrowDownIcon, RemoveIcon } from "../../../components/Icon"
+import { ClearIcon, DownloadIcon, KeyboardArrowDownIcon, RemoveIcon } from "../../../components/Icon"
 import { BLUE_COLOR, BORDER_COLOR, DARKER_TEXT_COLOR, DEFAULT_TEXT_COLOR, HEADER_HEIGHT, RIGHT_DRAWER_WIDTH } from "../../../components/Styles"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
 import type { Option } from "../../../types/option"
@@ -18,10 +19,11 @@ import { removeAyah, removeAyahsForSurah, setIsRightDrawerOpen } from "../state/
 import { QButton } from "./Button"
 import { useQuranState } from "./QuranContext"
 
+const FOOTER_HEIGHT = "64px"
+
 const RightDrawerBodyContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: calc( 100% - ${ HEADER_HEIGHT } );
+  flex: 1;
+  max-height: calc( 100% - ${ FOOTER_HEIGHT } );
 `
 
 const RightDrawerBodyReviewContainer = styled.section`
@@ -36,6 +38,34 @@ const RightDrawerBodyReviewTitle = styled.div`
   font-size: 15px;
   font-weight: 500;
   letter-spacing: 0.25px;
+`
+
+const RightDrawerContentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: calc( 100% - ${ HEADER_HEIGHT } );
+`
+
+const RightDrawerFooterContainer = styled.div`
+  align-items: center;
+  border-top: 1px solid ${ BORDER_COLOR };
+  display: flex;
+  flex-direction: row;
+  height: ${ FOOTER_HEIGHT };
+  padding: 0 15px;
+`
+
+const RightDrawerFooterDownloadButton = styled( Button )`
+  background: ${ BLUE_COLOR };
+  border: 2px solid ${ BLUE_COLOR };
+  color: #ffffff;
+  font: 700 16px/22px "HarmoniaSansPro";
+  height: 35px;
+  text-transform: none;
+
+  :hover {
+    background: ${ BLUE_COLOR };
+  }
 `
 
 const RightDrawerHeaderContainer = styled.div`
@@ -139,6 +169,13 @@ const StyledFormControlLabel = withStyles( {
   },
 } )( FormControlLabel )
 
+const StyledDownloadIcon = styled( DownloadIcon )`
+  fill: #ffffff;
+  height: 18px;
+  margin-right: 5px;
+  width: 18px;
+`
+
 const useStyles = makeStyles( () =>
   createStyles( {
     accordion: {
@@ -181,7 +218,7 @@ export const QRightDrawer: React.FunctionComponent = () => {
 
   const formatOptions: Array<Option<FormatType>> = [
     {
-      label: "Uthamni",
+      label: "Uthmani",
       value: FormatType.UTHMANI,
     },
     {
@@ -244,64 +281,78 @@ export const QRightDrawer: React.FunctionComponent = () => {
       {
         Object.keys( selectedAyahs ).length
           ? (
-            <RightDrawerBodyContainer>
-              <RightDrawerBodyReviewContainer>
-                <RightDrawerBodyReviewTitle>Review</RightDrawerBodyReviewTitle>
-                <RightDrawerSurahsContainer>
-                  {
-                    Object.keys( selectedAyahs ).map( ( surahId ) => (
-                      <RightDrawerSurahContainer className={ classes.accordion } key={ surahId }>
-                        <RightDrawerSurahTitleContainer expandIcon={ <KeyboardArrowDownIcon className={ classes.clickableSvgIcon } /> }>
-                          <RightDrawerSurahTitle>{ surahs[ surahId ].transliterations[ 0 ].text }</RightDrawerSurahTitle>
-                        </RightDrawerSurahTitleContainer>
-                        <RightDrawerSurahVersesContainer>
-                          {
-                            selectedAyahs[ surahId ].map( ( ayahNumberInSurah ) => (
-                              <RightDrawerSurahVerseContainer key={ `${ surahId }:${ ayahNumberInSurah }` }>
-                                <RightDrawerSurahVerseText>Verse { ayahNumberInSurah }</RightDrawerSurahVerseText>
-                                <IconButton>
-                                  <RemoveIcon className={ classes.clickableSvgIcon } onClick={ () => remove( surahId, ayahNumberInSurah ) } />
-                                </IconButton>
-                              </RightDrawerSurahVerseContainer>
-                            ) )
-                          }
-                          <RightDrawerSurahButtonsContainer>
-                            <QButton
-                              isActive={ true }
-                              isDisabled={ selectedAyahs[ surahId ].length === surahs[ surahId ].numberOfAyahs }
-                              label="Add more verses"
-                              onClick={ () => readSurah( surahId ) }
-                            />
-                            <QButton isActive={ true } label="Remove all" onClick={ () => removeAll( surahId ) } />
-                          </RightDrawerSurahButtonsContainer>
-                        </RightDrawerSurahVersesContainer>
-                      </RightDrawerSurahContainer>
-                    ) )
-                  }
-                </RightDrawerSurahsContainer>
-              </RightDrawerBodyReviewContainer>
-              <RightDrawerOptionsContainer>
-                <RightDrawerOptionsContainerHeader>Format</RightDrawerOptionsContainerHeader>
-                <RightDrawerOptionsContainerHelpText>Select all the formats you want to download in</RightDrawerOptionsContainerHelpText>
-                <div>
-                  {
-                    formatOptions.map( ( option ) => (
-                      <div key={ option.value }>
-                        <StyledFormControlLabel
-                          control={
-                            <Checkbox
-                              checked={ selectedFormats.indexOf( option.value ) !== -1 }
-                              onChange={ () => onFormatTypeToggle( option.value ) }
-                            />
-                          }
-                          label={ option.label }
-                        />
-                      </div>
-                    ) )
-                  }
-                </div>
-              </RightDrawerOptionsContainer>
-            </RightDrawerBodyContainer>
+            <RightDrawerContentContainer>
+              <RightDrawerBodyContainer>
+                <RightDrawerBodyReviewContainer>
+                  <RightDrawerBodyReviewTitle>Review</RightDrawerBodyReviewTitle>
+                  <RightDrawerSurahsContainer>
+                    {
+                      Object.keys( selectedAyahs ).map( ( surahId ) => (
+                        <RightDrawerSurahContainer className={ classes.accordion } key={ surahId }>
+                          <RightDrawerSurahTitleContainer expandIcon={ <KeyboardArrowDownIcon className={ classes.clickableSvgIcon } /> }>
+                            <RightDrawerSurahTitle>{ surahs[ surahId ].transliterations[ 0 ].text }</RightDrawerSurahTitle>
+                          </RightDrawerSurahTitleContainer>
+                          <RightDrawerSurahVersesContainer>
+                            {
+                              selectedAyahs[ surahId ].map( ( ayahNumberInSurah ) => (
+                                <RightDrawerSurahVerseContainer key={ `${ surahId }:${ ayahNumberInSurah }` }>
+                                  <RightDrawerSurahVerseText>Verse { ayahNumberInSurah }</RightDrawerSurahVerseText>
+                                  <IconButton>
+                                    <RemoveIcon className={ classes.clickableSvgIcon } onClick={ () => remove( surahId, ayahNumberInSurah ) } />
+                                  </IconButton>
+                                </RightDrawerSurahVerseContainer>
+                              ) )
+                            }
+                            <RightDrawerSurahButtonsContainer>
+                              <QButton
+                                color={ "secondary" }
+                                isDisabled={ selectedAyahs[ surahId ].length === surahs[ surahId ].numberOfAyahs }
+                                label="Add more verses"
+                                onClick={ () => readSurah( surahId ) }
+                                style={ { marginLeft: "-5px", padding: "10px 5px" } }
+                              />
+                              <QButton
+                                color={ "secondary" }
+                                label="Remove all"
+                                onClick={ () => removeAll( surahId ) }
+                                style={ { padding: "10px 5px" } }
+                              />
+                            </RightDrawerSurahButtonsContainer>
+                          </RightDrawerSurahVersesContainer>
+                        </RightDrawerSurahContainer>
+                      ) )
+                    }
+                  </RightDrawerSurahsContainer>
+                </RightDrawerBodyReviewContainer>
+                <RightDrawerOptionsContainer>
+                  <RightDrawerOptionsContainerHeader>Options</RightDrawerOptionsContainerHeader>
+                  <RightDrawerOptionsContainerHelpText>Select the formats you wish to download</RightDrawerOptionsContainerHelpText>
+                  <div>
+                    {
+                      formatOptions.map( ( option ) => (
+                        <div key={ option.value }>
+                          <StyledFormControlLabel
+                            control={
+                              <Checkbox
+                                checked={ selectedFormats.indexOf( option.value ) !== -1 }
+                                onChange={ () => onFormatTypeToggle( option.value ) }
+                              />
+                            }
+                            label={ option.label }
+                          />
+                        </div>
+                      ) )
+                    }
+                  </div>
+                </RightDrawerOptionsContainer>
+              </RightDrawerBodyContainer>
+              <RightDrawerFooterContainer>
+                <RightDrawerFooterDownloadButton fullWidth>
+                  <StyledDownloadIcon />
+                  <span>Download All</span>
+                </RightDrawerFooterDownloadButton>
+              </RightDrawerFooterContainer>
+            </RightDrawerContentContainer>
           ) : (
             <RightDrawerPlaceholderContainer>
               <RightDrawerPlaceholderText>You haven&apos;t selected any verse yet.<br />Select a verse to get started.</RightDrawerPlaceholderText>

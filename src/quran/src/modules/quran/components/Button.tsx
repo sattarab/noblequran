@@ -29,13 +29,8 @@ const ButtonContainer = styled( Button )`
     background-color: ${ WHITE_SMOKE_COLOR };
   }
 
-  &:disabled {
-    .MuiButton-label {
-      color: ${ DEFAULT_TEXT_COLOR_WITH_OPACITY };
-    }
-  }
-
-  &.active {
+  &.active,
+  &.secondary {
     .MuiButton-label {
       color: ${ BLUE_COLOR };
     }
@@ -44,28 +39,47 @@ const ButtonContainer = styled( Button )`
       background: ${ BLUE_COLOR_WITH_OPACITY };
     }
   }
+
+  &:disabled {
+    .MuiButton-label {
+      color: ${ DEFAULT_TEXT_COLOR_WITH_OPACITY };
+    }
+  }
 `
 
 export interface QButtonProps {
+  color?: "secondary"
   isActive?: boolean
   isDisabled?: boolean
   label: string
+  style?: React.CSSProperties
 
   onClick?( event: React.MouseEvent<HTMLButtonElement, MouseEvent> ): void
 }
 
-export const QButton: React.FunctionComponent<QButtonProps> = ( { isActive, isDisabled, label, onClick } ) => {
+export const QButton: React.FunctionComponent<QButtonProps> = ( { color, isActive, isDisabled, label, onClick, style } ) => {
   const onClickHandler = ( event: React.MouseEvent<HTMLButtonElement, MouseEvent> ): void => {
     if( onClick ) {
       return onClick( event )
     }
   }
-  return <ButtonContainer className={ clsx( { "active": isActive } ) } disabled={ isDisabled } onClick={ onClickHandler }>{ label }</ButtonContainer>
+  return (
+    <ButtonContainer
+      className={ clsx( color, { "active": isActive } ) }
+      disabled={ isDisabled }
+      onClick={ onClickHandler }
+      style={ style }
+    >
+      { label }
+    </ButtonContainer>
+  )
 }
 
 QButton.propTypes = {
+  color: PropTypes.oneOf( [ "secondary" ] ),
   isActive: PropTypes.bool,
   isDisabled: PropTypes.bool,
   label: PropTypes.string.isRequired,
   onClick: PropTypes.func,
+  style: PropTypes.objectOf( PropTypes.string ),
 }
