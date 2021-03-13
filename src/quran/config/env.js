@@ -5,7 +5,7 @@ const path = require( "path" )
 const paths = require( "./paths" )
 
 // Make sure that including paths.js after env.js will read .env variables.
-delete require.cache[require.resolve( "./paths" )]
+delete require.cache[ require.resolve( "./paths" ) ]
 
 const NODE_ENV = process.env.NODE_ENV
 if( ! NODE_ENV ) {
@@ -16,12 +16,12 @@ if( ! NODE_ENV ) {
 
 // https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
 const dotenvFiles = [
-  `${paths.dotenv}.${NODE_ENV}.local`,
+  `${ paths.dotenv }.${ NODE_ENV }.local`,
   // Don't include `.env.local` for `test` environment
   // since normally you expect tests to produce the same
   // results for everyone
-  NODE_ENV !== "test" && `${paths.dotenv}.local`,
-  `${paths.dotenv}.${NODE_ENV}`,
+  NODE_ENV !== "test" && `${ paths.dotenv }.local`,
+  `${ paths.dotenv }.${ NODE_ENV }`,
   paths.dotenv,
 ].filter( Boolean )
 
@@ -52,7 +52,7 @@ dotenvFiles.forEach( dotenvFile => {
 const appDirectory = fs.realpathSync( process.cwd() )
 process.env.NODE_PATH = ( process.env.NODE_PATH || "" )
   .split( path.delimiter )
-  .filter( folder => folder && !path.isAbsolute( folder ) )
+  .filter( folder => folder && ! path.isAbsolute( folder ) )
   .map( folder => path.resolve( appDirectory, folder ) )
   .join( path.delimiter )
 
@@ -65,7 +65,7 @@ function getClientEnvironment( publicUrl ) {
     .filter( key => REACT_APP.test( key ) )
     .reduce(
       ( env, key ) => {
-        env[key] = process.env[key]
+        env[ key ] = process.env[ key ]
         return env
       },
       {
@@ -95,7 +95,7 @@ function getClientEnvironment( publicUrl ) {
   // Stringify all values so we can feed into webpack DefinePlugin
   const stringified = {
     "process.env": Object.keys( raw ).reduce( ( env, key ) => {
-      env[key] = JSON.stringify( raw[key] )
+      env[ key ] = JSON.stringify( raw[ key ] )
       return env
     }, {} ),
   }

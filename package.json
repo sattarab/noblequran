@@ -5,7 +5,7 @@
   "author": "NobleQuran",
   "private": true,
   "scripts": {
-    "start-haproxy": "cd ops/haproxy && haproxy -f ./dev.cfg",
-    "start-server": "cd server && npm run start:dev"
+    "start:haproxy": "cd ops/haproxy && haproxy -f ./dev.cfg",
+    "start:server": "cd server && npm run start:dev"
   }
 }

@@ -169,6 +169,12 @@ const QHeaderFunction: React.FunctionComponent = () => {
     setIsLeftDrawerOpen( open )
   }, [] )
 
+  const toggleLeftMenuByButton = useCallback( ( event: React.MouseEvent<SVGSVGElement>, open: boolean ) => {
+    event.stopPropagation()
+    event.preventDefault()
+    toggleLeftMenu( open )
+  }, [ toggleLeftMenu ] )
+
   return (
     <>
       <HeaderContainer className={ clsx( baseClasses.header, {
@@ -177,7 +183,7 @@ const QHeaderFunction: React.FunctionComponent = () => {
         <HeaderTitleContainer onClick={ () => history.push( "/" ) }>
           {
             isMobileDevice && (
-              <StyledMenuIcon onClick={ () => toggleLeftMenu( ! isLeftDrawerOpen ) } />
+              <StyledMenuIcon onClick={ ( event ) => toggleLeftMenuByButton( event, ! isLeftDrawerOpen ) } />
             )
           }
           <StyledQuranIcon />

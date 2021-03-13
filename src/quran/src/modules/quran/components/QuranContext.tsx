@@ -65,7 +65,6 @@ const useStyles = makeStyles( ( theme: Theme ) =>
 )
 
 export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildren<Record<string, JSX.Element>>> = ( props ) => {
-  console.log( "loaded Quran Context Provider" )
   const baseClasses = useStyles()
   const dispatch = useAppDispatch()
   const isMobileDevice = useMedia( MOBILE_SCREEN_MEDIA_QUERY, ! isGreaterThanMediumScreen() )

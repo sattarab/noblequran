@@ -38,6 +38,7 @@ const HomePageSurahListDetailsContainer = styled.div`
 `
 
 const HomePageSurahListDetailsText = styled.div`
+  color: ${ DEFAULT_TEXT_COLOR };
   font-size: 14px;
   font-weight: 500;
   margin: 0 10px;
@@ -70,6 +71,7 @@ const HomePageSurahTranslatedText = styled.h2`
 `
 
 const HomePageSurahTransliteratedText = styled.h1`
+  color: ${ DEFAULT_TEXT_COLOR };
   flex: 1;
   font: 500 15px/22px "HarmoniaSansPro";
   margin: 0;

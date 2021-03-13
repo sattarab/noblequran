@@ -75,6 +75,12 @@ export class AyahsRepository {
       .then( ( ayahDocs ) => ayahDocs.map( this.fromDocument ) )
   }
 
+  findByIds( ids: string[] ): Promise<Ayah[]> {
+    return this.collection.find( { _id: { $in: ids.map( parseIntId ) } } ).toArray()
+      .catch( ( err ) => { throw new MongoDbException( err ) } )
+      .then( ( ayahDocs ) => ayahDocs.map( this.fromDocument ) )
+  }
+
   findByJuz( juzId: string ): Promise<Ayah[]> {
     return this.collection.find( { juzId: parseIntId( juzId ) } ).sort( [ [ "number", 1 ] ] ).toArray()
       .catch( ( err ) => { throw new MongoDbException( err ) } )

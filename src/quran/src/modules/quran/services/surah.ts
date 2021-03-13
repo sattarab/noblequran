@@ -1,8 +1,8 @@
 import type { History } from "history"
 import PropTypes from "prop-types"
 
-import { HttpMethod, sendHttpRequest } from "../../../helpers/api"
-import type { Ayah } from "../../../types/ayah"
+import { getBaseUrl, HttpMethod, sendHttpRequest } from "../../../helpers/api"
+import type { Ayah, FormatType } from "../../../types/ayah"
 import type { Pagination } from "../../../types/pagination"
 import type { Surah } from "../../../types/surah"
 import type { Translator } from "../../../types/translator"
@@ -30,10 +30,13 @@ export const SurahPropType = PropTypes.shape( {
   unicode: PropTypes.string.isRequired,
 } ).isRequired
 
+export function download( ayahIds: string[], format: FormatType ): void {
+  window.open( `${ getBaseUrl() }/surahs/ayahs/download?ayahIds=${ ayahIds.join( "," ) }&format=${ format }`, "_blank" )
+}
+
 export function getSurahs(): Surah[] {
   return [ ...SURAHS ]
 }
-
 
 export function getSurahsById(): { [ id: string ]: Surah } {
   return getSurahs().reduce( ( result: { [ id: string ]: Surah }, surah ) => {

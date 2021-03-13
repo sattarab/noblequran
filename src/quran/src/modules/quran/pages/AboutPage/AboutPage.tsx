@@ -2,6 +2,7 @@ import styled from "@emotion/styled"
 import React from "react"
 import { Helmet } from "react-helmet"
 
+import { DEFAULT_TEXT_COLOR } from "../../../../components/Styles"
 import { LARGE_SCREEN_MEDIA_QUERY } from "../../../../helpers/responsive"
 import { AL_QURAN } from "../../constants/common"
 
@@ -14,6 +15,7 @@ const AboutPageBody = styled.div`
 `
 
 const AboutPageIntro = styled.p`
+  color: ${ DEFAULT_TEXT_COLOR };
   font: 400 16px/24px "HarmoniaSansPro";
 `
 

@@ -32,6 +32,16 @@ const DEFAULT_ERROR_MESSAGE = "Unknown error"
 const axiosInstance = axios.create()
 axiosInstance.defaults.headers.common[ "Accept" ] = "application/json"
 
+export function getBaseUrl(): string {
+  if( process.env.REACT_APP_ENV === "dev" ) {
+    return "https://local.noblequran.cloud"
+  } else if( process.env.REACT_APP_ENV === "stg" ) {
+    return "https://stage.noblequran.cloud"
+  }
+
+  return "https://noblequran.cloud"
+}
+
 export async function sendHttpRequest<T>( options: HttpRequestOption ): Promise<T> {
   const axiosOptions = {
     ...options,

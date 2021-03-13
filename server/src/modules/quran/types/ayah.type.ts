@@ -4,6 +4,12 @@ export const enum WordType {
   WORD = "word",
 }
 
+export const enum FormatType {
+  INDOPAK = "indopak",
+  MUSHAF = "mushaf",
+  UTHMANI = "uthmani",
+}
+
 export interface Ayah {
   hizb: number
   id: string

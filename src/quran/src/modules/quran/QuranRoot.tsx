@@ -9,6 +9,7 @@ import { useEffectOnce } from "react-use"
 import { HEADER_HEIGHT, RIGHT_DRAWER_WIDTH } from "../../components/Styles"
 import { getItemFromStorage } from "../../helpers/utility"
 import { useAppDispatch, useAppSelector } from "../../hooks"
+import type { Ayah } from "../../types/ayah"
 import { QHeader } from "./components/Header"
 import { QLoader } from "./components/Loader"
 import { QuranContextProvider, useQuranState } from "./components/QuranContext"
@@ -67,7 +68,7 @@ export const QuranContainer: React.FunctionComponent = () => {
   const { isMobileDevice } = useQuranState()
 
   useEffectOnce( () => {
-    getItemFromStorage<{ [ key: string ]: string[] }>( "selectedAyahs" )
+    getItemFromStorage<{ [ key: string ]: Ayah[] }>( "selectedAyahs" )
       .then( ( storedSelectedAyahs ) => {
         if( storedSelectedAyahs ) {
           dispatch( setSelectedAyahs( storedSelectedAyahs ) )

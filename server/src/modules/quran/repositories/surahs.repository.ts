@@ -55,6 +55,12 @@ export class SurahsRepository {
       .then( ( surahDocs ) => surahDocs.map( this.fromDocument ) )
   }
 
+  findByIds( ids: string[] ): Promise<Surah[]> {
+    return this.collection.find( { _id: { $in: ids.map( parseIntId ) } } ).toArray()
+      .catch( ( err ) => { throw new MongoDbException( err ) } )
+      .then( ( surahDocs ) => surahDocs.map( this.fromDocument ) )
+  }
+
   async findOneById( id: string ): Promise<Surah> {
     const surahDoc = await this.collection.findOne( { _id: parseIntId( id ) } )
       .catch( ( err ) => { throw new MongoDbException( err ) } )

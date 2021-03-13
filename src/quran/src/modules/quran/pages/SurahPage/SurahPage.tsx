@@ -148,12 +148,17 @@ const SurahPageMainContainerAyahActionSelect = styled.a`
   cursor: pointer;
   font-weight: 500;
 
-  span {
+  .active {
     color: ${ BLUE_COLOR };
+  }
+
+  .default {
+    color: ${ DARK_TEXT_COLOR };
   }
 `
 
 const SurahPageMainContainerAyahArabicText = styled.div`
+  color: ${ DEFAULT_TEXT_COLOR };
   direction: rtl;
   font-size: 34px;
   margin-bottom: 30px;
@@ -323,6 +328,7 @@ const SurahPageMainContainerTitleContainer = styled.div`
 `
 
 const SurahPageMainContainerTitle = styled.div`
+  color: ${ DEFAULT_TEXT_COLOR };
   font-family: "QuranKarim";
   font-size: 200px;
   margin-top: -80px;
@@ -655,7 +661,7 @@ export const SurahPage: React.FunctionComponent = () => {
   }, [ handleSearch ] )
 
   const toggleAyahSelection = useCallback( ( ayah: Ayah ) => {
-    dispatch( toggleAyah( { ayahId: `${ ayah.numberInSurah }`, surahId: ayah.surahId } ) )
+    dispatch( toggleAyah( { ayah, surahId: ayah.surahId } ) )
   }, [ dispatch ] )
 
   // Hooks
@@ -938,11 +944,11 @@ export const SurahPage: React.FunctionComponent = () => {
                               <SurahPageMainContainerAyahActionsContainer>
                                 <SurahPageMainContainerAyahActionSelect onClick={ () => toggleAyahSelection( ayah ) }>
                                   {
-                                    selectedAyahs[ ayah.surahId ]?.includes( `${ ayah.numberInSurah }` )
+                                    selectedAyahs[ ayah.surahId ]?.find( ( surahAyah ) => surahAyah.id === ayah.id )
                                       ? (
-                                        <span>&#8211; Remove this verse</span>
+                                        <span className={ "default" }>&#8211; Remove this verse</span>
                                       ) : (
-                                        <span>&#43; Select this verse</span>
+                                        <span className={ "active" }>&#43; Select this verse</span>
                                       )
                                   }
                                 </SurahPageMainContainerAyahActionSelect>

@@ -1,3 +1,4 @@
+import { Logger } from "@nestjs/common"
 import { NestFactory } from "@nestjs/core"
 import * as fs from "fs"
 import * as path from "path"
@@ -5,7 +6,7 @@ import * as path from "path"
 import { AppModule } from "./app.module"
 import getConfig, { ConfigEnv } from "./modules/common/config"
 
-async function bootstrap() {
+export async function bootstrap(): Promise<void> {
   const config = getConfig()
 
   let sslFolderPath: string
@@ -34,7 +35,9 @@ async function bootstrap() {
     },
   } )
 
-  await app.listen( 4443 )
+  const port = process.env.VCAP_APPLICATION || process.env.PORT || config.port
+  await app.listen( port )
+  Logger.log( `Express server started on ${ port }` )
 }
 
 bootstrap()

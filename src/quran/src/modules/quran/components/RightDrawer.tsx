@@ -3,10 +3,10 @@ import Accordion from "@material-ui/core/Accordion"
 import AccordionDetails from "@material-ui/core/AccordionDetails"
 import AccordionSummary from "@material-ui/core/AccordionSummary"
 import Button from "@material-ui/core/Button"
-import Checkbox from "@material-ui/core/Checkbox"
 import Drawer from "@material-ui/core/Drawer"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
 import IconButton from "@material-ui/core/IconButton"
+import Radio from "@material-ui/core/Radio"
 import { createStyles, makeStyles, withStyles } from "@material-ui/core/styles"
 import React, { useCallback, useState } from "react"
 import { useHistory } from "react-router-dom"
@@ -14,7 +14,10 @@ import { useHistory } from "react-router-dom"
 import { ClearIcon, DownloadIcon, KeyboardArrowDownIcon, RemoveIcon } from "../../../components/Icon"
 import { BLUE_COLOR, BORDER_COLOR, DARKER_TEXT_COLOR, DEFAULT_TEXT_COLOR, HEADER_HEIGHT, RIGHT_DRAWER_WIDTH } from "../../../components/Styles"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
+import type { Ayah } from "../../../types/ayah"
+import { FormatType } from "../../../types/ayah"
 import type { Option } from "../../../types/option"
+import { download } from "../services/surah"
 import { removeAyah, removeAyahsForSurah, setIsRightDrawerOpen } from "../state/quran"
 import { QButton } from "./Button"
 import { useQuranState } from "./QuranContext"
@@ -60,7 +63,7 @@ const RightDrawerFooterDownloadButton = styled( Button )`
   border: 2px solid ${ BLUE_COLOR };
   color: #ffffff;
   font: 700 16px/22px "HarmoniaSansPro";
-  height: 35px;
+  height: 36px;
   text-transform: none;
 
   :hover {
@@ -155,19 +158,12 @@ const RightDrawerSurahVerseText = styled.div`
 const RightDrawerSurahVersesContainer = styled( AccordionDetails )`
   display: flex;
   flex-direction: column;
+  margin-top: -15px;
 `
 
 const RightDrawerSurahsContainer = styled.div`
   margin-top: 25px;
 `
-
-const StyledFormControlLabel = withStyles( {
-  label: {
-    "fontSize": "15px",
-    "fontWeight": 500,
-    "whiteSpace": "normal",
-  },
-} )( FormControlLabel )
 
 const StyledDownloadIcon = styled( DownloadIcon )`
   fill: #ffffff;
@@ -176,8 +172,26 @@ const StyledDownloadIcon = styled( DownloadIcon )`
   width: 18px;
 `
 
+const StyledFormControlLabel = withStyles( {
+  label: {
+    "color": DEFAULT_TEXT_COLOR,
+    "fontSize": "15px",
+    "fontWeight": 500,
+    "whiteSpace": "normal",
+  },
+} )( FormControlLabel )
+
+const StyledQButton = styled( QButton )`
+  padding: 10px 5px;
+`
+
 const useStyles = makeStyles( () =>
   createStyles( {
+    radio: {
+      "&$checked": {
+        color: BLUE_COLOR
+      },
+    },
     accordion: {
       boxShadow: "none",
       "&:before": {
@@ -200,19 +214,13 @@ const useStyles = makeStyles( () =>
   } ),
 )
 
-enum FormatType {
-  INDOPAK = "indopak",
-  MUSHAF = "mushaf",
-  UTHMANI = "uthmani",
-}
-
 export const QRightDrawer: React.FunctionComponent = () => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
+  const [ formatType, setFormatType ] = useState<FormatType>( FormatType.UTHMANI )
   const history = useHistory()
   const isRightDrawerOpen = useAppSelector( ( state ) => state.quran.isRightDrawerOpen )
   const selectedAyahs = useAppSelector( ( state ) => state.quran.selectedAyahs )
-  const [ selectedFormats, setSelectedFormats ] = useState<string[]>( [] )
 
   const { isMobileDevice, surahs } = useQuranState()
 
@@ -235,18 +243,17 @@ export const QRightDrawer: React.FunctionComponent = () => {
     dispatch( setIsRightDrawerOpen() )
   }, [ dispatch ] )
 
-  const onFormatTypeToggle = useCallback( ( type: FormatType ) => {
-    const updatedSelectedFormats = [ ...selectedFormats ]
-    const index = updatedSelectedFormats.indexOf( type )
-
-    if( index !== -1 ) {
-      updatedSelectedFormats.splice( index, 1 )
-    } else {
-      updatedSelectedFormats.push( type )
+  const downloadHandler = useCallback( () => {
+    const ayahIds: string[] = []
+    for( const [ , surahAyahs ] of Object.entries( selectedAyahs ) ) {
+      ayahIds.push( ...surahAyahs.map( ( ayah ) => `${ ayah.number }` ) )
     }
+    download( ayahIds, formatType )
+  }, [ formatType, selectedAyahs ] )
 
-    setSelectedFormats( updatedSelectedFormats )
-  }, [ selectedFormats ] )
+  const onFormatTypeToggle = useCallback( ( type: FormatType ) => {
+    setFormatType( type )
+  }, [ setFormatType ] )
 
   const readSurah = useCallback( ( surahId: string ) => {
     history.push( `/${ surahId }` )
@@ -256,8 +263,8 @@ export const QRightDrawer: React.FunctionComponent = () => {
     }
   }, [ dispatch, history, isMobileDevice ] )
 
-  const remove = useCallback( ( surahId: string, ayahNumberInSurah: string ) => {
-    dispatch( removeAyah( { ayahId: ayahNumberInSurah, surahId } ) )
+  const remove = useCallback( ( surahId: string, ayah: Ayah ) => {
+    dispatch( removeAyah( { ayah, surahId } ) )
   }, [ dispatch ] )
 
   const removeAll = useCallback( ( surahId: string ) => {
@@ -294,28 +301,27 @@ export const QRightDrawer: React.FunctionComponent = () => {
                           </RightDrawerSurahTitleContainer>
                           <RightDrawerSurahVersesContainer>
                             {
-                              selectedAyahs[ surahId ].map( ( ayahNumberInSurah ) => (
-                                <RightDrawerSurahVerseContainer key={ `${ surahId }:${ ayahNumberInSurah }` }>
-                                  <RightDrawerSurahVerseText>Verse { ayahNumberInSurah }</RightDrawerSurahVerseText>
-                                  <IconButton>
-                                    <RemoveIcon className={ classes.clickableSvgIcon } onClick={ () => remove( surahId, ayahNumberInSurah ) } />
+                              selectedAyahs[ surahId ].map( ( ayah ) => (
+                                <RightDrawerSurahVerseContainer key={ ayah.number }>
+                                  <RightDrawerSurahVerseText>Verse { ayah.numberInSurah }</RightDrawerSurahVerseText>
+                                  <IconButton onClick={ () => remove( surahId, ayah ) }>
+                                    <RemoveIcon className={ classes.clickableSvgIcon } />
                                   </IconButton>
                                 </RightDrawerSurahVerseContainer>
                               ) )
                             }
                             <RightDrawerSurahButtonsContainer>
-                              <QButton
-                                color={ "secondary" }
+                              <StyledQButton
+                                className={ "secondary" }
                                 isDisabled={ selectedAyahs[ surahId ].length === surahs[ surahId ].numberOfAyahs }
                                 label="Add more verses"
                                 onClick={ () => readSurah( surahId ) }
-                                style={ { marginLeft: "-5px", padding: "10px 5px" } }
+                                style={ { marginLeft: "-5px" } }
                               />
-                              <QButton
-                                color={ "secondary" }
+                              <StyledQButton
+                                className={ "secondary" }
                                 label="Remove all"
                                 onClick={ () => removeAll( surahId ) }
-                                style={ { padding: "10px 5px" } }
                               />
                             </RightDrawerSurahButtonsContainer>
                           </RightDrawerSurahVersesContainer>
@@ -326,15 +332,16 @@ export const QRightDrawer: React.FunctionComponent = () => {
                 </RightDrawerBodyReviewContainer>
                 <RightDrawerOptionsContainer>
                   <RightDrawerOptionsContainerHeader>Options</RightDrawerOptionsContainerHeader>
-                  <RightDrawerOptionsContainerHelpText>Select the formats you wish to download</RightDrawerOptionsContainerHelpText>
+                  <RightDrawerOptionsContainerHelpText>Select a format you wish to download</RightDrawerOptionsContainerHelpText>
                   <div>
                     {
                       formatOptions.map( ( option ) => (
                         <div key={ option.value }>
                           <StyledFormControlLabel
                             control={
-                              <Checkbox
-                                checked={ selectedFormats.indexOf( option.value ) !== -1 }
+                              <Radio
+                                checked={ formatType === option.value }
+                                classes={ { root: classes.radio } }
                                 onChange={ () => onFormatTypeToggle( option.value ) }
                               />
                             }
@@ -347,7 +354,7 @@ export const QRightDrawer: React.FunctionComponent = () => {
                 </RightDrawerOptionsContainer>
               </RightDrawerBodyContainer>
               <RightDrawerFooterContainer>
-                <RightDrawerFooterDownloadButton fullWidth>
+                <RightDrawerFooterDownloadButton fullWidth onClick={ downloadHandler }>
                   <StyledDownloadIcon />
                   <span>Download All</span>
                 </RightDrawerFooterDownloadButton>

@@ -48,7 +48,7 @@ const ButtonContainer = styled( Button )`
 `
 
 export interface QButtonProps {
-  color?: "secondary"
+  className?: string
   isActive?: boolean
   isDisabled?: boolean
   label: string
@@ -57,7 +57,7 @@ export interface QButtonProps {
   onClick?( event: React.MouseEvent<HTMLButtonElement, MouseEvent> ): void
 }
 
-export const QButton: React.FunctionComponent<QButtonProps> = ( { color, isActive, isDisabled, label, onClick, style } ) => {
+export const QButton: React.FunctionComponent<QButtonProps> = ( { className, isActive, isDisabled, label, onClick, style } ) => {
   const onClickHandler = ( event: React.MouseEvent<HTMLButtonElement, MouseEvent> ): void => {
     if( onClick ) {
       return onClick( event )
@@ -65,7 +65,7 @@ export const QButton: React.FunctionComponent<QButtonProps> = ( { color, isActiv
   }
   return (
     <ButtonContainer
-      className={ clsx( color, { "active": isActive } ) }
+      className={ clsx( className, { "active": isActive } ) }
       disabled={ isDisabled }
       onClick={ onClickHandler }
       style={ style }
@@ -76,7 +76,7 @@ export const QButton: React.FunctionComponent<QButtonProps> = ( { color, isActiv
 }
 
 QButton.propTypes = {
-  color: PropTypes.oneOf( [ "secondary" ] ),
+  className: PropTypes.string,
   isActive: PropTypes.bool,
   isDisabled: PropTypes.bool,
   label: PropTypes.string.isRequired,

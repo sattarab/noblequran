@@ -1,7 +1,13 @@
-export const enum WordType {
+export enum WordType {
   END = "end",
   PAUSE = "pause",
   WORD = "word",
+}
+
+export enum FormatType {
+  INDOPAK = "indopak",
+  MUSHAF = "mushaf",
+  UTHMANI = "uthmani",
 }
 
 export interface Ayah {

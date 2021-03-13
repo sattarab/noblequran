@@ -3,12 +3,13 @@ import { createSlice } from "@reduxjs/toolkit"
 
 import { setItemInStorage } from "../../../helpers/utility"
 import type { RootState } from "../../../store"
+import type { Ayah } from "../../../types/ayah"
 
 interface QuranState {
   isRightDrawerOpen: boolean
   isTitleFontLoaded: boolean
   selectedAyahs: {
-    [ id: string ]: string[]
+    [ id: string ]: Ayah[]
   }
 }
 
@@ -22,12 +23,12 @@ export const quranSlice = createSlice( {
   name: "quran",
   initialState,
   reducers: {
-    removeAyah( state: QuranState, action: PayloadAction<{ ayahId: string, surahId: string }> ) {
-      const { ayahId, surahId } = action.payload
+    removeAyah( state: QuranState, action: PayloadAction<{ ayah: Ayah, surahId: string }> ) {
+      const { ayah, surahId } = action.payload
       const updatedState = {
         ...state.selectedAyahs,
       }
-      const index = updatedState[ surahId ] != null ? updatedState[ surahId ].findIndex( ( number ) => number === ayahId ) : -1
+      const index = updatedState[ surahId ] != null ? updatedState[ surahId ].findIndex( ( surahAyah ) => surahAyah.id === ayah.id ) : -1
 
       if( index === -1 ) {
         return
@@ -54,17 +55,17 @@ export const quranSlice = createSlice( {
     setIsTitleFontLoaded( state: QuranState, action: PayloadAction<boolean> ) {
       state.isTitleFontLoaded = action.payload
     },
-    setSelectedAyahs( state: QuranState, action: PayloadAction<{ [ key: string ]: string[] }> ) {
+    setSelectedAyahs( state: QuranState, action: PayloadAction<{ [ key: string ]: Ayah[] }> ) {
       state.selectedAyahs = {
         ...action.payload
       }
     },
-    toggleAyah( state: QuranState, action: PayloadAction<{ ayahId: string, surahId: string }> ) {
-      const { ayahId, surahId } = action.payload
+    toggleAyah( state: QuranState, action: PayloadAction<{ ayah: Ayah, surahId: string }> ) {
+      const { ayah, surahId } = action.payload
       const updatedState = {
         ...state.selectedAyahs,
       }
-      const index = updatedState[ surahId ]?.findIndex( ( ayahIds ) => ayahIds.includes( ayahId ) )
+      const index = updatedState[ surahId ]?.findIndex( ( surahAyah ) => surahAyah.id === ayah.id )
 
       if( updatedState[ surahId ]?.length && index !== -1 ) {
         updatedState[ surahId ].splice( index, 1 )
@@ -75,7 +76,7 @@ export const quranSlice = createSlice( {
         if( ! updatedState[ surahId ] ) {
           updatedState[ surahId ] = []
         }
-        updatedState[ surahId ].push( ayahId )
+        updatedState[ surahId ].push( ayah )
         updatedState[ surahId ].sort()
       }
 
