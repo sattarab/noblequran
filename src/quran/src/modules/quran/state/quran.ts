@@ -3,13 +3,13 @@ import { createSlice } from "@reduxjs/toolkit"
 
 import { setItemInStorage } from "../../../helpers/utility"
 import type { RootState } from "../../../store"
-import type { Ayah } from "../../../types/ayah"
+import type { Ayah, SelectedAyah } from "../../../types/ayah"
 
 interface QuranState {
   isRightDrawerOpen: boolean
   isTitleFontLoaded: boolean
   selectedAyahs: {
-    [ id: string ]: Ayah[]
+    [ id: string ]: SelectedAyah[]
   }
 }
 
@@ -23,12 +23,12 @@ export const quranSlice = createSlice( {
   name: "quran",
   initialState,
   reducers: {
-    removeAyah( state: QuranState, action: PayloadAction<{ ayah: Ayah, surahId: string }> ) {
-      const { ayah, surahId } = action.payload
+    removeAyah( state: QuranState, action: PayloadAction<{ ayahId: string, surahId: string }> ) {
+      const { ayahId, surahId } = action.payload
       const updatedState = {
         ...state.selectedAyahs,
       }
-      const index = updatedState[ surahId ] != null ? updatedState[ surahId ].findIndex( ( surahAyah ) => surahAyah.id === ayah.id ) : -1
+      const index = updatedState[ surahId ] != null ? updatedState[ surahId ].findIndex( ( surahAyah ) => surahAyah.id === ayahId ) : -1
 
       if( index === -1 ) {
         return
@@ -76,7 +76,12 @@ export const quranSlice = createSlice( {
         if( ! updatedState[ surahId ] ) {
           updatedState[ surahId ] = []
         }
-        updatedState[ surahId ].push( ayah )
+        updatedState[ surahId ].push( {
+          id: ayah.id,
+          number: ayah.number,
+          numberInSurah: ayah.numberInSurah,
+          text: ayah.text,
+        } )
         updatedState[ surahId ].sort()
       }
 

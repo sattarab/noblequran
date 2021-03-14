@@ -14,7 +14,6 @@ import { useHistory } from "react-router-dom"
 import { ClearIcon, DownloadIcon, KeyboardArrowDownIcon, RemoveIcon } from "../../../components/Icon"
 import { BLUE_COLOR, BORDER_COLOR, DARKER_TEXT_COLOR, DEFAULT_TEXT_COLOR, HEADER_HEIGHT, RIGHT_DRAWER_WIDTH } from "../../../components/Styles"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
-import type { Ayah } from "../../../types/ayah"
 import { FormatType } from "../../../types/ayah"
 import type { Option } from "../../../types/option"
 import { download } from "../services/surah"
@@ -263,8 +262,8 @@ export const QRightDrawer: React.FunctionComponent = () => {
     }
   }, [ dispatch, history, isMobileDevice ] )
 
-  const remove = useCallback( ( surahId: string, ayah: Ayah ) => {
-    dispatch( removeAyah( { ayah, surahId } ) )
+  const remove = useCallback( ( surahId: string, ayahId: string ) => {
+    dispatch( removeAyah( { ayahId, surahId } ) )
   }, [ dispatch ] )
 
   const removeAll = useCallback( ( surahId: string ) => {
@@ -304,7 +303,7 @@ export const QRightDrawer: React.FunctionComponent = () => {
                               selectedAyahs[ surahId ].map( ( ayah ) => (
                                 <RightDrawerSurahVerseContainer key={ ayah.number }>
                                   <RightDrawerSurahVerseText>Verse { ayah.numberInSurah }</RightDrawerSurahVerseText>
-                                  <IconButton onClick={ () => remove( surahId, ayah ) }>
+                                  <IconButton onClick={ () => remove( surahId, ayah.id ) }>
                                     <RemoveIcon className={ classes.clickableSvgIcon } />
                                   </IconButton>
                                 </RightDrawerSurahVerseContainer>

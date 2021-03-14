@@ -1,15 +1,3 @@
-export enum WordType {
-  END = "end",
-  PAUSE = "pause",
-  WORD = "word",
-}
-
-export enum FormatType {
-  INDOPAK = "indopak",
-  MUSHAF = "mushaf",
-  UTHMANI = "uthmani",
-}
-
 export interface Ayah {
   hizb: number
   id: string
@@ -39,4 +27,18 @@ export interface Ayah {
       text: string
     }>
   }>
+}
+
+export enum FormatType {
+  INDOPAK = "indopak",
+  MUSHAF = "mushaf",
+  UTHMANI = "uthmani",
+}
+
+export type SelectedAyah = Pick<Ayah, "id" | "number" | "numberInSurah" | "text">
+
+export enum WordType {
+  END = "end",
+  PAUSE = "pause",
+  WORD = "word",
 }
