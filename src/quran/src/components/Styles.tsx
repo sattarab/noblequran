@@ -8,9 +8,10 @@ export const DARK_TEXT_COLOR = "#3c4043"
 export const DARKER_TEXT_COLOR = "#333333"
 export const DEFAULT_TEXT_COLOR = "#5f6368"
 export const DEFAULT_TEXT_COLOR_WITH_OPACITY = "rgb( 95 99 104 / 50% )"
-export const WHITE_SMOKE_COLOR = "#f5f5f5"
+export const FOOTER_COLOR = "#f8f9fa"
 export const LIGHT_WHITE_SMOKE_COLOR = "rgb( 245 245 245 / 70% )"
 export const LIGHTER_WHITE_SMOKE_COLOR = "rgb( 245 245 245 / 20% )"
+export const WHITE_SMOKE_COLOR = "#f5f5f5"
 
 // Drawer Constants
 export const RIGHT_DRAWER_WIDTH = "320px"

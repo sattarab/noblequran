@@ -503,7 +503,7 @@ export const SurahPage: React.FunctionComponent = () => {
     let translatorName = getTranslatorName( selectedTranslations[ 0 ] )
 
     if( isMobileDevice && translatorName && translatorName.length > 10 ) {
-      translatorName = `${ translatorName?.substr( 0, 10 ) }…`
+      translatorName = `${ translatorName.substr( 0, 10 ) }…`
     }
 
     return `${ translatorName } +${ selectedTranslations.length - 1 }`
@@ -664,7 +664,6 @@ export const SurahPage: React.FunctionComponent = () => {
     dispatch( toggleAyah( { ayah, surahId: ayah.surahId } ) )
   }, [ dispatch ] )
 
-  // Hooks
   useClickAway( translatorsMenuRef, () => {
     if( displayTranslatorsMenu ) {
       setDisplayTranslatorsMenu( false )
@@ -870,7 +869,7 @@ export const SurahPage: React.FunctionComponent = () => {
                                 className={ clsx( { "active": displayVerseMenu } ) }
                                 onClick={ onClickSelectVerseHandler }
                               >
-                            Verse
+                                Verse
                                 {
                                   displayVerseMenu
                                     ? (

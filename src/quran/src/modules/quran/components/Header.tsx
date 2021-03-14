@@ -90,7 +90,7 @@ const HeaderNavigationTab = styled( StyledButton )`
 
 const HeaderTitle = styled.h1`
   font-size: 24px;
-  font-weight: 500;
+  font-weight: 700;
   margin: 0;
 `
 

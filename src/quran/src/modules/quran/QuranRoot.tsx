@@ -10,6 +10,7 @@ import { HEADER_HEIGHT, RIGHT_DRAWER_WIDTH } from "../../components/Styles"
 import { getItemFromStorage } from "../../helpers/utility"
 import { useAppDispatch, useAppSelector } from "../../hooks"
 import type { Ayah } from "../../types/ayah"
+import { QFooter } from "./components/Footer"
 import { QHeader } from "./components/Header"
 import { QLoader } from "./components/Loader"
 import { QuranContextProvider, useQuranState } from "./components/QuranContext"
@@ -89,6 +90,7 @@ export const QuranContainer: React.FunctionComponent = () => {
         </Suspense>
       </main>
       <QRightDrawer />
+      <QFooter />
     </QuranContainerWrapper>
   )
 }
