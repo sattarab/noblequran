@@ -17,7 +17,7 @@ import { useAppDispatch, useAppSelector } from "../../../hooks"
 import { FormatType } from "../../../types/ayah"
 import type { Option } from "../../../types/option"
 import { download } from "../services/surah"
-import { removeAyah, removeAyahsForSurah, setIsRightDrawerOpen } from "../state/quran"
+import { removeAyah, removeAyahsForSurah, toggleIsRightDrawerOpen } from "../state/quran"
 import { QButton } from "./Button"
 import { useQuranState } from "./QuranContext"
 
@@ -239,7 +239,7 @@ export const QRightDrawer: React.FunctionComponent = () => {
   ]
 
   const closeRightDrawer = useCallback( () => {
-    dispatch( setIsRightDrawerOpen() )
+    dispatch( toggleIsRightDrawerOpen() )
   }, [ dispatch ] )
 
   const downloadHandler = useCallback( () => {
@@ -258,7 +258,7 @@ export const QRightDrawer: React.FunctionComponent = () => {
     history.push( `/${ surahId }` )
     window.scroll( 0, 0 )
     if( isMobileDevice ) {
-      dispatch( setIsRightDrawerOpen() )
+      dispatch( toggleIsRightDrawerOpen() )
     }
   }, [ dispatch, history, isMobileDevice ] )
 

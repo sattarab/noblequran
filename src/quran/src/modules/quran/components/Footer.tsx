@@ -1,9 +1,10 @@
 import styled from "@emotion/styled"
-import React, { memo } from "react"
+import React, { memo, useCallback } from "react"
+import { Link } from "react-router-dom"
 
 import { QuranIcon } from "../../../components/Icon"
 import { FOOTER_COLOR } from "../../../components/Styles"
-import { LARGE_SCREEN_MEDIA_QUERY } from "../../../helpers/responsive"
+import { MEDIUM_SCREEN_MEDIA_QUERY, MOBILE_SCREEN_MEDIA_QUERY } from "../../../helpers/responsive"
 
 const Footer = styled.footer`
   background: ${ FOOTER_COLOR };
@@ -12,7 +13,7 @@ const Footer = styled.footer`
   padding: 40px 30px 24px 30px;
   margin-top: 32px;
 
-  @media ${ LARGE_SCREEN_MEDIA_QUERY } {
+  @media ${ MEDIUM_SCREEN_MEDIA_QUERY } {
     height: 440px;
     padding: 64px 64px 48px;
   }
@@ -39,7 +40,7 @@ const FooterDetailContainer = styled.div`
   display: flex;
   flex-direction: column;
 
-  @media ${ LARGE_SCREEN_MEDIA_QUERY } {
+  @media ${ MEDIUM_SCREEN_MEDIA_QUERY } {
     flex: 50%;
     flex-direction: row;
   }
@@ -51,23 +52,31 @@ const FooterDetailsContainer = styled.div`
   flex-direction: column;
   justify-content: start;
 
-  @media ${ LARGE_SCREEN_MEDIA_QUERY } {
+  @media ${ MEDIUM_SCREEN_MEDIA_QUERY } {
     flex-direction: row;
   }
 `
 
-const FooterLink = styled.a`
+const FooterLink = styled( Link )`
+  text-decoration: none;
+
   & + & {
-    margin-top: 15px;
+    margin-top: 5px;
   }
 `
 
-const FooterLinksContainer = styled.div`
+const FooterLinksContainer = styled.nav`
   display: flex;
   flex: 100%;
   flex-direction: column;
 
-  @media ${ LARGE_SCREEN_MEDIA_QUERY } {
+  @media ${ MOBILE_SCREEN_MEDIA_QUERY } {
+    & + & {
+      margin-top: 15px;
+    }
+  }
+
+  @media ${ MEDIUM_SCREEN_MEDIA_QUERY } {
     flex: 50%;
   }
 `
@@ -88,6 +97,10 @@ const StyledQuranIcon = styled( QuranIcon )`
 `
 
 const QFooterFunction: React.FunctionComponent = () => {
+  const scrollTop = useCallback( () => {
+    window.scrollTo( 0, 0 )
+  }, [] )
+
   return (
     <Footer>
       <FooterContainer>
@@ -98,9 +111,14 @@ const QFooterFunction: React.FunctionComponent = () => {
           </FooterDetailContainer>
           <FooterDetailContainer>
             <FooterLinksContainer>
-              <FooterLink>Browse Surahs</FooterLink>
-              <FooterLink>About</FooterLink>
-              <FooterLink>Sitemap</FooterLink>
+              <FooterLink onClick={ scrollTop } to="/">Browse Surahs</FooterLink>
+              <FooterLink onClick={ scrollTop } to="/about">About</FooterLink>
+            </FooterLinksContainer>
+            <FooterLinksContainer>
+              <FooterLink onClick={ scrollTop } to="/2">Al-Baqarah</FooterLink>
+              <FooterLink onClick={ scrollTop } to="/18">Al-Kahf</FooterLink>
+              <FooterLink onClick={ scrollTop } to="/36">Ya Sin</FooterLink>
+              <FooterLink onClick={ scrollTop } to="/67">Al-Mulk</FooterLink>
             </FooterLinksContainer>
           </FooterDetailContainer>
         </FooterDetailsContainer>

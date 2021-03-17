@@ -49,9 +49,6 @@ export const quranSlice = createSlice( {
       setItemInStorage( "selectedAyahs", updatedState )
       state.selectedAyahs = updatedState
     },
-    setIsRightDrawerOpen( state: QuranState ) {
-      state.isRightDrawerOpen = ! state.isRightDrawerOpen
-    },
     setIsTitleFontLoaded( state: QuranState, action: PayloadAction<boolean> ) {
       state.isTitleFontLoaded = action.payload
     },
@@ -88,9 +85,12 @@ export const quranSlice = createSlice( {
       setItemInStorage( "selectedAyahs", updatedState )
       state.selectedAyahs = updatedState
     },
+    toggleIsRightDrawerOpen( state: QuranState ) {
+      state.isRightDrawerOpen = ! state.isRightDrawerOpen
+    },
   },
 } )
 
-export const { removeAyah, removeAyahsForSurah, setIsRightDrawerOpen, setIsTitleFontLoaded, setSelectedAyahs, toggleAyah } = quranSlice.actions
+export const { removeAyah, removeAyahsForSurah, setIsTitleFontLoaded, setSelectedAyahs, toggleAyah, toggleIsRightDrawerOpen } = quranSlice.actions
 export const selectQuran = ( state: RootState ): QuranState => state.quran as QuranState
 export default quranSlice.reducer

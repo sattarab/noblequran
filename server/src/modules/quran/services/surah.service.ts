@@ -48,6 +48,10 @@ export class SurahService {
 
     zip.pipe( res )
 
+    zip.on( "error", ( err ) => {
+      throw new Error( err.message )
+    } )
+
     const surahs = await this.surahsRepository.findByIds( surahIds )
     for( const [ surahId, surahAyahs ] of Object.entries( ayahsGroup ) ) {
       const surah = surahs.find( ( selectedSurah ) => selectedSurah.id === surahId )

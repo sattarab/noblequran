@@ -34,6 +34,10 @@ export function download( ayahIds: string[], format: FormatType ): void {
   window.open( `${ getBaseUrl() }/surahs/ayahs/download?ayahIds=${ ayahIds.join( "," ) }&format=${ format }`, "_blank" )
 }
 
+export function getDefaultTranslation(): string {
+  return "en.sahih"
+}
+
 export function getSurahs(): Surah[] {
   return [ ...SURAHS ]
 }

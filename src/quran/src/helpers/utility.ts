@@ -3,6 +3,13 @@ import localforage from "localforage"
 import { logError } from "./error"
 
 const ESCAPE_REGEX = /([.*+?^=!:${}()|\[\]\/\\])/g
+const RTL_LANGUAGE_CODES = [
+  "ar",
+  "dv",
+  "fa",
+  "ku",
+  "ur",
+]
 
 export function capitalize( value: string ): string {
   return value.charAt( 0 ).toUpperCase() + value.slice( 1 )
@@ -47,7 +54,7 @@ export function getLanguageLabel( code: string ): string {
     }
 
     case "dv": {
-      return "Divehi"
+      return "Dhivehi/Maldivian"
     }
 
     case "en": {
@@ -201,6 +208,14 @@ export function groupBy<T extends Record<string, any>>( array: T[], key: string 
     group[ groupKey ].push( value )
     return group
   }, {} )
+}
+
+export function isRtlLanguage( code: string ): boolean {
+  if( RTL_LANGUAGE_CODES.includes( code ) ) {
+    return true
+  }
+
+  return false
 }
 
 export function setItemInStorage<T>( key: string, object: T ): Promise<T | null> {

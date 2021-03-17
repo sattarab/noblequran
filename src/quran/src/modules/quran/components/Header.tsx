@@ -8,7 +8,7 @@ import { Link, useHistory, useLocation } from "react-router-dom"
 
 import { MenuIcon, QuranIcon } from "../../../components/Icon"
 import { BLUE_COLOR, BLUE_COLOR_WITH_OPACITY, BORDER_COLOR, DARK_BLUE_COLOR, DEFAULT_TEXT_COLOR, HEADER_HEIGHT, WHITE_SMOKE_COLOR } from "../../../components/Styles"
-import { LARGE_SCREEN_MEDIA_QUERY } from "../../../helpers/responsive"
+import { MEDIUM_SCREEN_MEDIA_QUERY } from "../../../helpers/responsive"
 import { useAppSelector } from "../../../hooks"
 import { useQuranState } from "./QuranContext"
 import { QRightDrawerButton } from "./RightDrawerButton"
@@ -54,7 +54,7 @@ const HeaderContainer = styled.div`
   justify-content: space-between;
   padding: 0 30px;
 
-  @media ${ LARGE_SCREEN_MEDIA_QUERY } {
+  @media ${ MEDIUM_SCREEN_MEDIA_QUERY } {
     padding: 0 60px;
   }
 `

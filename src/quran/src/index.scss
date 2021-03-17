@@ -1,4 +1,11 @@
 @font-face {
+  font-family: "MushafBismillah";
+  src: url( "./fonts/Mushaf/v1/woff2/bismillah.woff2" ) format( "woff2" ),
+       url( "./fonts/Mushaf/v1/woff/bismillah.woff" ) format( "woff" ),
+       url( "./fonts/Mushaf/v1/ttf/bismillah.ttf" ) format( "truetype" );
+}
+
+@font-face {
   font-family: "HarmoniaSansPro";
   font-style: normal;
   font-weight: 400;
@@ -22,14 +29,15 @@
 @font-face {
   font-family: "QuranKarim";
   src: url( "./fonts/QuranKarim/QuranKarim.woff" ) format( "woff" ),
-       url( "./fonts/QuranKarim/QuranKarim.ttf" ) format( "truetype" ),;
+       url( "./fonts/QuranKarim/QuranKarim.ttf" ) format( "truetype" );
 }
 
 @for $i from 1 through 604 {
   @font-face {
     font-family: "Mushafp#{ $i }";
     src: url( "./fonts/Mushaf/v1/woff2/p#{ $i }.woff2" ) format( "woff2" ),
-         url( "./fonts/Mushaf/v1/woff/p#{ $i }.woff" ) format( "woff" );
+         url( "./fonts/Mushaf/v1/woff/p#{ $i }.woff" ) format( "woff" ),
+         url( "./fonts/Mushaf/v1/ttf/p#{ $i }.ttf" ) format( "truetype" );
   }
 
   .p#{ $i } {

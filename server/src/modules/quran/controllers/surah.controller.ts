@@ -32,10 +32,6 @@ export class SurahController {
 
     const ayahIds = query.ayahIds.split( "," )
     await this.surahService.download( res, ayahIds, query.format )
-    res.writeHead( 200, {
-      "Content-Disposition": "attachment;filename=Verses.zip",
-      "Content-Type": "application/zip",
-    } )
     res.end()
   }
 

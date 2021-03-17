@@ -6,7 +6,7 @@ import React, { memo, useCallback, useState } from "react"
 import { AddTaskIcon } from "../../../components/Icon"
 import { BLUE_COLOR_WITH_OPACITY } from "../../../components/Styles"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
-import { setIsRightDrawerOpen } from "../state/quran"
+import { toggleIsRightDrawerOpen } from "../state/quran"
 import { QPopper } from "./Popper"
 import { useQuranState } from "./QuranContext"
 
@@ -49,7 +49,7 @@ const QRightDrawerButtonFunction: React.FunctionComponent = () => {
   }
 
   const toggleRightMenu = useCallback( () => {
-    dispatch( setIsRightDrawerOpen() )
+    dispatch( toggleIsRightDrawerOpen() )
   }, [ dispatch ] )
 
   return (
