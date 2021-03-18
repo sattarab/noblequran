@@ -18,4 +18,4 @@ haproxy -c -V -f ./dev.cfg
 Run `npm run start:haproxy` from the `noblequran` root folder
 
 ## Renew certificate
-Run script ./scripts/renew-local-ssl.sh
+Run script `./scripts/renew-local-ssl.sh` from `noblequran` root folder
