@@ -38,6 +38,7 @@ import { useQuranState } from "../../components/QuranContext"
 import { QRightDrawerButton } from "../../components/RightDrawerButton"
 import { ScrollUpButton } from "../../components/ScrollUpButton"
 import { AL_QURAN } from "../../constants/common"
+import { trackMixpanelEvent } from "../../services/mixpanel"
 import { getDefaultTranslation, getSurahAyahs, getSurahs, getTranslatorsGroupedByLanguage } from "../../services/surah"
 import { toggleAyah, toggleIsRightDrawerOpen } from "../../state/quran"
 import { setSelectedTranslations } from "./state/surah"
@@ -63,6 +64,7 @@ const StyledButton = withStyles( {
 
 const StyledFormControlLabel = withStyles( {
   label: {
+    "color": DEFAULT_TEXT_COLOR,
     "fontSize": "13px",
     "whiteSpace": "normal",
   },
@@ -205,21 +207,22 @@ const SurahPageMainContainerAyahTranslationContainer = styled.div`
   & + & {
     margin-top: 15px;
   }
-`
-
-const SurahPageMainContainerAyahTranslatedText = styled.p`
-  line-height: 1.5;
-  margin: 0;
 
   &.rtl {
     direction: rtl;
   }
 `
 
-const SurahPageMainContainerAyahTranslatorName = styled.h3`
+const SurahPageMainContainerAyahTranslatedText = styled.span`
+  color: ${ DEFAULT_TEXT_COLOR };
+  line-height: 1.5;
+  margin: 0;
+`
+
+const SurahPageMainContainerAyahTranslatorName = styled.span`
   color: ${ DARK_TEXT_COLOR };
   font: 500 14px/20px "HarmoniaSansPro";
-  margin: 0 0 5px;
+  margin: 0 5px;
 `
 
 const SurahPageMainContainerAyahWord = styled.span`
@@ -241,6 +244,7 @@ const SurahPageMainContainerHeaderBackIconContainer = styled.div`
 `
 
 const SurahPageMainContainerHeaderBackText = styled.div`
+  color: ${ DEFAULT_TEXT_COLOR };
   margin-left: 5px;
   margin-top: 5px;
 `
@@ -705,9 +709,11 @@ export const SurahPage: React.FunctionComponent = () => {
       .finally( () => {
         setIsLoading( false )
       } )
-  }, [ selectedSurah.id, selectedTranslations ] )
+  }, [ selectedSurah?.id, selectedTranslations ] )
 
   useEffectOnce( () => {
+    trackMixpanelEvent( "Page Opened", { Name: "Surah" } )
+
     getTranslatorsGroupedByLanguage()
       .then( ( translators ) => {
         translators.sort( ( a, b ) => {
@@ -961,10 +967,12 @@ export const SurahPage: React.FunctionComponent = () => {
                               </SurahPageMainContainerAyahArabicText>
                               {
                                 ayah.translations && Object.keys( ayah.translations ).map( ( identifier ) => (
-                                  <SurahPageMainContainerAyahTranslationContainer key={ identifier }>
-                                    <SurahPageMainContainerAyahTranslatorName>{ getTranslatorName( identifier ) }</SurahPageMainContainerAyahTranslatorName>
-                                    <SurahPageMainContainerAyahTranslatedText className={ clsx( { "rtl": isRtlLanguage( identifier.split( "." )[ 0 ] ) } ) }>{ ayah.translations?.[ identifier ] }</SurahPageMainContainerAyahTranslatedText>
-                                  </SurahPageMainContainerAyahTranslationContainer>
+                                  ayah.translations?.[ identifier ] && (
+                                    <SurahPageMainContainerAyahTranslationContainer key={ identifier } className={ clsx( { "rtl": isRtlLanguage( identifier.split( "." )[ 0 ] ) } ) }>
+                                      <SurahPageMainContainerAyahTranslatedText dangerouslySetInnerHTML={ { __html: ayah.translations[ identifier ] } } />
+                                      <SurahPageMainContainerAyahTranslatorName>&#8226;&nbsp;{ getTranslatorName( identifier ) }</SurahPageMainContainerAyahTranslatorName>
+                                    </SurahPageMainContainerAyahTranslationContainer>
+                                  )
                                 ) )
                               }
                               <SurahPageMainContainerAyahActionsContainer>

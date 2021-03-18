@@ -4,13 +4,7 @@ import clsx from "clsx"
 import PropTypes from "prop-types"
 import React from "react"
 
-import {
-  BLUE_COLOR,
-  BLUE_COLOR_WITH_OPACITY,
-  DEFAULT_TEXT_COLOR,
-  DEFAULT_TEXT_COLOR_WITH_OPACITY,
-  WHITE_SMOKE_COLOR,
-} from "../../../components/Styles"
+import { BLUE_COLOR, BLUE_COLOR_WITH_OPACITY, DEFAULT_TEXT_COLOR, DEFAULT_TEXT_COLOR_WITH_OPACITY, WHITE_SMOKE_COLOR } from "../../../components/Styles"
 
 
 const ButtonContainer = styled( Button )`

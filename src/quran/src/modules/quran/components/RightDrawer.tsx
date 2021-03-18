@@ -68,6 +68,10 @@ const RightDrawerFooterDownloadButton = styled( Button )`
   :hover {
     background: ${ BLUE_COLOR };
   }
+
+  & + & {
+    margin-left: 5px;
+  }
 `
 
 const RightDrawerHeaderContainer = styled.div`

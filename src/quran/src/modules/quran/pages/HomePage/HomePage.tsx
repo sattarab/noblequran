@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from "../../../../hooks"
 import { useQuranState } from "../../components/QuranContext"
 import { ScrollUpButton } from "../../components/ScrollUpButton"
 import { AL_QURAN } from "../../constants/common"
+import { trackMixpanelEvent } from "../../services/mixpanel"
 import { SearchBar } from "./components/SearchBar"
 import { SurahGrid } from "./components/SurahGrid"
 import { SurahList } from "./components/SurahList"
@@ -110,7 +111,7 @@ const HomePageNoSurahsSmallPlaceholderListText = styled.ul`
 
 const HomePageNoSurahsSmallPlaceholderText = styled.div`
   font-size: 13px;
-  margin-top: 30px;
+  margin-top: 15px;
 `
 
 const HomePageNoSurahsPlaceholderText = styled.div`
@@ -145,6 +146,8 @@ export const HomePage: React.FunctionComponent = () => {
 
 
   useEffectOnce( () => {
+    trackMixpanelEvent( "Page Opened", { Name: "Home" } )
+
     getItemFromStorage<string[]>( "surahBookmarks" )
       .then( ( storedBookmarks ) => {
         if( storedBookmarks ) {
@@ -193,7 +196,7 @@ export const HomePage: React.FunctionComponent = () => {
                       <li>&#8226;&nbsp;Search by number</li>
                       <li>&#8226;&nbsp;Perhaps you can try searching by surah type</li>
                     </HomePageNoSurahsSmallPlaceholderListText>
-                    <HomePageNoSurahsClearFilterLink onClick={ resetFilters }>Clear your filters and try again.</HomePageNoSurahsClearFilterLink>
+                    <HomePageNoSurahsClearFilterLink onClick={ resetFilters }>Clear your filters and try again</HomePageNoSurahsClearFilterLink>
                   </HomePageNoSurahsPlaceholderContainer>
                 ) : (
                   <>
