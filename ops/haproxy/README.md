@@ -15,7 +15,7 @@ pip3 install certbot-dns-route53
 haproxy -c -V -f ./dev.cfg
 
 ## Run
-To run haproxy go into the `server` folder and run `npm run start:haproxy`
+Run `npm run start:haproxy` from the `noblequran` root folder
 
 ## Renew certificate
 Run script ./scripts/renew-local-ssl.sh
