@@ -1,0 +1,27 @@
+#!/bin/bash
+BASE_DIR="$( cd "$(dirname "$0")"/.. ; pwd -P )"
+NOBLEQURAN_VERSION="$( cd $BASE_DIR && node -p "require('./package.json').version" )"
+
+cd $BASE_DIR/server
+npm install --no-fund
+npm run build
+if [ ${PIPESTATUS[0]} -ne 0 ]; then
+  echo "server build FAIL"
+  exit 1
+fi
+
+cd $BASE_DIR/src/quran
+npm install --no-fund
+npm run build:prd
+if [ ${PIPESTATUS[0]} -ne 0 ]; then
+  echo "frontend build FAIL"
+  exit 1
+fi
+
+cd $BASE_DIR
+package=`npm pack`
+package_prd=`echo $package | cut -d. -f-3`+prd.tgz
+mv $package $package_prd
+$BASE_DIR/scripts/upload-prd $package_prd
+echo $package_prd
+

@@ -1,0 +1,50 @@
+/**
+ * @license
+ * MyFonts Webfont Build ID 4029456, 2021-03-19T22:21:39-0400
+ *
+ * The fonts listed in this notice are subject to the End User License
+ * Agreement(s) entered into by the website owner. All other parties are
+ * explicitly restricted from using the Licensed Webfonts(s).
+ *
+ * You may obtain a valid license at the URLs below.
+ *
+ * Webfont: HarmoniaSansPro-Regular by Monotype
+ * URL: https://www.myfonts.com/fonts/mti/harmonia-sans/pro-regular-116608/
+ *
+ * Webfont: HarmoniaSansPro-SemiBd by Monotype
+ * URL: https://www.myfonts.com/fonts/mti/harmonia-sans/pro-semi-bold-116608/
+ *
+ * Webfont: HarmoniaSansPro-Bold by Monotype
+ * URL: https://www.myfonts.com/fonts/mti/harmonia-sans/pro-bold-116608/
+ *
+ *
+ * Webfonts copyright: Copyright 2010 Monotype Imaging Inc. All rights reserved.
+ *
+ * © 2021 MyFonts Inc
+*/
+
+
+/* @import must be at top of file, otherwise CSS will not work */
+@import url("//hello.myfonts.net/count/3d7c10");
+
+@font-face {
+  font-family: "HarmoniaSansPro";
+  font-style: normal;
+  font-weight: 500;
+  src: url('webFonts/HarmoniaSansProSemiBd/font.woff2') format('woff2'), url('webFonts/HarmoniaSansProSemiBd/font.woff') format('woff');
+}
+
+@font-face {
+  font-family: "HarmoniaSansPro";
+  font-style: normal;
+  font-weight: 400;
+  src: url('webFonts/HarmoniaSansProRegular/font.woff2') format('woff2'), url('webFonts/HarmoniaSansProRegular/font.woff') format('woff');
+}
+
+@font-face {
+  font-family: "HarmoniaSansPro";
+  font-style: normal;
+  font-weight: 700;
+  src: url('webFonts/HarmoniaSansProBold/font.woff2') format('woff2'), url('webFonts/HarmoniaSansProBold/font.woff') format('woff');
+}
+

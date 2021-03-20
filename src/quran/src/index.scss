@@ -1,29 +1,10 @@
+@import "./fonts/HarmoniaSansPro/MyFontsWebfontsKit.css";
+
 @font-face {
   font-family: "MushafBismillah";
   src: url( "./fonts/Mushaf/v1/woff2/bismillah.woff2" ) format( "woff2" ),
        url( "./fonts/Mushaf/v1/woff/bismillah.woff" ) format( "woff" ),
        url( "./fonts/Mushaf/v1/ttf/bismillah.ttf" ) format( "truetype" );
-}
-
-@font-face {
-  font-family: "HarmoniaSansPro";
-  font-style: normal;
-  font-weight: 400;
-  src: url( "./fonts/HarmoniaSansPro/HarmoniaSansPro-Regular.woff" ) format( "woff" );
-}
-
-@font-face {
-  font-family: "HarmoniaSansPro";
-  font-style: normal;
-  font-weight: 500;
-  src: url( "./fonts/HarmoniaSansPro/HarmoniaSansPro-SemiBd.woff" ) format( "woff" );
-}
-
-@font-face {
-  font-family: "HarmoniaSansPro";
-  font-style: normal;
-  font-weight: 700;
-  src: url( "./fonts/HarmoniaSansPro/HarmoniaSansPro-Bold.woff" ) format( "woff" );
 }
 
 @font-face {
