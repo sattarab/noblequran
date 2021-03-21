@@ -113,7 +113,7 @@
     "clean": "rm -rf ./node_modules && rm -rf ./build",
     "start": "npm run start:dev",
     "start:dev": "REACT_APP_ENV=dev REACT_APP_VERSION=$npm_package_version REACT_APP_MIXPANEL_TOKEN=61f10bb6350769f80a6c76560286815a node scripts/start.js",
-    "build": "REACT_APP_ENV=dev REACT_APP_VERSION=$npm_package_version REACT_APP_MIXPANEL_TOKEN=61f10bb6350769f80a6c76560286815a node scripts/build.js",
+    "build": "REACT_APP_ENV=dev REACT_APP_VERSION=$npm_package_version REACT_APP_MIXPANEL_TOKEN=61f10bb6350769f80a6c76560286815a node --stack-size=10000 scripts/build.js",
     "build:stg": "REACT_APP_ENV=stg REACT_APP_VERSION=$npm_package_version REACT_APP_MIXPANEL_TOKEN=61f10bb6350769f80a6c76560286815a node --stack-size=10000 scripts/build.js",
     "build:prd": "REACT_APP_ENV=prd REACT_APP_VERSION=$npm_package_version REACT_APP_MIXPANEL_TOKEN=3216cff288c3feea5836378a7b0d1149 node --stack-size=10000 scripts/build.js",
     "postinstall": "patch-package",

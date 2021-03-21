@@ -100,7 +100,7 @@ const MenuHeader = styled.div`
 
 const SurahPageBismillah = styled.div`
   color: ${ DEFAULT_TEXT_COLOR };
-  font: 400 36px/51px "MushafBismillah";
+  font: 400 24px/30px "MushafBismillah";
   padding-top: 30px;
   text-align: center;
 `
@@ -926,7 +926,7 @@ export const SurahPage: React.FunctionComponent = () => {
                     <SurahPageMainContainerBody className={ clsx( { "fixed": isSurahTitleFixed } ) }>
                       {
                         selectedSurah.hasBismillah && selectedSurah.id !== "1" && (
-                          <SurahPageBismillah>﷽</SurahPageBismillah>
+                          <SurahPageBismillah>ﭑﭒﭓ</SurahPageBismillah>
                         )
 
                       }
