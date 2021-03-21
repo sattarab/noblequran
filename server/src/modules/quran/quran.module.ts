@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common"
 import { ServeStaticModule } from "@nestjs/serve-static"
+import type { Response } from "express"
 import * as path from "path"
 
 import { CommonModule } from "../common/common.module"
@@ -32,6 +33,9 @@ import { TranslatorService } from "./services/translators.service"
       serveStaticOptions: {
         extensions: [ "html" ],
         redirect: false,
+        setHeaders: ( res: Response ) => {
+          res.header( "Cache-Control", "private, no-cache, no-store, must-revalidate" )
+        }
       },
     } ),
   ],
