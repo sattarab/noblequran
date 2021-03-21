@@ -22,6 +22,6 @@ cd $BASE_DIR
 package=`npm pack`
 package_prd=`echo $package | cut -d. -f-3`+prd.tgz
 mv $package $package_prd
-$BASE_DIR/scripts/upload-prd $package_prd
+$BASE_DIR/scripts/upload-prd.sh $package_prd
 echo $package_prd
 
