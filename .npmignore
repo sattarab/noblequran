@@ -14,10 +14,8 @@
 /nest-cli.json
 /ops
 /scripts
-/server/**/*.map
-/server/src/**
-/server/logs/**
-/server/test/**
+/server/**
+!/server/package.json
 !/server/dist/**
 /src/**
 !/src/quran/build/**
