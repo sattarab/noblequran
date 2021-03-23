@@ -1,7 +1,6 @@
 "use strict"
 
-// @todo causes issue: `You attempted to import /Users/abdullah/noblequran/src/quran/node_modules/@pmmmwh/react-refresh-webpack-plugin/lib/runtime/RefreshUtils.js which falls outside of the project src/ directory`
-// const ReactRefreshWebpackPlugin = require( "@pmmmwh/react-refresh-webpack-plugin" )
+const ReactRefreshWebpackPlugin = require( "@pmmmwh/react-refresh-webpack-plugin" )
 const CaseSensitivePathsPlugin = require( "case-sensitive-paths-webpack-plugin" )
 const CompressionPlugin = require( "compression-webpack-plugin" )
 const ESLintPlugin = require( "eslint-webpack-plugin" )
@@ -357,10 +356,13 @@ module.exports = function ( webpackEnv ) {
         // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
         // please link the files into your node_modules/ and let module-resolution kick in.
         // Make sure your source files are compiled, as they will not be processed in any way.
-        new ModuleScopePlugin( paths.appSrc, [
-          paths.appPackageJson,
-          reactRefreshOverlayEntry,
-        ] ),
+        ...( isEnvProduction
+          ? new ModuleScopePlugin( paths.appSrc, [
+            paths.appPackageJson,
+            reactRefreshOverlayEntry,
+          ] )
+          : []
+        )
       ],
     },
     resolveLoader: {
@@ -610,19 +612,19 @@ module.exports = function ( webpackEnv ) {
       // @todo causes issue: `You attempted to import /Users/abdullah/noblequran/src/quran/node_modules/@pmmmwh/react-refresh-webpack-plugin/lib/runtime/RefreshUtils.js which falls outside of the project src/ directory`
       // Experimental hot reloading for React .
       // https://github.com/facebook/react/tree/master/packages/react-refresh
-      // isEnvDevelopment &&
-      //   shouldUseReactRefresh &&
-      //   new ReactRefreshWebpackPlugin( {
-      //     overlay: {
-      //       entry: webpackDevClientEntry,
-      //       // The expected exports are slightly different from what the overlay exports,
-      //       // so an interop is included here to enable feedback on module-level errors.
-      //       module: reactRefreshOverlayEntry,
-      //       // Since we ship a custom dev client and overlay integration,
-      //       // the bundled socket handling logic can be eliminated.
-      //       sockIntegration: false,
-      //     },
-      //   } ),
+      isEnvDevelopment
+        && shouldUseReactRefresh
+        && new ReactRefreshWebpackPlugin( {
+          overlay: {
+            entry: webpackDevClientEntry,
+            // The expected exports are slightly different from what the overlay exports,
+            // so an interop is included here to enable feedback on module-level errors.
+            module: reactRefreshOverlayEntry,
+            // Since we ship a custom dev client and overlay integration,
+            // the bundled socket handling logic can be eliminated.
+            sockIntegration: false,
+          },
+        } ),
       // Watcher doesn't work well if you mistype casing in a path so we use
       // a plugin that prints an error when you attempt to do this.
       // See https://github.com/facebook/create-react-app/issues/240
