@@ -5,8 +5,8 @@ import * as path from "path"
 
 import { CommonModule } from "../common/common.module"
 import { MongoModule } from "../mongo/mongo.module"
+import { CommonController } from "./controllers/common.controller"
 import { JuzController } from "./controllers/juz.controller"
-import { StatusController } from "./controllers/status.controller"
 import { SurahController } from "./controllers/surah.controller"
 import { TranslatorController } from "./controllers/translator.controller"
 import { AyahsRepository } from "./repositories/ayahs.repository"
@@ -20,8 +20,8 @@ import { TranslatorService } from "./services/translators.service"
 
 @Module( {
   controllers: [
+    CommonController,
     JuzController,
-    StatusController,
     SurahController,
     TranslatorController,
   ],

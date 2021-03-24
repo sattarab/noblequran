@@ -1,22 +1,9 @@
 import { Logger } from "@nestjs/common"
 import * as cluster from "cluster"
 
-import { bootstrap } from "./main"
-
 if( cluster.isMaster ) {
-  if( ! process.env.PORT ) {
-    console.error( "Port required" )
-    process.exit( 1 )
-  }
-
-  const port = parseInt( process.env.PORT )
+  const port = 4443
   const workerPortMap: { [ key: string ]: number } = {}
-
-  if( ! port ) {
-    console.error( "Port required" )
-    process.exit( 1 )
-  }
-
   const worker = cluster.fork( { "VCAP_APPLICATION": port } )
   workerPortMap[ worker.id ] = port
 
@@ -36,5 +23,5 @@ if( cluster.isMaster ) {
     }
   } )
 } else {
-  bootstrap()
+  require( "./main" )
 }

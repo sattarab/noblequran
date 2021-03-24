@@ -5,7 +5,7 @@ export enum ConfigEnv {
 }
 
 const packages = {
-  root: require( "../../../../package.json" ),
+  root: require( "../../../../../package.json" ),
 }
 
 interface Config {

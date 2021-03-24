@@ -161,6 +161,26 @@ module.exports = function ( webpackEnv ) {
     return loaders
   }
 
+  const plugins = [
+    // Adds support for installing with Plug'n'Play, leading to faster installs and adding
+    // guards against forgotten dependencies and such.
+    PnpWebpackPlugin,
+  ]
+
+  if( isEnvProduction ) {
+    plugins.push(
+      // Prevents users from importing files from outside of src/ (or node_modules/).
+      // This often causes confusion because we only process files within src/ with babel.
+      // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
+      // please link the files into your node_modules/ and let module-resolution kick in.
+      // Make sure your source files are compiled, as they will not be processed in any way.
+      new ModuleScopePlugin( paths.appSrc, [
+        paths.appPackageJson,
+        reactRefreshOverlayEntry,
+      ] )
+    )
+  }
+
   return {
     mode: isEnvProduction ? "production" : isEnvDevelopment && "development",
     // Stop compilation early in production
@@ -347,23 +367,7 @@ module.exports = function ( webpackEnv ) {
         Buffer: false,
         process: false,
       },
-      plugins: [
-        // Adds support for installing with Plug'n'Play, leading to faster installs and adding
-        // guards against forgotten dependencies and such.
-        PnpWebpackPlugin,
-        // Prevents users from importing files from outside of src/ (or node_modules/).
-        // This often causes confusion because we only process files within src/ with babel.
-        // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
-        // please link the files into your node_modules/ and let module-resolution kick in.
-        // Make sure your source files are compiled, as they will not be processed in any way.
-        ...( isEnvProduction
-          ? new ModuleScopePlugin( paths.appSrc, [
-            paths.appPackageJson,
-            reactRefreshOverlayEntry,
-          ] )
-          : []
-        )
-      ],
+      plugins,
     },
     resolveLoader: {
       plugins: [

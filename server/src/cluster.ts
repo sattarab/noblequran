@@ -2,8 +2,6 @@ import { Logger } from "@nestjs/common"
 import * as cluster from "cluster"
 import * as os from "os"
 
-import { bootstrap } from "./main"
-
 if( cluster.isMaster ) {
   if( ! process.env.PORT ) {
     console.error( "Port required" )
@@ -41,5 +39,5 @@ if( cluster.isMaster ) {
     }
   } )
 } else {
-  bootstrap()
+  require( "./main" )
 }
