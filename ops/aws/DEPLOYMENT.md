@@ -14,5 +14,6 @@ npm install --production
 cd /var/www/noblequran/
 unlink src_main
 ln -s releases/noblequran-$SERVER_VERSION src_main
+sudo su node
 ./start main
 tail -f logs/error.log
