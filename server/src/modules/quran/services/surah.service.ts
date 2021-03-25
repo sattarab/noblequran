@@ -55,12 +55,13 @@ export class SurahService {
     const surahs = await this.surahsRepository.findByIds( surahIds )
     for( const [ surahId, surahAyahs ] of Object.entries( ayahsGroup ) ) {
       const surah = surahs.find( ( selectedSurah ) => selectedSurah.id === surahId )
-      let ayahsCsv = ""
+      let ayahsText = ""
+
       for( const surahAyah of surahAyahs ) {
-        ayahsCsv += `${ surah.number }:${ surahAyah.numberInSurah } ${ surahAyah.text[ format ] }\n`
+        ayahsText += `${ surahAyah.text[ format ] }\n`
       }
 
-      zip.append( ayahsCsv, { name: `${ surah.transliterations[ 0 ].text }.txt` } )
+      zip.append( ayahsText, { name: `${ surah.transliterations[ 0 ].text }.txt` } )
     }
 
     await zip.finalize()

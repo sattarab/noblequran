@@ -9,6 +9,7 @@ const packages = {
 }
 
 interface Config {
+  baseUrl: string
   env: string
   mongo: {
     db: string
@@ -19,6 +20,7 @@ interface Config {
 }
 
 export default (): Config => ( {
+  baseUrl: ConfigEnv.DEV ? "https://local.noblequran.cloud" : "https://noblequran.cloud",
   env: process.env.NODE_ENV || ConfigEnv.DEV,
   mongo: {
     db: process.env.MONGO_DB || "noblequran",

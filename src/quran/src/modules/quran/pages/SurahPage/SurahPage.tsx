@@ -605,7 +605,7 @@ export const SurahPage: React.FunctionComponent = () => {
   }, [ groupedTranslators ] )
 
   const loadAyahs = () => {
-    if( ayahs.length === selectedSurah.numberOfAyahs || ! pagination?.nextPage ) {
+    if( ayahs.length === selectedSurah.numberOfAyahs || ! pagination?.nextPage || ! selectedSurah ) {
       setHasMore( false )
       return
     }
@@ -697,7 +697,7 @@ export const SurahPage: React.FunctionComponent = () => {
   } )
 
   useEffect( () => {
-    getSurahAyahs( selectedSurah.id, { page: 1, perPage: 10, translations: selectedTranslations } )
+    getSurahAyahs( selectedSurah?.id, { page: 1, perPage: 10, translations: selectedTranslations } )
       .then( ( response ) => {
         setAyahs( response.items )
         setPagination( response.pagination )
@@ -752,7 +752,7 @@ export const SurahPage: React.FunctionComponent = () => {
   } )
 
   if( ! selectedSurah ) {
-    selectedSurah = getSurahs().find( ( surah ) => surah.queryIndexes.includes( id ) ) as Surah
+    selectedSurah = getSurahs().find( ( surah ) => surah.slug === id ) as Surah
 
     if( ! selectedSurah ) {
       history.replace( "/" )

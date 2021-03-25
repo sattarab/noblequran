@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common"
+import { ConfigService } from "@nestjs/config"
 import { ServeStaticModule } from "@nestjs/serve-static"
 import type { Response } from "express"
 import * as path from "path"
@@ -41,6 +42,7 @@ import { TranslatorService } from "./services/translators.service"
   ],
   providers: [
     AyahsRepository,
+    ConfigService,
     JuzsRepository,
     JuzService,
     SurahsRepository,
