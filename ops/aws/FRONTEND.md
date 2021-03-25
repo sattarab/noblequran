@@ -61,23 +61,26 @@ certbot renew --http-01-port=54321
 
 ```
 sudo su
-wget http://www.haproxy.org/download/2.2/src/haproxy-2.2.11.tar.gz
-tar -xzf haproxy-2.2.11.tar.gz
-cd haproxy-2.2.11
+wget http://www.haproxy.org/download/2.3/src/haproxy-2.3.7.tar.gz
+tar -xzf haproxy-2.3.7.tar.gz
+cd haproxy-2.3.7
 # Install the dependency need for the build
 yum install openssl-devel pcre-devel make gcc
-make TARGET=linux-glibc USE_PCRE=1 USE_PCRE_JIT=1 USE_OPENSSL=1 USE_ZLIB=1 USE_REGPARM=1
+make TARGET=linux-glibc USE_PCRE=1 USE_PCRE_JIT=1 USE_OPENSSL=1 USE_ZLIB=1 USE_REGPARM=1 USE_SYSTEMD=1
 make install
 cp -f /usr/local/sbin/haproxy /usr/sbin
 id -u haproxy &>/dev/null || useradd -s /usr/sbin/nologin -r haproxy
-cp haproxy-2.2.11/examples/haproxy.init /etc/init.d/haproxy
+cd contrib/systemd
+make
+cp haproxy.service /lib/systemd/system/
 mkdir -p /var/lib/haproxy/ # use for binding to socket
-chmod +x /etc/init.d/haproxy
 mkdir -p /etc/haproxy/errors
 vi /etc/haproxy/haproxy.cfg # Copy prd.cfg from ops/haproxy/prd.cfg
 vi /etc/haproxy/errors/502.http # copy src/error.html with 502 http header information in the beginning of the file
 vi /etc/haprxoy/errors/503.http # copy src/error.html with 503 http header information in the beginning of the file
-service haproxy check # validate haproxy config
-service haproxy restart / service haproxy reload # To reload without any downtime
+systemctl daemon-reload
+systemctl enable haproxy
+systemctl start haproxy
+systemctl status haproxy
 curl -X GET -I noblequran.cloud:443 # Quick sanity check
 ```

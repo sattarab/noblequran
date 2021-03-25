@@ -14,6 +14,7 @@ export const SURAHS: Surah[] = [
       "the",
       "الفاتحة",
       "al fatihah",
+      "al-fatihah",
       "fatihah",
       "al",
       "makkah",
@@ -23,6 +24,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 5,
     },
+    "slug": "al-fatihah",
     "translations": [
       {
         "language": "en",
@@ -50,6 +52,7 @@ export const SURAHS: Surah[] = [
       "the",
       "البقرة",
       "al baqarah",
+      "al-baqarah",
       "baqarah",
       "al",
       "madinah",
@@ -60,6 +63,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 87,
     },
+    "slug": "al-baqarah",
     "translations": [
       {
         "language": "en",
@@ -91,6 +95,7 @@ export const SURAHS: Surah[] = [
       "عمران",
       "آل",
       "ali 'imran",
+      "ali-imran",
       "'imran",
       "ali",
       "madinah",
@@ -101,6 +106,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 89,
     },
+    "slug": "ali-imran",
     "translations": [
       {
         "language": "en",
@@ -128,6 +134,7 @@ export const SURAHS: Surah[] = [
       "the",
       "النساء",
       "an nisa",
+      "an-nisa",
       "nisa",
       "an",
       "madinah",
@@ -138,6 +145,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 92,
     },
+    "slug": "an-nisa",
     "translations": [
       {
         "language": "en",
@@ -167,6 +175,7 @@ export const SURAHS: Surah[] = [
       "table",
       "المائدة",
       "al ma'idah",
+      "al-maidah",
       "ma'idah",
       "al",
       "madinah",
@@ -177,6 +186,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 112,
     },
+    "slug": "al-maidah",
     "translations": [
       {
         "language": "en",
@@ -204,6 +214,7 @@ export const SURAHS: Surah[] = [
       "the",
       "الأنعام",
       "al an'am",
+      "al-anam",
       "an'am",
       "al",
       "makkah",
@@ -213,6 +224,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 55,
     },
+    "slug": "al-anam",
     "translations": [
       {
         "language": "en",
@@ -240,6 +252,7 @@ export const SURAHS: Surah[] = [
       "the",
       "الأعراف",
       "al a'raf",
+      "al-araf",
       "a'raf",
       "al",
       "makkah",
@@ -249,6 +262,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 39,
     },
+    "slug": "al-araf",
     "translations": [
       {
         "language": "en",
@@ -280,12 +294,14 @@ export const SURAHS: Surah[] = [
       "of",
       "الأنفال",
       "al anfal",
+      "al-anfal",
       "anfal",
       "al",
       "madinah",
       "medinan",
       "medinah",
     ],
+    "slug": "al-anfal",
     "revelation": {
       "place": "medinan",
       "order": 88,
@@ -317,12 +333,14 @@ export const SURAHS: Surah[] = [
       "the",
       "التوبة",
       "at tawbah",
+      "at-tawbah",
       "tawbah",
       "at",
       "madinah",
       "medinan",
       "medinah",
     ],
+    "slug": "at-tawbah",
     "revelation": {
       "place": "medinan",
       "order": 113,
@@ -365,6 +383,7 @@ export const SURAHS: Surah[] = [
         "text": "Jonah",
       },
     ],
+    "slug": "yunus",
     "transliterations": [
       {
         "language": "en",
@@ -391,6 +410,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 52,
     },
+    "slug": "hud",
     "translations": [
       {
         "language": "en",
@@ -423,6 +443,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 53,
     },
+    "slug": "yusuf",
     "translations": [
       {
         "language": "en",
@@ -450,6 +471,7 @@ export const SURAHS: Surah[] = [
       "the",
       "الرعد",
       "ar ra'd",
+      "ar-rad",
       "ra'd",
       "ar",
       "madinah",
@@ -460,6 +482,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 96,
     },
+    "slug": "ar-rad",
     "translations": [
       {
         "language": "en",
@@ -492,6 +515,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 72,
     },
+    "slug": "ibrahim",
     "translations": [
       {
         "language": "en",
@@ -521,6 +545,7 @@ export const SURAHS: Surah[] = [
       "rocky",
       "الحجر",
       "al hijr",
+      "al-hijr",
       "hijr",
       "al",
       "makkah",
@@ -530,6 +555,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 54,
     },
+    "slug": "al-hijr",
     "translations": [
       {
         "language": "en",
@@ -557,6 +583,7 @@ export const SURAHS: Surah[] = [
       "the",
       "النحل",
       "an nahl",
+      "an-nahl",
       "nahl",
       "an",
       "makkah",
@@ -566,6 +593,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 70,
     },
+    "slug": "an-nahl",
     "translations": [
       {
         "language": "en",
@@ -595,6 +623,7 @@ export const SURAHS: Surah[] = [
       "night",
       "الإسراء",
       "al isra",
+      "al-isra",
       "isra",
       "al",
       "makkah",
@@ -604,6 +633,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 50,
     },
+    "slug": "al-isra",
     "translations": [
       {
         "language": "en",
@@ -640,6 +670,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 69,
     },
+    "slug": "al-kahf",
     "translations": [
       {
         "language": "en",
@@ -672,6 +703,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 44,
     },
+    "slug": "maryam",
     "translations": [
       {
         "language": "en",
@@ -706,6 +738,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 45,
     },
+    "slug": "ta-ha",
     "translations": [
       {
         "language": "en",
@@ -738,6 +771,7 @@ export const SURAHS: Surah[] = [
       "makkah",
       "meccan",
     ],
+    "slug": "al-anbya",
     "revelation": {
       "place": "meccan",
       "order": 73,
@@ -779,6 +813,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 103,
     },
+    "slug": "al-haj",
     "translations": [
       {
         "language": "en",
@@ -815,6 +850,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 74,
     },
+    "slug": "al-muminun",
     "translations": [
       {
         "language": "en",
@@ -852,6 +888,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 102,
     },
+    "slug": "an-nur",
     "translations": [
       {
         "language": "en",
@@ -888,6 +925,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 42,
     },
+    "slug": "al-furqan",
     "translations": [
       {
         "language": "en",
@@ -924,6 +962,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 47,
     },
+    "slug": "ash-shuara",
     "translations": [
       {
         "language": "en",
@@ -960,6 +999,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 48,
     },
+    "slug": "an-naml",
     "translations": [
       {
         "language": "en",
@@ -996,6 +1036,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 49,
     },
+    "slug": "al-qasas",
     "translations": [
       {
         "language": "en",
@@ -1032,6 +1073,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 85,
     },
+    "slug": "al-ankabut",
     "translations": [
       {
         "language": "en",
@@ -1068,6 +1110,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 84,
     },
+    "slug": "ar-rum",
     "translations": [
       {
         "language": "en",
@@ -1100,6 +1143,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 57,
     },
+    "slug": "luqman",
     "translations": [
       {
         "language": "en",
@@ -1136,6 +1180,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 75,
     },
+    "slug": "as-sajdah",
     "translations": [
       {
         "language": "en",
@@ -1175,6 +1220,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 90,
     },
+    "slug": "al-ahzab",
     "translations": [
       {
         "language": "en",
@@ -1207,6 +1253,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 58,
     },
+    "slug": "sheba",
     "translations": [
       {
         "language": "en",
@@ -1239,6 +1286,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 43,
     },
+    "slug": "fatir",
     "translations": [
       {
         "language": "en",
@@ -1274,6 +1322,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 41,
     },
+    "slug": "yaseen",
     "translations": [
       {
         "language": "en",
@@ -1316,6 +1365,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 56,
     },
+    "slug": "as-safat",
     "translations": [
       {
         "language": "en",
@@ -1352,6 +1402,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 38,
     },
+    "slug": "saad",
     "translations": [
       {
         "language": "en",
@@ -1388,6 +1439,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 59,
     },
+    "slug": "az-zumar",
     "translations": [
       {
         "language": "en",
@@ -1422,6 +1474,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 60,
     },
+    "slug": "ghafir",
     "translations": [
       {
         "language": "en",
@@ -1458,6 +1511,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 61,
     },
+    "slug": "fussilat",
     "translations": [
       {
         "language": "en",
@@ -1494,6 +1548,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 62,
     },
+    "slug": "ash-shuraa",
     "translations": [
       {
         "language": "en",
@@ -1534,6 +1589,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 63,
     },
+    "slug": "az-zukhruf",
     "translations": [
       {
         "language": "en",
@@ -1570,6 +1626,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 64,
     },
+    "slug": "ad-dukhan",
     "translations": [
       {
         "language": "en",
@@ -1606,6 +1663,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 65,
     },
+    "slug": "al-jathiyah",
     "translations": [
       {
         "language": "en",
@@ -1646,6 +1704,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 66,
     },
+    "slug": "al-ahqaf",
     "translations": [
       {
         "language": "en",
@@ -1679,6 +1738,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 95,
     },
+    "slug": "muhammad",
     "translations": [
       {
         "language": "en",
@@ -1716,6 +1776,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 111,
     },
+    "slug": "al-fath",
     "translations": [
       {
         "language": "en",
@@ -1753,6 +1814,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 106,
     },
+    "slug": "al-hujurat",
     "translations": [
       {
         "language": "en",
@@ -1789,6 +1851,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 34,
     },
+    "slug": "qaf",
     "translations": [
       {
         "language": "en",
@@ -1827,6 +1890,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 67,
     },
+    "slug": "adh-dhariyat",
     "translations": [
       {
         "language": "en",
@@ -1863,6 +1927,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 76,
     },
+    "slug": "at-tur",
     "translations": [
       {
         "language": "en",
@@ -1899,6 +1964,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 23,
     },
+    "slug": "an-najm",
     "translations": [
       {
         "language": "en",
@@ -1935,6 +2001,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 37,
     },
+    "slug": "al-qamar",
     "translations": [
       {
         "language": "en",
@@ -1972,6 +2039,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 97,
     },
+    "slug": "ar-rahman",
     "translations": [
       {
         "language": "en",
@@ -2008,6 +2076,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 46,
     },
+    "slug": "al-waqiah",
     "translations": [
       {
         "language": "en",
@@ -2045,6 +2114,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 94,
     },
+    "slug": "al-hadid",
     "translations": [
       {
         "language": "en",
@@ -2084,6 +2154,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 105,
     },
+    "slug": "al-mujadila",
     "translations": [
       {
         "language": "en",
@@ -2121,6 +2192,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 101,
     },
+    "slug": "al-hashr",
     "translations": [
       {
         "language": "en",
@@ -2166,6 +2238,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 91,
     },
+    "slug": "al-mumtahanah",
     "translations": [
       {
         "language": "en",
@@ -2203,6 +2276,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 109,
     },
+    "slug": "as-saf",
     "translations": [
       {
         "language": "en",
@@ -2242,6 +2316,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 110,
     },
+    "slug": "al-jumah",
     "translations": [
       {
         "language": "en",
@@ -2279,6 +2354,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 104,
     },
+    "slug": "al-munaifqun",
     "translations": [
       {
         "language": "en",
@@ -2318,6 +2394,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 108,
     },
+    "slug": "at-taghabun",
     "translations": [
       {
         "language": "en",
@@ -2355,6 +2432,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 99,
     },
+    "slug": "at-talaq",
     "translations": [
       {
         "language": "en",
@@ -2392,6 +2470,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 107,
     },
+    "slug": "at-tahrim",
     "translations": [
       {
         "language": "en",
@@ -2428,6 +2507,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 77,
     },
+    "slug": "al-mulk",
     "translations": [
       {
         "language": "en",
@@ -2464,6 +2544,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 2,
     },
+    "slug": "at-qalam",
     "translations": [
       {
         "language": "en",
@@ -2500,6 +2581,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 78,
     },
+    "slug": "at-haqqah",
     "translations": [
       {
         "language": "en",
@@ -2538,6 +2620,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 79,
     },
+    "slug": "at-maarij",
     "translations": [
       {
         "language": "en",
@@ -2570,6 +2653,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 71,
     },
+    "slug": "nuh",
     "translations": [
       {
         "language": "en",
@@ -2606,6 +2690,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 40,
     },
+    "slug": "al-jinn",
     "translations": [
       {
         "language": "en",
@@ -2644,6 +2729,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 3,
     },
+    "slug": "al-muzzammil",
     "translations": [
       {
         "language": "en",
@@ -2682,6 +2768,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 4,
     },
+    "slug": "al-muddaththir",
     "translations": [
       {
         "language": "en",
@@ -2718,6 +2805,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 31,
     },
+    "slug": "al-qiyamah",
     "translations": [
       {
         "language": "en",
@@ -2755,6 +2843,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 98,
     },
+    "slug": "al-insan",
     "translations": [
       {
         "language": "en",
@@ -2791,6 +2880,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 33,
     },
+    "slug": "al-mursalat",
     "translations": [
       {
         "language": "en",
@@ -2827,6 +2917,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 80,
     },
+    "slug": "an-naba",
     "translations": [
       {
         "language": "en",
@@ -2867,6 +2958,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 81,
     },
+    "slug": "an-naziat",
     "translations": [
       {
         "language": "en",
@@ -2901,6 +2993,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 24,
     },
+    "slug": "abasa",
     "translations": [
       {
         "language": "en",
@@ -2937,6 +3030,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 7,
     },
+    "slug": "at-takwir",
     "translations": [
       {
         "language": "en",
@@ -2973,6 +3067,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 82,
     },
+    "slug": "al-infitar",
     "translations": [
       {
         "language": "en",
@@ -3009,6 +3104,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 86,
     },
+    "slug": "al-mutaffifin",
     "translations": [
       {
         "language": "en",
@@ -3045,6 +3141,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 83,
     },
+    "slug": "al-inshiqaq",
     "translations": [
       {
         "language": "en",
@@ -3086,6 +3183,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 27,
     },
+    "slug": "al-buruj",
     "translations": [
       {
         "language": "en",
@@ -3122,6 +3220,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 36,
     },
+    "slug": "at-tariq",
     "translations": [
       {
         "language": "en",
@@ -3160,6 +3259,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 8,
     },
+    "slug": "al-ala",
     "translations": [
       {
         "language": "en",
@@ -3196,6 +3296,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 68,
     },
+    "slug": "al-ghashiyah",
     "translations": [
       {
         "language": "en",
@@ -3232,6 +3333,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 10,
     },
+    "slug": "al-fajr",
     "translations": [
       {
         "language": "en",
@@ -3268,6 +3370,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 35,
     },
+    "slug": "al-balad",
     "translations": [
       {
         "language": "en",
@@ -3304,6 +3407,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 26,
     },
+    "slug": "ash-shams",
     "translations": [
       {
         "language": "en",
@@ -3340,6 +3444,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 9,
     },
+    "slug": "al-layl",
     "translations": [
       {
         "language": "en",
@@ -3378,6 +3483,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 11,
     },
+    "slug": "ad-duhaa",
     "translations": [
       {
         "language": "en",
@@ -3414,6 +3520,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 12,
     },
+    "slug": "ash-sharh",
     "translations": [
       {
         "language": "en",
@@ -3450,6 +3557,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 28,
     },
+    "slug": "at-tin",
     "translations": [
       {
         "language": "en",
@@ -3486,6 +3594,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 1,
     },
+    "slug": "al-alaq",
     "translations": [
       {
         "language": "en",
@@ -3522,6 +3631,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 25,
     },
+    "slug": "al-qadr",
     "translations": [
       {
         "language": "en",
@@ -3561,6 +3671,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 100,
     },
+    "slug": "al-bayyinah",
     "translations": [
       {
         "language": "en",
@@ -3598,6 +3709,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 93,
     },
+    "slug": "az-zalzalah",
     "translations": [
       {
         "language": "en",
@@ -3634,6 +3746,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 14,
     },
+    "slug": "al-adiyat",
     "translations": [
       {
         "language": "en",
@@ -3670,6 +3783,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 30,
     },
+    "slug": "al-qariah",
     "translations": [
       {
         "language": "en",
@@ -3712,6 +3826,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 16,
     },
+    "slug": "at-takathur",
     "translations": [
       {
         "language": "en",
@@ -3750,6 +3865,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 13,
     },
+    "slug": "al-asr",
     "translations": [
       {
         "language": "en",
@@ -3786,6 +3902,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 32,
     },
+    "slug": "al-humazah",
     "translations": [
       {
         "language": "en",
@@ -3822,6 +3939,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 19,
     },
+    "slug": "al-fil",
     "translations": [
       {
         "language": "en",
@@ -3854,6 +3972,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 29,
     },
+    "slug": "quraysh",
     "translations": [
       {
         "language": "en",
@@ -3892,6 +4011,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 17,
     },
+    "slug": "al-maun",
     "translations": [
       {
         "language": "en",
@@ -3928,6 +4048,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 15,
     },
+    "slug": "al-kawthar",
     "translations": [
       {
         "language": "en",
@@ -3964,6 +4085,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 18,
     },
+    "slug": "al-kafirun",
     "translations": [
       {
         "language": "en",
@@ -4003,6 +4125,7 @@ export const SURAHS: Surah[] = [
       "place": "medinan",
       "order": 114,
     },
+    "slug": "an-nasr",
     "translations": [
       {
         "language": "en",
@@ -4041,6 +4164,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 6,
     },
+    "slug": "al-masad",
     "translations": [
       {
         "language": "en",
@@ -4077,6 +4201,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 22,
     },
+    "slug": "al-ikhlas",
     "translations": [
       {
         "language": "en",
@@ -4113,6 +4238,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 20,
     },
+    "slug": "al-falaq",
     "translations": [
       {
         "language": "en",
@@ -4149,6 +4275,7 @@ export const SURAHS: Surah[] = [
       "place": "meccan",
       "order": 21,
     },
+    "slug": "an-nas",
     "translations": [
       {
         "language": "en",

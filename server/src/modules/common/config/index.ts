@@ -5,10 +5,11 @@ export enum ConfigEnv {
 }
 
 const packages = {
-  root: require( "../../../../package.json" ),
+  root: require( "../../../../../package.json" ),
 }
 
 interface Config {
+  baseUrl: string
   env: string
   mongo: {
     db: string
@@ -19,6 +20,7 @@ interface Config {
 }
 
 export default (): Config => ( {
+  baseUrl: process.env.NODE_ENV === ConfigEnv.PRD ? "https://noblequran.cloud" : "https://local.noblequran.cloud",
   env: process.env.NODE_ENV || ConfigEnv.DEV,
   mongo: {
     db: process.env.MONGO_DB || "noblequran",

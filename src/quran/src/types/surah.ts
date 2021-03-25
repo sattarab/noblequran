@@ -12,6 +12,7 @@ export interface Surah {
     order: number
     place: string
   }
+  slug: string
   translations: Array<{
     language: string
     text: string
