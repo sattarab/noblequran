@@ -13,7 +13,7 @@ import {
 import { isGreaterThanMediumScreen, MOBILE_SCREEN_MEDIA_QUERY } from "../../../helpers/responsive"
 import { useAppDispatch } from "../../../hooks"
 import type { Surah } from "../../../types/surah"
-import { getSurahsById } from "../services/surah"
+import { getSurahsById, getSurahsBySlug } from "../services/surah"
 import { setIsTitleFontLoaded } from "../state/quran"
 
 export type SelectedAyahModel = string[]
@@ -25,6 +25,7 @@ interface QuranContextType {
   baseClasses: Record<"header" | "headerShift" | "iconButton" | "svgIcon" | "svgIconActive" | "svgIconDisabled", string>
   isMobileDevice: boolean
   surahs: { [ id: string ]: Surah }
+  surahsSlugHash: { [ slug: string ]: Surah }
 }
 
 export const QuranContext = createContext<QuranContextType | null>( null )
@@ -69,6 +70,7 @@ export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildr
   const dispatch = useAppDispatch()
   const isMobileDevice = useMedia( MOBILE_SCREEN_MEDIA_QUERY, ! isGreaterThanMediumScreen() )
   const surahs = getSurahsById()
+  const surahsSlugHash = getSurahsBySlug()
 
   const surahNamesFontObserver = new FontFaceObserver( "QuranKarim" )
 
@@ -80,6 +82,7 @@ export const QuranContextProvider: React.FunctionComponent<React.PropsWithChildr
     baseClasses,
     isMobileDevice,
     surahs,
+    surahsSlugHash,
   }
 
   // eslint-disable-next-line react/prop-types

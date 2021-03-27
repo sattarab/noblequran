@@ -46,7 +46,7 @@ const AboutPageFunction: React.FunctionComponent = () => {
     <AboutPageContainer>
       <Helmet>
         <title>About - The Noble Quran | { AL_QURAN }</title>
-        <meta name="description" content="The Quran is the central religious text of Islam. It is regarded as the finest work in classical Arabic literature. It is organized in 114 chapters(surahs), which consist of verses(ayahs)." />
+        <meta name="description" content="The Noble Quran is the central religious text of Islam. It is regarded as the finest work in classical Arabic literature. It is organized in 114 chapters(surahs), which consist of verses(ayahs)." />
       </Helmet>
       <AboutPageBody>
         <AboutPageSectionBody>
