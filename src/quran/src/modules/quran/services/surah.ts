@@ -49,6 +49,13 @@ export function getSurahsById(): { [ id: string ]: Surah } {
   }, {} )
 }
 
+export function getSurahsBySlug(): { [ id: string ]: Surah } {
+  return getSurahs().reduce( ( result: { [ id: string ]: Surah }, surah ) => {
+    result[ surah.slug ] = surah
+    return result
+  }, {} )
+}
+
 export function getSurahAyahs( id: string, options: { page: number, perPage: number, translations?: string[] } ): Promise<{ items: Ayah[], pagination: Pagination }> {
   let url = `/surahs/${ id }/ayahs?page=${ options.page }&perPage=${ options.perPage }`
 
@@ -69,7 +76,7 @@ export function getTranslatorsGroupedByLanguage(): Promise<Translator[]> {
   } )
 }
 
-export function readSurah( history: History, surahId: string ): void {
-  history.push( `/${ surahId }` )
+export function readSurah( history: History, surahSlug: string ): void {
+  history.push( `/${ surahSlug }` )
   window.scroll( 0, 0 )
 }

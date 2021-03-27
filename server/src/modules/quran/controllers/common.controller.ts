@@ -28,12 +28,12 @@ export class CommonController {
     try {
       const siteMapStream = new SitemapStream( { hostname: this.configService.get( "baseUrl" ) } )
       const pipeline = siteMapStream.pipe( createGzip() )
-      siteMapStream.write( { url: "/", changefreq: "weekly", priority: 1.0 } )
-      siteMapStream.write( { url: "/yaseen/", changefreq: "weekly", priority: 0.8 } )
-      siteMapStream.write( { url: "/al-kahf/", changefreq: "weekly", priority: 0.8 } )
-      siteMapStream.write( { url: "/ar-rahman/", changefreq: "weekly", priority: 0.5 } )
-      siteMapStream.write( { url: "/al-baqarah/", changefreq: "weekly", priority: 0.5 } )
-      siteMapStream.write( { url: "/al-fatihah/", changefreq: "weekly", priority: 0.5 } )
+      siteMapStream.write( { url: "/", changefreq: "daily", priority: 1.0 } )
+      siteMapStream.write( { url: "/yaseen/", changefreq: "daily", priority: 0.8 } )
+      siteMapStream.write( { url: "/al-kahf/", changefreq: "daily", priority: 0.8 } )
+      siteMapStream.write( { url: "/ar-rahman/", changefreq: "daily", priority: 0.8 } )
+      siteMapStream.write( { url: "/al-baqarah/", changefreq: "daily", priority: 0.8 } )
+      siteMapStream.write( { url: "/al-fatihah/", changefreq: "daily", priority: 0.8 } )
       streamToPromise( pipeline ).then( ( map ) => this.sitemap = map )
       siteMapStream.end()
       pipeline.pipe( res ).on( "error", ( err ) => {
