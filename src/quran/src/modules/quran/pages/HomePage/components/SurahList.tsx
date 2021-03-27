@@ -96,7 +96,7 @@ const SurahListFunction: React.FunctionComponent = () => {
     <HomePageSurahsListContainer>
       {
         surahs.map( ( surah ) =>
-          <HomePageSurahListContainer aria-label={ surah.transliterations[ 0 ].text } onClick={ () => readSurah( history, surah.id ) } key={ surah.id }>
+          <HomePageSurahListContainer aria-label={ surah.transliterations[ 0 ].text } onClick={ () => readSurah( history, surah.slug ) } key={ surah.id }>
             <HomePageSurahListTitleContainer>
               <HomePageSurahTranslatedText>{ surah.translations[ 0 ].text }</HomePageSurahTranslatedText>
               <>

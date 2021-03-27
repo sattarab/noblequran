@@ -258,8 +258,8 @@ export const QRightDrawer: React.FunctionComponent = () => {
     setFormatType( type )
   }, [ setFormatType ] )
 
-  const readSurah = useCallback( ( surahId: string ) => {
-    history.push( `/${ surahId }` )
+  const readSurah = useCallback( ( surahSlug: string ) => {
+    history.push( `/${ surahSlug }` )
     window.scroll( 0, 0 )
     if( isMobileDevice ) {
       dispatch( toggleIsRightDrawerOpen() )
@@ -318,7 +318,7 @@ export const QRightDrawer: React.FunctionComponent = () => {
                                 className={ "secondary" }
                                 isDisabled={ selectedAyahs[ surahId ].length === surahs[ surahId ].numberOfAyahs }
                                 label="Add more verses"
-                                onClick={ () => readSurah( surahId ) }
+                                onClick={ () => readSurah( surahs[ surahId ].slug ) }
                                 style={ { marginLeft: "-5px" } }
                               />
                               <StyledQButton

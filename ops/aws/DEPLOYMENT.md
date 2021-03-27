@@ -1,4 +1,4 @@
-SERVER_VERSION={{ VERSION_FROM_PACKAGE_JSON }
+SERVER_VERSION=0.0.4-0
 cd /var/www/noblequran/releases/
 tar xzf "noblequran-$SERVER_VERSION+prd.tgz"
 mv package/ noblequran-$SERVER_VERSION
@@ -7,6 +7,7 @@ mv package/ noblequran-$SERVER_VERSION
 cd noblequran-$SERVER_VERSION
 
 nvm install 14.16.0
+nvm use 14.16.0
 npm install -g forever
 
 cd server

@@ -115,10 +115,10 @@ const QFooterFunction: React.FunctionComponent = () => {
               <FooterLink onClick={ scrollTop } to="/about">About</FooterLink>
             </FooterLinksContainer>
             <FooterLinksContainer>
-              <FooterLink onClick={ scrollTop } to="/2">Al-Baqarah</FooterLink>
-              <FooterLink onClick={ scrollTop } to="/18">Al-Kahf</FooterLink>
-              <FooterLink onClick={ scrollTop } to="/36">Ya Sin</FooterLink>
-              <FooterLink onClick={ scrollTop } to="/67">Al-Mulk</FooterLink>
+              <FooterLink onClick={ scrollTop } to="/al-baqarah">Al-Baqarah</FooterLink>
+              <FooterLink onClick={ scrollTop } to="/al-kahf">Al-Kahf</FooterLink>
+              <FooterLink onClick={ scrollTop } to="/yaseen">Ya Sin</FooterLink>
+              <FooterLink onClick={ scrollTop } to="/al-mulk">Al-Mulk</FooterLink>
             </FooterLinksContainer>
           </FooterDetailContainer>
         </FooterDetailsContainer>

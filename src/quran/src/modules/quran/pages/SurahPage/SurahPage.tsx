@@ -39,7 +39,7 @@ import { QRightDrawerButton } from "../../components/RightDrawerButton"
 import { ScrollUpButton } from "../../components/ScrollUpButton"
 import { AL_QURAN } from "../../constants/common"
 import { trackMixpanelEvent } from "../../services/mixpanel"
-import { getDefaultTranslation, getSurahAyahs, getSurahs, getTranslatorsGroupedByLanguage } from "../../services/surah"
+import { getDefaultTranslation, getSurahAyahs, getTranslatorsGroupedByLanguage } from "../../services/surah"
 import { toggleAyah, toggleIsRightDrawerOpen } from "../../state/quran"
 import { setSelectedTranslations } from "./state/surah"
 
@@ -465,11 +465,11 @@ export const SurahPage: React.FunctionComponent = () => {
   const translatorsMenuRef = useRef( null )
   const versesMenuRef = useRef( null )
 
-  const { baseClasses, isMobileDevice, surahs } = useQuranState()
+  const { baseClasses, isMobileDevice, surahs, surahsSlugHash } = useQuranState()
 
   const match = matchPath( location.pathname, "/:id" )
   const id = ( match?.params as { id: string } ).id
-  let selectedSurah: Surah = surahs[ id ]
+  const selectedSurah: Surah = surahsSlugHash[ id ] ?? surahs[ id ]
 
   const [ ayahs, setAyahs ] = useState<Ayah[]>( [] )
   const [ displayError, setDisplayError ] = useState<boolean>( false )
@@ -752,12 +752,8 @@ export const SurahPage: React.FunctionComponent = () => {
   } )
 
   if( ! selectedSurah ) {
-    selectedSurah = getSurahs().find( ( surah ) => surah.slug === id ) as Surah
-
-    if( ! selectedSurah ) {
-      history.replace( "/" )
-      return null
-    }
+    history.replace( "/" )
+    return null
   }
 
   const numberOfAyahsArray = new Array( selectedSurah.numberOfAyahs ).fill( 0 ).map( ( value, index ) => index + 1 )
@@ -765,8 +761,8 @@ export const SurahPage: React.FunctionComponent = () => {
   return (
     <>
       <Helmet>
-        <title>{ selectedSurah.transliterations[ 0 ].text } - The Noble Quran - { AL_QURAN }</title>
-        <meta name="description" content={ `Surah ${ selectedSurah.transliterations[ 0 ].text }(${ selectedSurah.name }) - ${ selectedSurah.ayahs?.[ 0 ].text.uthmani }` } />
+        <title>{ selectedSurah.transliterations[ 0 ].text } - The Noble Quran | { AL_QURAN }</title>
+        <meta name="description" content={ `Surah ${ selectedSurah.transliterations[ 0 ].text } is the ${ selectedSurah.number } of the Quran and ${ selectedSurah.revelation.order } according to the revelation order. This is a ${ selectedSurah.revelation.place } surah and consists of ${ selectedSurah.numberOfAyahs } verses.` } />
       </Helmet>
       {
         isLoading

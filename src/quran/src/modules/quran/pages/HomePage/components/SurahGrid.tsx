@@ -144,7 +144,7 @@ const SurahGridFunction: React.FunctionComponent = () => {
         surahs.map( ( surah ) => (
           <HomePageSurahGridContainer
             aria-label={ surah.transliterations[ 0 ].text }
-            onClick={ () => readSurah( history, surah.id ) } key={ surah.id }
+            onClick={ () => readSurah( history, surah.slug ) } key={ surah.id }
           >
             <HomePageSurahGridInnerContainer>
               <HomePageSurahGridTitleContainer>
