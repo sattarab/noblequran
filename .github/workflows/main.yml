@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-node@v2.1.4
 
       - name: Install
-        run: npm run install-all
+        run: npm run install:all
 
       - name: Build
         run: npm run build
