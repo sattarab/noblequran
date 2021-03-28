@@ -116,9 +116,9 @@
     "start:dev": "REACT_APP_ENV=dev REACT_APP_MIXPANEL_TOKEN=61f10bb6350769f80a6c76560286815a node scripts/start.js",
     "lint": "eslint \"{src,test}/**/*.ts\" --max-warnings 0",
     "lint:fix": "eslint \"{src,test}/**/*.ts\" --fix",
-    "build": "REACT_APP_ENV=dev REACT_APP_VERSION=$NOBLEQURAN_VERSION REACT_APP_MIXPANEL_TOKEN=61f10bb6350769f80a6c76560286815a node scripts/build.js",
-    "build:stg": "REACT_APP_ENV=stg REACT_APP_VERSION=$NOBLEQURAN_VERSION REACT_APP_MIXPANEL_TOKEN=61f10bb6350769f80a6c76560286815a node scripts/build.js",
-    "build:prd": "REACT_APP_ENV=prd REACT_APP_VERSION=$NOBLEQURAN_VERSION REACT_APP_MIXPANEL_TOKEN=3216cff288c3feea5836378a7b0d1149 node scripts/build.js",
+    "build": "REACT_APP_ENV=dev REACT_APP_VERSION=$NOBLEQURAN_VERSION REACT_APP_MIXPANEL_TOKEN=61f10bb6350769f80a6c76560286815a node --stack-size=1200 scripts/build.js",
+    "build:stg": "REACT_APP_ENV=stg REACT_APP_VERSION=$NOBLEQURAN_VERSION REACT_APP_MIXPANEL_TOKEN=61f10bb6350769f80a6c76560286815a node --stack-size=1200 scripts/build.js",
+    "build:prd": "REACT_APP_ENV=prd REACT_APP_VERSION=$NOBLEQURAN_VERSION REACT_APP_MIXPANEL_TOKEN=3216cff288c3feea5836378a7b0d1149 node --stack-size=1200 scripts/build.js",
     "postinstall": "patch-package",
     "test": "node scripts/test.js"
   },
