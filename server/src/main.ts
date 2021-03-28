@@ -35,7 +35,7 @@ export async function bootstrap(): Promise<void> {
     },
   } )
 
-  const port = process.env.VCAP_APPLICATION || process.env.PORT || config.port
+  const port = process.env.VCAP_APPLICATION || process.env.PORT || 4443
   await app.listen( port )
   Logger.log( `Express server started on ${ port }` )
 }
