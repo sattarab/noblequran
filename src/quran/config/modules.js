@@ -14,7 +14,7 @@ const paths = require( "./paths" )
 function getAdditionalModulePaths( options = {} ) {
   const baseUrl = options.baseUrl
 
-  if( !baseUrl ) {
+  if( ! baseUrl ) {
     return ""
   }
 
@@ -43,8 +43,8 @@ function getAdditionalModulePaths( options = {} ) {
   // Otherwise, throw an error.
   throw new Error(
     chalk.red.bold(
-      "Your project's `baseUrl` can only be set to `src` or `node_modules`." +
-        " Create React App does not support other values at this time.",
+      "Your project's `baseUrl` can only be set to `src` or `node_modules`."
+        + " Create React App does not support other values at this time.",
     ),
   )
 }
@@ -57,7 +57,7 @@ function getAdditionalModulePaths( options = {} ) {
 function getWebpackAliases( options = {} ) {
   const baseUrl = options.baseUrl
 
-  if( !baseUrl ) {
+  if( ! baseUrl ) {
     return {}
   }
 
@@ -78,7 +78,7 @@ function getWebpackAliases( options = {} ) {
 function getJestAliases( options = {} ) {
   const baseUrl = options.baseUrl
 
-  if( !baseUrl ) {
+  if( ! baseUrl ) {
     return {}
   }
 
