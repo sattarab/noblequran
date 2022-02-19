@@ -5,6 +5,10 @@
   "author": "NobleQuran",
   "private": true,
   "scripts": {
+    "build": "cd server && npm run build && cd ../src/quran && npm run build",
+    "install:all": "cd server && npm install && cd ../src/quran && npm install",
+    "lint": "cd server && npm run lint && cd ../src/quran && npm run lint",
+    "lint:fix": "cd server && npm run lint:fix && cd ../src/quran && npm run lint:fix",
     "start:haproxy": "cd ops/haproxy && haproxy -f ./dev.cfg",
     "start:server": "cd server && npm run start:dev"
   }
