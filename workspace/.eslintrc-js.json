@@ -1,0 +1,59 @@
+{
+  "root": true,
+  "rules": {
+    "array-bracket-spacing": [ "warn", "always" ],
+    "comma-dangle": [ "warn", "always-multiline" ],
+    "comma-spacing": [ "warn", { "before": false, "after": true } ],
+    "computed-property-spacing": [ "warn", "always" ],
+    "eol-last": "warn",
+    "eslint-comments/no-unlimited-disable": "off",
+    "generator-star-spacing": [ "warn", { "before": true, "after": false } ],
+    "indent": [ "warn", 2, {
+      "SwitchCase": 1
+    } ],
+    "key-spacing": [ "warn" ],
+    "keyword-spacing": [ "warn", {
+      "overrides": {
+        "if": { "after": false },
+        "catch": { "after": false },
+        "for": { "after": false },
+        "switch": { "after": false },
+        "while": { "after": false }
+      }
+    } ],
+    "no-case-declarations": "warn",
+    "no-dupe-class-members": "off",
+    "no-duplicate-imports": "off",
+    "no-multi-spaces": "warn",
+    "no-multiple-empty-lines": [ "warn", { "max": 1 } ],
+    "no-shadow": "off",
+    "no-undef": "off",
+    "no-unexpected-multiline": "warn",
+    "no-unsafe-finally": "warn",
+    "no-whitespace-before-property": "warn",
+    "object-curly-spacing": [ "warn", "always" ],
+    "operator-linebreak": [ "warn", "before" ],
+    "prefer-const": "warn",
+    "prettier/prettier": "off",
+    "quotes": [ "warn", "double" ],
+    "semi": [ "warn", "never" ],
+    "simple-import-sort/exports": "warn",
+    "simple-import-sort/imports": [ "warn", {
+      "groups":
+      [ [ "^\\u0000" ], [ "^@?\\w" ], [ "^(@onelocal)(/.*|$)", "^" ] ]
+    } ],
+    "space-in-parens": [ "warn", "always", { "exceptions": [ "empty" ] } ],
+    "space-unary-ops": [
+      "warn",
+      {
+        "words": true,
+        "nonwords": false,
+        "overrides": {
+          "!": true
+        }
+      }
+    ],
+    "template-curly-spacing": [ "warn", "always" ],
+    "yield-star-spacing": [ "warn", "after" ]
+  }
+}

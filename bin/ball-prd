@@ -2,17 +2,15 @@
 BASE_DIR="$( cd "$(dirname "$0")"/.. ; pwd -P )"
 NOBLEQURAN_VERSION="$( cd $BASE_DIR && node -p "require('./package.json').version" )"
 
-cd $BASE_DIR/server
+cd $BASE_DIR/workspace
 npm install --no-fund
-npm run build
+npm run build-server:prd
 if [ ${PIPESTATUS[0]} -ne 0 ]; then
-  echo "server build FAIL"
+  echo "frontend build FAIL"
   exit 1
 fi
 
-cd $BASE_DIR/src/quran
-npm install --no-fund
-npm run build:prd
+npm run build-frontend-web:prd
 if [ ${PIPESTATUS[0]} -ne 0 ]; then
   echo "frontend build FAIL"
   exit 1

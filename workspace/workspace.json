@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "projects": {
+    "backend": "packages/backend",
+    "frontend-web": "packages/frontend-web",
+    "frontend-web-e2e": "packages/frontend-web-e2e"
+  }
+}

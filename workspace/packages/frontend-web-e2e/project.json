@@ -1,0 +1,28 @@
+{
+  "root": "packages/frontend-web-e2e",
+  "sourceRoot": "packages/frontend-web-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "packages/frontend-web-e2e/cypress.json",
+        "devServerTarget": "frontend-web:serve"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "frontend-web:serve:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/frontend-web-e2e/**/*.{js,ts}"]
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["frontend-web"]
+}

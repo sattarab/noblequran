@@ -16,7 +16,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./server
+        working-directory: ./workspace/
 
     steps:
       - uses: actions/checkout@v2
@@ -30,7 +30,10 @@ jobs:
         run: npm install
 
       - name: Lint
-        run: npm run lint
+        run: nx lint backend --max-warnings 0
+
+      - name: Tests
+        run: nx test backend
 
       - name: Build
-        run: npm run build
+        run: nx build backend

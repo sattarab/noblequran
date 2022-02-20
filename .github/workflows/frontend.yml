@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Frontend
+name: Frontend Web
 
 # Controls when the action will run.
 on:
@@ -16,7 +16,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./src/quran
+        working-directory: ./workspace/
 
     steps:
       - uses: actions/checkout@v2
@@ -30,7 +30,7 @@ jobs:
         run: npm install
 
       - name: Lint
-        run: npm run lint
+        run: nx lint frontend-web --max-warnings 0
 
       - name: Build
-        run: npm run build:prd
+        run: nx build frontend-web

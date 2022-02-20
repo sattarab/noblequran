@@ -1,0 +1,36 @@
+{
+  "extends": "@nrwl/workspace/presets/core.json",
+  "npmScope": "workspace",
+  "affected": {
+    "defaultBase": "main"
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/nest"
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/nx-cloud",
+      "options": {
+        "cacheableOperations": ["build", "lint", "test", "e2e"],
+        "accessToken": "YWYxMTRhNzMtMDY5OC00OTQwLWI1OGItODRiOTg3ZjM5NTc1fHJlYWQtd3JpdGU="
+      }
+    }
+  },
+  "defaultProject": "backend",
+  "generators": {
+    "@nrwl/react": {
+      "application": {
+        "style": "styled-components",
+        "linter": "eslint",
+        "babel": true
+      },
+      "component": {
+        "style": "styled-components"
+      },
+      "library": {
+        "style": "styled-components",
+        "linter": "eslint"
+      }
+    }
+  }
+}
