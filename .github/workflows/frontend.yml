@@ -30,7 +30,7 @@ jobs:
         run: npm install
 
       - name: Lint
-        run: nx lint frontend-web --max-warnings 0
+        run: ./node_modules/.bin/nx lint frontend-web --max-warnings 0
 
       - name: Build
-        run: nx build frontend-web
+        run: ./node_modules/.bin/nx build frontend-web

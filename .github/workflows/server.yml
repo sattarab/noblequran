@@ -30,10 +30,10 @@ jobs:
         run: npm install
 
       - name: Lint
-        run: nx lint backend --max-warnings 0
+        run: ./node_modules/.bin/nx lint backend --max-warnings 0
 
       - name: Tests
-        run: nx test backend
+        run: ./node_modules/.bin/nx test backend
 
       - name: Build
-        run: nx build backend
+        run: ./node_modules/.bin/nx build backend
